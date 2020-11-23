@@ -1,0 +1,31 @@
+
+verbose: 1
+debug: 0
+
+check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
+disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
+enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $false"'
+
+
+# UPX (x86, x64)
+upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"
+upx_compress: best
+upx_args: 
+
+
+# peCloakCapstone (x86)
+pecloak_python_path: "C:\\Python27\\python.exe"
+pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+pecloak_args: 
+
+
+# Hyperion (x86, x64)
+hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
+hyperion_args: 
+
+# Open-Source ConfuserEx
+confuserex_path: "contrib\\ConfuserEx.v1.4.1\\Confuser.CLI.exe"
+confuserex_plugins:
+  - compressor
+confuserex_args: 
+
