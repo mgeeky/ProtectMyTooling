@@ -67,7 +67,7 @@ def checkAv():
     logger.info("Checking AV status...")
 
     if 'check_av_command' in options.keys() and 'disable_av_command' in options.keys() \
-        and  'enable_av_command' in options.keys():
+        and 'enable_av_command' in options.keys() and options['check_av_command']:
 
         out = shell(logger, options['check_av_command'])
         logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
@@ -88,6 +88,11 @@ def checkAv():
 
 def handleAv(status):
     outstatus = -1
+
+    if 'disable_av_command' not in options.keys() or not options['disable_av_command'] or \
+        'enable_av_command' not in options.keys() or not options['enable_av_command']:
+        logger.info("No Enable/Disable AV commands were specified, skipping AV orchestration.")
+        return outstatus
 
     if status == 0:
         outstatus = checkAv()

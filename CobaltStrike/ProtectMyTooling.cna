@@ -139,7 +139,7 @@ alias protected-execute-assembly {
 }
 
 alias protected-upload {
-    local('$bid $f $localpath $remotepath $content $generatedlocalpath');
+    local('$bid $f $localpath $remotepath $content $generatedlocalpath $algo $md $digest $hash');
     ($bid, $localpath, $remotepath) = @_;
 
     if($localpath is $null || strlen($localpath) == 0) {
@@ -180,14 +180,21 @@ alias protected-upload {
         return;
     }
 
+    $algo = "MD5";
+    $md = [java.security.MessageDigest getInstance: $algo];
+    $digest = [$md digest: $content];
+
+    $hash = [javax.xml.bind.DatatypeConverter printHexBinary: $digest];
+    $hash = lc($hash);
+
     if($remotepath is $null || strlen($remotepath) == 0) {
         $remotepath = getFileName($localpath);
-        btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . "): $generatedlocalpath as $remotepath");
+        btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . ", md5: " . $hash . "): $generatedlocalpath as $remotepath");
         bupload_raw!($1, $remotepath, $content, $generatedlocalpath);
         return;
     }
 
-    btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . ") from: ( $+ $generatedlocalpath $+ ) to: ( $+ $remotepath $+ )");
+    btask($1, "Tasked Beacon to upload a protected file (size: " . interpretSize(strlen($content)) . ", md5: " . $hash . ") from: ( $+ $generatedlocalpath $+ ) to: ( $+ $remotepath $+ )");
     bupload_raw!($1, $remotepath, $content, $generatedlocalpath);
 }
 

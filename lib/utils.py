@@ -47,7 +47,7 @@ def shell2(cmd, alternative = False):
             capture_output=True, 
             startupinfo=si, 
             creationflags=CREATE_NO_WINDOW,
-            timeout=30
+            timeout=60
             )
 
         outs = out.stdout
@@ -63,7 +63,7 @@ def shell2(cmd, alternative = False):
             creationflags=CREATE_NO_WINDOW
         )
         try:
-            outs, errs = proc.communicate(timeout=30)
+            outs, errs = proc.communicate(timeout=60)
             proc.wait()
 
         except TimeoutExpired:

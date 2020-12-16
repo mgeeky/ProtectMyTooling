@@ -30,7 +30,7 @@ class PackerUpx(IPacker):
             parser.add_argument('--upx-path', metavar='PATH', dest='upx_path',
                 help = '(required) Path to UPX binary capable of compressing x86/x64 executables.')
 
-            parser.add_argument('--upx-compress', metavar='LEVEL', dest='upx_compress', default = 'best',
+            parser.add_argument('--upx-compress', metavar='LEVEL', dest='upx_compress', default = '',
                 help = 'Compression level [1-9]: 1 - compress faster, 9 - compress better. Can also be "best" for greatest compression level possible.')
 
             parser.add_argument('--upx-args', metavar='ARGS', dest='upx_args',
@@ -52,7 +52,9 @@ class PackerUpx(IPacker):
             try:
                 level = self.options['upx_compress']
 
-                if level == 'best':
+                if level == '':
+                    self.upx_args += ' '
+                elif level == 'best':
                     self.upx_args += ' --best'
                 else:
                     level = int(self.options['upx_compress'])
