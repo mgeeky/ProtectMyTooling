@@ -1,0 +1,24 @@
+<project outputDir="" baseDir="" xmlns="http://confuser.codeplex.com">
+  <rule pattern="true" inherit="false">
+    <protection id="Hide Methods" />
+    <protection id="erase headers" />
+    <protection id="local to field" />
+    <protection id="anti tamper" />
+    <protection id="Calli Protection" />
+    <protection id="MD5 Hash Check" />
+    <protection id="Mutations" />
+    <protection id="constants" />
+    <protection id="ctrl flow" />
+    <protection id="anti debug" />
+    <protection id="Fake Native" />
+    <protection id="invalid metadata" />
+    <protection id="Clean ref proxy" />
+    <protection id="module flood" />
+    <protection id="Rename Module" />
+    <protection id="ref proxy" />
+    <protection id="resources" />
+    <protection id="rename" />
+    <protection id="virt" />
+  </rule>
+  <plugin>KoiVM.Confuser.exe</plugin>
+</project>
