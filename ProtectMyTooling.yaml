@@ -23,7 +23,7 @@ pecloak_args:
 hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
 hyperion_args: 
 
-# Open-Source ConfuserEx
+# Open-Source neo-ConfuserEx
 confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
 confuserex_args: 
