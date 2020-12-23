@@ -24,7 +24,7 @@ hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
 hyperion_args: 
 
 # Open-Source ConfuserEx
-confuserex_path: "contrib\\ConfuserEx.v1.4.1\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
+confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
 confuserex_args: 
 

@@ -1,0 +1,2 @@
+REAL_KEY_SIZE equ 0x6
+REAL_KEY_RANGE equ 0x4
