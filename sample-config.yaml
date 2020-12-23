@@ -30,10 +30,8 @@ hyperion_args:
 #
 # Open-Source neo-ConfuserEx
 #
-#confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
-#confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
-confuserex_path: "contrib\\ConfuserEx-Mod-By-Bed.v1.4.1\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\beds-maximum.crproj"
+confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
 confuserex_args: 
 
 
