@@ -308,8 +308,8 @@ def main():
         except lib.utils.ShellCommandReturnedError as e:
             logger.err("Error occured while trying to disable AV (Continuing anyway):\n{}".format(str(e)))
 
-        infile = options['infile']
-        outfile = options['outfile']
+        infile = os.path.abspath(options['infile'])
+        outfile = os.path.abspath(options['outfile'])
 
         if os.path.isfile(infile):
             out = processFile(True, infile, outfile)
