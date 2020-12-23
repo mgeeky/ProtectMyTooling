@@ -208,7 +208,7 @@ Adjusted project file:
             out = shell(self.logger, IPacker.build_cmdline(
                 PackerEnigma.enigma_cmdline_template,
                 os.path.basename(path),
-                fp.name,
+                tmpname,
                 '',
                 ''
             ))
