@@ -12,7 +12,8 @@ class PackerUpx(IPacker):
     upx_cmdline_template = '<command> <options> -o <outfile> <infile>'
 
     default_options = {
-        'upx_compress': 'best',
+        'upx_compress': '',
+        'upx_corrupt': 1,
     }
 
     def __init__(self, logger, options):
@@ -97,7 +98,7 @@ class PackerUpx(IPacker):
                 return True
 
     def tamper(self, outfile):
-        self.logger.info(f'File compressed with UPX correctly. Tampering output artifact now...')
+        self.logger.info(f'Corrupting output UPX artifact so that decompression won\'t be easy...')
 
         pe = pefile.PE(outfile)
 
