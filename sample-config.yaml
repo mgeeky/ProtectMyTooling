@@ -12,6 +12,7 @@ enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitori
 #
 upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"
 upx_compress: best
+upx_corrupt: 1
 upx_args: 
 
 #

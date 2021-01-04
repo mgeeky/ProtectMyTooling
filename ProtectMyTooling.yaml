@@ -10,6 +10,7 @@ debug: 0
 # UPX (x86, x64)
 upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"
 upx_compress: 
+upx_corrupt: 1
 upx_args: 
 
 
@@ -24,5 +25,7 @@ hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
 hyperion_args: 
 
 # Open-Source neo-ConfuserEx
-confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
+#confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
+#confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
+confuserex_path: "contrib\\ConfuserEx-Mod-By-Bed\\Confuser.CLI.exe"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\beds-maximum.crproj"
