@@ -104,8 +104,10 @@ class Logger:
 
     # Info shall be used as an ordinary logging facility, for every desired output.
     def info(self, txt, forced = False, **kwargs):
-        if forced or (self.options['verbose'] or \
+        if (self.options['verbose'] or \
             self.options['debug'] or (type(self.options['log']) == str and self.options['log'] != 'none')):
+            Logger.out(txt, self.options['log'], 'info', **kwargs)
+        elif forced:
             Logger.out(txt, self.options['log'], 'info', **kwargs)
 
     def dbg(self, txt, **kwargs):

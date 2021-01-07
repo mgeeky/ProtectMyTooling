@@ -134,7 +134,35 @@ alias protected-execute-assembly {
         return;
     }
 
-    btask($bid, "Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+    $algo = "MD5";
+    $md = [java.security.MessageDigest getInstance: $algo];
+    $digest = 0;
+    $hash = "";
+
+    try {
+        $f = openf($generatedlocalpath);
+        $content = readb($f, -1);
+        if($content is $null) {
+            berror($1, "Could not generate protected version of file to be uploaded. Please review logfile.")
+        }
+
+        $digest = [$md digest: $content];
+        $hash = [javax.xml.bind.DatatypeConverter printHexBinary: $digest];
+        $hash = lc($hash);
+
+        closef($f);
+    }
+    catch $message { 
+        berror($1, "Could not read contents of file to upload. Error: $message (file path: $generatedlocalpath )");
+        return;
+    }
+
+    if(strlen($hash) == 0) {
+        btask($bid, "Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+    }
+    else {
+        btask($bid, "Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
+    }
     bexecute_assembly!($bid, $generatedlocalpath, $args);
 }
 
@@ -307,7 +335,7 @@ sub executePacker {
             $output = readb($f, -1);
 
             if ($output is $null) {
-                throw "Read empty file";
+                berror($1, "Could not generate protected version of file to be uploaded. Please review logfile.")
             }
             closef($f);
 

@@ -211,7 +211,7 @@ Adjusted project file:
                 tmpname,
                 '',
                 ''
-            ))
+            ), output = True)
 
         except Exception as e:
             raise

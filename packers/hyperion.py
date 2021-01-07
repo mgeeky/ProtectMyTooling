@@ -62,7 +62,7 @@ class PackerHyperion(IPacker):
                 self.hyperion_args,
                 infile,
                 outfile
-            ))
+            ), output = True)
 
         except Exception as e:
             raise

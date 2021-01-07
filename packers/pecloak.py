@@ -83,7 +83,7 @@ class PackerPeCloak(IPacker):
                 self.pecloak_args,
                 '',
                 outfile
-            ))
+            ), output = True)
             succeeded = True
 
         except ShellCommandReturnedError as e:

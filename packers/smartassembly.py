@@ -206,7 +206,7 @@ Adjusted project file:
                 infile,
                 outfile
             )
-            out = shell(self.logger, cmdline)
+            out = shell(self.logger, cmdline, output = True)
 
             status = os.path.isfile(outfile)
 

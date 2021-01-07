@@ -212,6 +212,7 @@ def main(argv):
 
     config = argv[1]
     infile = argv[2]
+    settings['output'] = ''
 
     if len(argv) == 4:
         settings['output'] = argv[3]
@@ -274,7 +275,6 @@ def main(argv):
             
             output('[.] File is a native {} EXE executable.'.format(arch))
 
-
     cmdline = '"{}" "{}" -c "{}" -v {} "{}" "{}"'.format(
         settings['python3_interpreter_path'],
         os.path.join(settings['protect_my_tooling_dir'], 'ProtectMyTooling.py'),
@@ -287,8 +287,15 @@ def main(argv):
     output('RUNNING ProtectMyTooling with command line:\n\t' + cmdline + '\n\n')
     result = shell(cmdline)
 
+    if settings['output']:
+        logfile = settings['output'] + ".tmp"
+        if os.path.isfile(logfile):
+            with open(logfile) as f:
+                result = f.read()
+
     output('Result:')
     output(result)
+
     output('\nOUTPUT-FILE: "{}"'.format(outfile))
 
     return True

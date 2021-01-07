@@ -32,7 +32,7 @@ def getClrAssemblyName(path):
     except:
         return ''
 
-def shell2(cmd, alternative = False):
+def shell2(cmd, alternative = False, stdErrToStdout = False):
     CREATE_NO_WINDOW = 0x08000000
     si = subprocess.STARTUPINFO()
     si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -74,22 +74,31 @@ def shell2(cmd, alternative = False):
     status = outs.decode(errors='ignore').strip()
 
     if len(errs) > 0:
-        raise ShellCommandReturnedError('''
+        error = '''
 Running shell command ({}) failed:
 
 ---------------------------------------------
 {}
 ---------------------------------------------
-'''.format(cmd, errs.decode(errors='ignore')))
+'''.format(cmd, errs.decode(errors='ignore'))
+
+        if stdErrToStdout:
+            return error
+            
+        raise ShellCommandReturnedError(error)
 
     return status
 
-def shell(logger, cmd, alternative = False):
+def shell(logger, cmd, alternative = False, output = False):
     logger.info(' Running shell:\n\tcmd> {}'.format(cmd))
     
-    out = shell2(cmd, alternative)
+    out = shell2(cmd, alternative, stdErrToStdout = output)
 
-    logger.dbg('shell("{}") returned:\n"{}"'.format(cmd, out))
+    if not output:
+        logger.dbg('shell("{}") returned:\n"{}"'.format(cmd, out))
+    else:
+        logger.info('shell("{}") returned:\n"{}"'.format(cmd, out), forced = True)
+
     return out
 
 def configPath(basepath, path):

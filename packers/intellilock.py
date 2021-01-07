@@ -59,7 +59,7 @@ class PackerIntellilock(IPacker):
                 self.intellilock_args,
                 infile,
                 outfile
-            ))
+            ), output = True)
 
         except Exception as e:
             raise

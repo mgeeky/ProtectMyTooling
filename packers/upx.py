@@ -89,7 +89,7 @@ class PackerUpx(IPacker):
             self.upx_args,
             infile,
             outfile
-        ))
+        ), output = True)
 
         if os.path.isfile(outfile):
             if self.options['upx_corrupt'] == 1:

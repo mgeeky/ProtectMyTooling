@@ -71,6 +71,6 @@ class PackerNetshrink(IPacker):
             self.netshrink_args,
             infile,
             outfile
-        ))
+        ), output = True)
 
         return os.path.isfile(outfile)

@@ -138,7 +138,6 @@ def parse_options(logger, opts, version):
         try:
             with open(opts['log'], 'w') as f:
                 pass
-            opts['log'] = opts['log']
         except Exception as e:
             raise Exception('[ERROR] Failed to open log file for writing. Error: "%s"' % e)
     else:
