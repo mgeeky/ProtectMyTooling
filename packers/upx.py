@@ -37,7 +37,7 @@ class PackerUpx(IPacker):
             parser.add_argument('--upx-compress', metavar='LEVEL', dest='upx_compress', default = '',
                 help = 'Compression level [1-9]: 1 - compress faster, 9 - compress better. Can also be "best" for greatest compression level possible.')
 
-            parser.add_argument('--upx-corrupt', metavar='bool', type=int, choices=range(0, 1), default = 1,
+            parser.add_argument('--upx-corrupt', metavar='bool', type=int, choices=range(0, 2), default = 1,
                 dest='upx_corrupt', help = 'If set to 1 enables UPX metadata corruption to prevent "upx -d" unpacking. This corruption won\'t affect executable\'s ability to launch. Default: enabled (1)')
 
             parser.add_argument('--upx-args', metavar='ARGS', dest='upx_args',
