@@ -31,9 +31,8 @@ hyperion_args:
 #
 # Open-Source neo-ConfuserEx
 #
-confuserex_path: "contrib\\neo-ConfuserEx.v1.0.0\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\neo-maximum.crproj"
-confuserex_args: 
+confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
 
 
 #

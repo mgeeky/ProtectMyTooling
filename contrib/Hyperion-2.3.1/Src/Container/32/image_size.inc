@@ -1,1 +1,1 @@
-IMAGE_SIZE equ 0x3e000
+IMAGE_SIZE equ 0x4b000
