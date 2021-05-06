@@ -63,8 +63,8 @@ def parse_options(logger, opts, version):
     parser.add_argument('infile', metavar='_input', help='Input file to be packed/protected.')
     parser.add_argument('outfile', metavar='output', help='Output file constituing generated sample.')
 
-    parser.add_argument("-c", "--config", dest='config', default='multi-pack-config.yaml',
-        help="External configuration file. Default: multi-pack-config.yml")
+    parser.add_argument("-c", "--config", dest='config', default='ProtectMyTooling.yaml',
+        help="External configuration file. Default: ProtectMyTooling.yaml")
     parser.add_argument("-a", "--arch", dest='arch', default='',
         help="Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise (shellcode) you'll need to specify it.")
 
