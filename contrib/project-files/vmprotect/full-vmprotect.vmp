@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Document Version="2">
+    <Protection InputFileName="Z:\__RED_LAB_1\infect-me\protectors-test\raw\beacon64.exe" Options="890824" VMCodeSectionName=".adata" LicenseDataFileName="Z:\__RED_LAB_1\infect-me\protectors-test\raw\vmprotect-beacon64.exe" OutputFileName="Z:\__RED_LAB_1\infect-me\protectors-test\tests2\vmprotect-beacon64.exe">
+        <Messages>
+            <Message Id="0"></Message>
+            <Message Id="1"></Message>
+            <Message Id="2"></Message>
+            <Message Id="3"></Message>
+        </Messages>
+        <Folders />
+        <Procedures>
+            <Procedure MapAddress="EntryPoint" Options="0" CompilationType="2" />
+        </Procedures>
+        <Objects />
+    </Protection>
+    <DLLBox>
+        <Folders />
+    </DLLBox>
+    <Script />
+</Document>

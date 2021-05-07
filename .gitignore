@@ -1,5 +1,5 @@
 *.pyc
-protect-my-tooling-config.yaml
-/contrib/*
 /notes.txt
 /CobaltStrike/cobaltProtectMyTooling.conf
+contrib/*
+!contrib/project-files/
