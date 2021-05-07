@@ -22,13 +22,13 @@ pecloak_args:
 
 
 # Hyperion (x86, x64)
-hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
+hyperion_path: "contrib\\Hyperion\\hyperion.exe"
 hyperion_args: 
 
 #
 # Open-Source ConfuserEx-v1.5.0 forked by mkaring
 #
-confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
+confuserex_path: "contrib\\ConfuserEx\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
 
 

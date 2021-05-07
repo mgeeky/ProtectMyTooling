@@ -3,3 +3,7 @@
 /CobaltStrike/cobaltProtectMyTooling.conf
 contrib/*
 !contrib/project-files/
+!contrib/Hyperion
+!contrib/ConfuserEx
+!contrib/upx
+!contrib/peCloakCapstone

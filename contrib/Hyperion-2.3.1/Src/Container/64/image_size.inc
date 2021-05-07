@@ -1,1 +1,0 @@
-IMAGE_SIZE equ 0x4b6000
