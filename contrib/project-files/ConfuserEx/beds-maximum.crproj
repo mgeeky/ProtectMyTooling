@@ -3,7 +3,8 @@
     <protection id="Hide Methods" />
     <protection id="erase headers" />
     <protection id="local to field" />
-    <protection id="anti tamper" />
+    <!-- According to https://github.com/mkaring/ConfuserEx/issues/64 triggers AV detection -->
+    <!--<protection id="anti tamper" />-->
     <protection id="MD5 Hash Check" />
     <protection id="Mutations" />
     <protection id="anti debug" />
@@ -19,6 +20,7 @@
     <!-- <protection id="module flood" /> -->
     <!-- <protection id="constants" /> -->
   </rule>
+  <!-- Can trigger AVs detections. Useful only for merging multiple assemblies into one. -->
   <!--<packer id="compressor" />-->
   <!--<plugin>KoiVM.Confuser.exe</plugin>-->
 </project>

@@ -90,15 +90,15 @@ class PackerConfuserEx(IPacker):
         newProject = ET.tostring(et, encoding='utf-8')
         projFile.write(newProject)
 
-        if self.options['confuserex_save_generated_project_file']:
-            self.logger.dbg('''
+        self.logger.dbg('''
 ----------------------------------
 Adjusted project file:
 ----------------------------------
 
 {}
 '''.format(newProject.decode()))
-        
+
+        if self.options['confuserex_save_generated_project_file']:        
             suf = '.crproj'
             with open(outfile + suf, 'w') as foo:
                 foo.write(newProject.decode())

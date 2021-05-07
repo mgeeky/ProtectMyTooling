@@ -1,8 +1,10 @@
 <project outputDir="" baseDir="" xmlns="http://confuser.codeplex.com">
-  <rule pattern="true" preset="maximum" inherit="false">
+  <rule pattern="true" inherit="false">
     <protection id="anti debug" />
     <protection id="anti dump" />
     <protection id="anti ildasm" />
+    <!-- According to https://github.com/mkaring/ConfuserEx/issues/64 triggers AV detection -->
+    <!-- However, lets roll the dices with this one. -->
     <protection id="anti tamper" />
     <protection id="constants" />
     <protection id="ctrl flow" />
@@ -10,7 +12,9 @@
     <protection id="invalid metadata" />
     <protection id="ref proxy" />
     <protection id="resources" />
-    <protection id="typescramble" />
+    <!-- mkaring recommends to not use it as its broken -->
+    <!--<protection id="typescramble" />-->
   </rule>
-  <packer id="compressor" />
+  <!-- Can trigger AVs detections. Useful only for merging multiple assemblies into one. -->
+  <!--<packer id="compressor" />-->
 </project>

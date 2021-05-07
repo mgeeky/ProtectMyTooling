@@ -3,7 +3,8 @@
     <protection id="anti debug" />
     <protection id="anti dump" />
     <protection id="anti ildasm" />
-    <protection id="anti tamper" />
+    <!-- According to https://github.com/mkaring/ConfuserEx/issues/64 triggers AV detection -->
+    <!--<protection id="anti tamper" />-->
     <protection id="constants" />
     <protection id="ctrl flow" />
     <protection id="harden" />
@@ -11,6 +12,9 @@
     <protection id="ref proxy" />
     <protection id="resources" />
     <protection id="rename" />
+    <!-- mkaring recommends to not use it as its broken -->
+    <!--<protection id="typescramble" />-->
   </rule>
-  <packer id="compressor" />
+  <!-- Can trigger AVs detections. Useful only for merging multiple assemblies into one. -->
+  <!--<packer id="compressor" />-->
 </project>

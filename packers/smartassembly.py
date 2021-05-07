@@ -159,15 +159,15 @@ class PackerSmartAssembly(IPacker):
         newProject = ET.tostring(et, encoding='utf-8')
         projFile.write(newProject)
 
-        if self.options['smartassembly_save_generated_project_file']:
-            self.logger.dbg('''
+        self.logger.dbg('''
 ----------------------------------
 Adjusted project file:
 ----------------------------------
 
 {}
 '''.format(newProject.decode()))
-        
+
+        if self.options['smartassembly_save_generated_project_file']:        
             with open(outfile + '.nrproj', 'w') as foo:
                 foo.write(newProject.decode())
 

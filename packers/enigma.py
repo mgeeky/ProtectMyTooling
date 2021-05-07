@@ -168,15 +168,15 @@ class PackerEnigma(IPacker):
         newProject = ET.tostring(et, encoding='utf-8')
         projFile.write(newProject)
 
-        if self.options['enigma_save_generated_project_file']:
-            self.logger.dbg('''
+        self.logger.dbg('''
 ----------------------------------
 Adjusted project file:
 ----------------------------------
 
 {}
 '''.format(newProject.decode()))
-        
+
+        if self.options['enigma_save_generated_project_file']:        
             suf = '.enigma'
             if arch == 'x64': suf += '64'
 
