@@ -27,6 +27,7 @@ options = {
     'silent' : False,
     'colors' : False,
     'config' : '',
+    'timeout' : 60,
     'arch' : '',
     'log': None,
     'packers': '',

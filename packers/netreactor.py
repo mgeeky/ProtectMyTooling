@@ -214,7 +214,7 @@ Adjusted project file:
                 self.netreactor_args + ' -project "{}"'.format(fp.name),
                 infile,
                 ''
-            ), output = self.options['verbose'] or self.options['debug'])
+            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
             status = (' - Successfully Protected!' in out)
 

@@ -89,7 +89,7 @@ class PackerUpx(IPacker):
             self.upx_args,
             infile,
             outfile
-        ), output = self.options['verbose'] or self.options['debug'])
+        ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
         if os.path.isfile(outfile):
             if self.options['upx_corrupt'] == 1:

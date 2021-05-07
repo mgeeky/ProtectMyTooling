@@ -78,7 +78,7 @@ class PackerThemida(IPacker):
                 self.themida_args + ' /protect "{}"'.format(project),
                 infile,
                 outfile
-            ))
+            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
         except Exception as e:
             raise

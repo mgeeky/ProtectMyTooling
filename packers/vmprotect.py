@@ -64,7 +64,7 @@ class PackerVMProtect(IPacker):
                 self.vmprotect_args + ' -pf "{}"'.format(self.options['vmprotect_project_file']),
                 infile,
                 outfile
-            ), output = self.options['verbose'] or self.options['debug'])
+            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
         except Exception as e:
             raise

@@ -206,7 +206,8 @@ Adjusted project file:
                 infile,
                 outfile
             )
-            out = shell(self.logger, cmdline, output = self.options['verbose'] or self.options['debug'])
+            out = shell(self.logger, cmdline, 
+                output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
             status = os.path.isfile(outfile)
 

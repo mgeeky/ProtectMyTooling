@@ -32,7 +32,7 @@ def getClrAssemblyName(path):
     except:
         return ''
 
-def shell2(cmd, alternative = False, stdErrToStdout = False):
+def shell2(cmd, alternative = False, stdErrToStdout = False, timeout = 60):
     CREATE_NO_WINDOW = 0x08000000
     si = subprocess.STARTUPINFO()
     si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -47,7 +47,7 @@ def shell2(cmd, alternative = False, stdErrToStdout = False):
             capture_output=True, 
             startupinfo=si, 
             creationflags=CREATE_NO_WINDOW,
-            timeout=60
+            timeout=timeout
             )
 
         outs = out.stdout
@@ -63,7 +63,7 @@ def shell2(cmd, alternative = False, stdErrToStdout = False):
             creationflags=CREATE_NO_WINDOW
         )
         try:
-            outs, errs = proc.communicate(timeout=60)
+            outs, errs = proc.communicate(timeout=timeout)
             proc.wait()
 
         except TimeoutExpired:
@@ -89,10 +89,10 @@ Running shell command ({}) failed:
 
     return status
 
-def shell(logger, cmd, alternative = False, output = False):
-    logger.info(' Running shell:\n\tcmd> {}'.format(cmd))
+def shell(logger, cmd, alternative = False, output = False, timeout = 60):
+    logger.info(' Running shell (timeout: {}):\n\tcmd> {}'.format(timeout, cmd))
     
-    out = shell2(cmd, alternative, stdErrToStdout = output)
+    out = shell2(cmd, alternative, stdErrToStdout = output, timeout = timeout)
 
     if not output:
         logger.dbg('shell("{}") returned:\n"{}"'.format(cmd, out))

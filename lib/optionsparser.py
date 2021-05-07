@@ -65,6 +65,8 @@ def parse_options(logger, opts, version):
 
     parser.add_argument("-c", "--config", dest='config', default='ProtectMyTooling.yaml',
         help="External configuration file. Default: ProtectMyTooling.yaml")
+    parser.add_argument('-t', '--timeout', dest='timeout', default=0, type=int, 
+        help = 'Command execution timeout. Default: 60 seconds.')
     parser.add_argument("-a", "--arch", dest='arch', default='',
         help="Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise (shellcode) you'll need to specify it.")
 
@@ -99,6 +101,7 @@ def parse_options(logger, opts, version):
     params = parser.parse_args()
 
     opts['packerslist'] = params.packers.split(',')
+    opts['timeout'] = int(params.timeout)
 
     for i in range(len(allPackersList)):
         allPackersList[i] = os.path.basename(allPackersList[i]).replace('.py', '')
@@ -128,6 +131,14 @@ def parse_options(logger, opts, version):
 
     else:
         opts.update(vars(params))
+
+    if type(opts['timeout']) == str:
+        if opts['timeout'] == '':
+            opts['timeout'] = 60
+        else:
+            opts['timeout'] = int(opts['timeout'])
+    elif opts['timeout'] == 0:
+        opts['timeout'] = 60
 
     if opts['silent'] and opts['log']:
         parser.error("Options -s and -w are mutually exclusive.")
@@ -163,7 +174,13 @@ def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams):
             if fileparams[k] == None: fileparams[k] = ''
 
             if isEmpty(cmdlineparams[k]) and (type(fileparams[k]) == bool or not isEmpty(fileparams[k])):
-                    opts[k] = fileparams[k]
+                opts[k] = fileparams[k]
+            elif isEmpty(cmdlineparams[k]) and not isEmpty(fileparams[k]):
+                opts[k] = fileparams[k]
+            elif type(cmdlineparams[k]) == int and cmdlineparams[k] == 0 and type(fileparams[k]) == int and fileparams[k] > 0:
+                opts[k] = fileparams[k]
+            elif type(fileparams[k]) == int and fileparams[k] == 0 and type(cmdlineparams[k]) == int and cmdlineparams[k] > 0:
+                opts[k] = cmdlineparams[k]
             else:
                 opts[k] = cmdlineparams[k] 
 

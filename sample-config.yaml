@@ -1,4 +1,6 @@
 verbose: 0
+debug: 0
+timeout: 60
 
 #
 # Manages Windows Defender

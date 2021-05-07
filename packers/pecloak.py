@@ -83,7 +83,7 @@ class PackerPeCloak(IPacker):
                 self.pecloak_args,
                 '',
                 outfile
-            ), output = self.options['verbose'] or self.options['debug'])
+            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
             succeeded = True
 
         except ShellCommandReturnedError as e:
@@ -98,7 +98,7 @@ class PackerPeCloak(IPacker):
                         self.pecloak_args + ' -a',
                         '',
                         outfile
-                    ))
+                    ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
                     succeeded = True
 
                 except ShellCommandReturnedError as e:

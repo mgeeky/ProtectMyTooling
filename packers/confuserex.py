@@ -122,7 +122,7 @@ Adjusted project file:
                     self.confuserex_args,
                     tmpname,
                     ''
-                ), output = self.options['verbose'] or self.options['debug'])
+                ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
                 if os.path.isfile(generatedOutFile):
                     shutil.move(generatedOutFile, outfile)

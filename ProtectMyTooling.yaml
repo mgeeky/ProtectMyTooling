@@ -1,6 +1,7 @@
 
 verbose: 0
 debug: 0
+timeout: 180
 
 #check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
 #disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
