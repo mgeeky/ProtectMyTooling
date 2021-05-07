@@ -71,6 +71,6 @@ class PackerNetshrink(IPacker):
             self.netshrink_args,
             infile,
             outfile
-        ), output = True)
+        ), output = self.options['verbose'] or self.options['debug'])
 
         return os.path.isfile(outfile)

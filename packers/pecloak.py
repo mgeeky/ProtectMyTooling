@@ -83,7 +83,7 @@ class PackerPeCloak(IPacker):
                 self.pecloak_args,
                 '',
                 outfile
-            ), output = True)
+            ), output = self.options['verbose'] or self.options['debug'])
             succeeded = True
 
         except ShellCommandReturnedError as e:

@@ -62,7 +62,7 @@ class PackerHyperion(IPacker):
                 self.hyperion_args,
                 infile,
                 outfile
-            ), output = True)
+            ), output = self.options['verbose'] or self.options['debug'])
 
         except Exception as e:
             raise

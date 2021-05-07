@@ -211,7 +211,7 @@ Adjusted project file:
                 tmpname,
                 '',
                 ''
-            ), output = True)
+            ), output = self.options['verbose'] or self.options['debug'])
 
         except Exception as e:
             raise

@@ -214,7 +214,7 @@ Adjusted project file:
                 self.netreactor_args + ' -project "{}"'.format(fp.name),
                 infile,
                 ''
-            ), output = True)
+            ), output = self.options['verbose'] or self.options['debug'])
 
             status = (' - Successfully Protected!' in out)
 

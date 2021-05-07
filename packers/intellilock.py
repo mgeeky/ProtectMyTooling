@@ -59,7 +59,7 @@ class PackerIntellilock(IPacker):
                 self.intellilock_args,
                 infile,
                 outfile
-            ), output = True)
+            ), output = self.options['verbose'] or self.options['debug'])
 
         except Exception as e:
             raise

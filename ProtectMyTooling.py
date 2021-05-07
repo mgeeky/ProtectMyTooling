@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 # Author:
-#   Mariusz B. / mgeeky, '20
+#   Mariusz B. / mgeeky, '20-'21
 #   <mb [at] binary-offensive.com>
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.1'
+VERSION = '0.2'
 
 import os
 import pefile
@@ -145,9 +145,8 @@ def validateOutfile(outfile):
         return False
 
 def testRun(outfile):
-    print('Running application to test it...')
-
-    shell(logger, '"{}" {}'.format(outfile, options['cmdline']))
+    print('\n\nRunning application to test it...\n')
+    print(shell(logger, '"{}" {}'.format(outfile, options['cmdline'])))
 
 def processFile(singleFile, infile, _outfile):
     result = False
