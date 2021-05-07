@@ -28,7 +28,7 @@ hyperion_args:
 # Open-Source ConfuserEx-v1.5.0 forked by mkaring
 #
 confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
 
 
 #
