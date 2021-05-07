@@ -1,5 +1,5 @@
 
-verbose: 1
+verbose: 0
 debug: 0
 
 #check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
@@ -35,7 +35,7 @@ confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.cr
 # VMProtect
 #
 vmprotect_path: "contrib\\VMProtect\\VMProtect_Con.exe"
-vmprotect_project_file: "contrib\\vmprotect-projects\\full-vmprotect.vmp"
+vmprotect_project_file: "contrib\\project-files\\vmprotect\\full-vmprotect.vmp"
 vmprotect_args: 
 
 
@@ -44,5 +44,5 @@ vmprotect_args:
 #
 themida_path_x86: "contrib\\Themida\\Themida.exe"
 themida_path_x64: "contrib\\Themida\\Themida64.exe"
-themida_project_file: "contrib\\themida-projects\\advanced-tiger-red.tmd"
+themida_project_file: "contrib\\project-files\\themida\\advanced-tiger-red.tmd"
 themida_args: 
