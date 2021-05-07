@@ -287,7 +287,7 @@ def main():
     print('''
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20, <mb@binary-offensive.com>
+        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
         v{}
 '''.format(VERSION))
 
