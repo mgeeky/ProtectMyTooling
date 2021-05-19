@@ -36,6 +36,16 @@ hyperion_args:
 confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
 
+#
+# Call Obfuscator
+#
+callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
+callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
+callobf_config: generate-automatically
+#callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
+
+
+
 
 #
 # Themida (x86, x64)
