@@ -47,3 +47,12 @@ themida_path_x86: "contrib\\Themida\\Themida.exe"
 themida_path_x64: "contrib\\Themida\\Themida64.exe"
 themida_project_file: "contrib\\project-files\\themida\\advanced-tiger-red.tmd"
 themida_args: 
+
+
+#
+# Call Obfuscator
+#
+callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
+callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
+callobf_config: generate-automatically
+
