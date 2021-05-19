@@ -115,6 +115,9 @@ class PackerCallObf(IPacker):
             if k.lower().endswith('.dll'):
                 k = k[:-4]
 
+            if k not in dodgyFunctions.keys():
+                continue
+
             config += f''';
 ;
 ;
