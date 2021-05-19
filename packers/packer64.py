@@ -41,9 +41,6 @@ class PackerPacker64(IPacker):
                 help = '(required) Path to Packer64 executable.')
 
         else:
-            if not self.options['config']:
-                self.logger.fatal('Config file not specified!')
-
             self.options['packer64_path'] = os.path.abspath(configPath(self.options['config'], self.options['packer64_path']))
 
             if not os.path.isfile(self.options['packer64_path']):
