@@ -112,7 +112,8 @@ class PackerCallObf(IPacker):
         outputImports = {}
 
         for k, v in usedImports.items():
-            if k.lower().endswith('.dll'):
+            k = k.lower()
+            if k.endswith('.dll'):
                 k = k[:-4]
 
             if k not in dodgyFunctions.keys():
