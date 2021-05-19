@@ -58,7 +58,8 @@ class PackerPeCloak(IPacker):
     def process(self, arch, infile, outfile):
 
         if arch != 'x86':
-            raise ArchitectureNotSupported('peCloak supports only x86 binaries!')
+            #raise ArchitectureNotSupported('peCloak supports only x86 binaries!')
+            self.logger.fatal('peCloak supports only x86 PE executables!')
 
         cwd = os.getcwd()
         base = os.path.dirname(self.options['pecloak_script_path'])

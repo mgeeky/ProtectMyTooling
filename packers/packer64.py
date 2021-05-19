@@ -49,7 +49,8 @@ class PackerPacker64(IPacker):
     def process(self, arch, infile, outfile):
 
         if arch != 'x64':
-            self.logger.fatal('This packer supports only x64 PE executables!')
+            #raise ArchitectureNotSupported('Packer64 supports only x64 binaries!')
+            self.logger.fatal('Packer64 supports only x64 PE executables!')
 
         path = self.options['packer64_path']
 
