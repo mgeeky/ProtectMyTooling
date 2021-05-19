@@ -54,6 +54,6 @@ themida_args:
 #
 callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
 callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
-#callobf_config: generate-automatically
-callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
+callobf_config: generate-automatically
+#callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
 

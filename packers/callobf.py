@@ -4,6 +4,7 @@
 from IPacker import IPacker
 from lib.utils import *
 
+import random
 import string
 import os, tempfile
 import pefile
@@ -55,16 +56,100 @@ class PackerCallObf(IPacker):
 
                 self.options['callobf_config'] = os.path.abspath(configPath(self.options['config'], self.options['callobf_config']))
 
-    def generateConfigFile(self):
+
+    def generateConfigFile(self, infile):
         configPath = ''
         config = ''
 
         dodgyFunctions = {}
         beningFunctions = {}
+        usedImports = {}
 
-        #with open('')
+        p = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/dodgy-functions.txt'))
+        r = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/bening-functions.txt'))
+
+        with open(p) as f:
+            for line in f.readlines():
+                line = line.strip()
+                key, value = line.split(',')
+                key = key.strip().lower()
+                value = value.strip()
+
+                if key not in dodgyFunctions.keys():
+                    dodgyFunctions[key] = []
+
+                dodgyFunctions[key].append(value)
+
+            random.shuffle(dodgyFunctions[key])
+
+        with open(r) as f:
+            for line in f.readlines():
+                line = line.strip()
+                key, value = line.split(',')
+                key = key.strip().lower()
+                value = value.strip()
+
+                if key not in beningFunctions.keys():
+                    beningFunctions[key] = []
+
+                beningFunctions[key].append(value)
+
+            random.shuffle(beningFunctions[key])
+
+        pe = pefile.PE(infile)
+
+        print('[.] Before obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())
+
+        self.logger.dbg('Input file PE imports:')
+
+        for entry in pe.DIRECTORY_ENTRY_IMPORT:
+            dll_name = entry.dll.decode('utf-8').lower()
+
+            if dll_name not in usedImports.keys():
+                usedImports[dll_name] = []
+
+            self.logger.dbg(f'\tDLL: {dll_name}')
+            for func in entry.imports:
+                f = func.name.decode('utf-8')
+
+                self.logger.dbg(f'\t\t- {f}')
+                usedImports[dll_name].append(f)
+
+        outputImports = {}
+
+        for k, v in usedImports.items():
+            if k.lower().endswith('.dll'):
+                k = k[:-4]
+
+            config += f''';
+;
+;
+[{k}.dll]
+'''
+
+            for uf in v:
+                randomShot = (random.randint(1, 100) % 3 == 0)
+
+                if uf not in dodgyFunctions[k] and not randomShot: 
+                    continue
+
+                newFun = ''
+                while newFun == '' or newFun in dodgyFunctions[k] or len(newFun) > len(uf):
+                    newFun = random.choice(beningFunctions[k])
+
+                config += f'{uf}={newFun}\r\n'
 
         tmp = tempfile.NamedTemporaryFile(delete=False)
+
+        self.logger.dbg(f'''
+
+Resulting generated CallObfuscator config file:
+------------------------------------------------------
+
+{config}
+
+------------------------------------------------------
+''')
 
         try:
             tmp.write(config.encode())
@@ -74,13 +159,14 @@ class PackerCallObf(IPacker):
 
         return configPath
 
+
     def process(self, arch, infile, outfile):
         configPath = self.options['callobf_config']
         autoGen = False
 
         if configPath == 'generate-automatically':
             autoGen = True
-            configPath = self.generateConfigFile()
+            configPath = self.generateConfigFile(infile)
 
         path = self.options['callobf_path_x86']
         if arch == 'x64':
@@ -104,4 +190,56 @@ class PackerCallObf(IPacker):
         if(autoGen):
             os.unlink(configPath)
 
-        return os.path.isfile(outfile)
+        ret = os.path.isfile(outfile)
+
+        if ret:
+            self.renameSection(outfile)
+
+        return ret
+
+    def renameSection(self, outfile):
+        self.logger.info(f'Renaming .cobf PE section...')
+
+        pe = pefile.PE(outfile)
+
+        newSectionNames = (
+            '.info',
+            '.meta',
+            '.udata',
+            '.jdata',
+            '.ldata',
+            '.vdata',
+            '.hinfo',
+            '.finfo',
+            '.blob',
+            '.bcert',
+            '.bsec',
+            '.odat',
+            '.adat',
+            '.edat',
+            '.tdat',
+            '.cdat',
+        )
+
+        section_table_offset = (pe.DOS_HEADER.e_lfanew + 4 + 
+            pe.FILE_HEADER.sizeof() + pe.FILE_HEADER.SizeOfOptionalHeader)
+
+        sectnum = 0
+        for sect in pe.sections:
+            section_offset = section_table_offset + sectnum * 0x28
+            sectnum += 1
+
+            if sect.Name.decode().lower().startswith('.cobf'):
+                newSectName = random.choice(newSectionNames)
+                newname = newSectName.encode() + ((8 - len(newSectName)) * b'\x00')
+                
+                self.logger.dbg('\tRenamed CallObfuscator section ({}) => ({})'.format(
+                    sect.Name.decode(), newSectName
+                ))
+                
+                pe.set_bytes_at_offset(section_offset, newname)
+                break
+
+        pe.parse_sections(section_table_offset)
+        pe.write(outfile)
+        print('[.] After obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())

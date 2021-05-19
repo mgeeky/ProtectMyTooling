@@ -50,7 +50,7 @@ def parse_options(logger, opts, version):
         num = 0
         for name, packer in packersloader.get_packers().items():
             num += 1
-            print('[{0}] Packer: {1:14} - {2}'.format(num, name, packer.get_desc().strip()))
+            print('[{0:2}] Packer: {1:14} - {2}'.format(num, name, packer.get_desc().strip()))
 
         sys.exit(0)
 
