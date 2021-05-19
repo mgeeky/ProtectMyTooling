@@ -27,7 +27,7 @@ class PackerCallObf(IPacker):
 
     @staticmethod
     def get_desc():
-        return '(CallObfuscator) Handy tool to obscure PE imported calls by hiding dangerous calls behind innocuous ones.'
+        return 'CallObfuscator - An open-source, handy tool to obscure PE imported calls by hiding dangerous calls behind innocuous ones.'
 
     def help(self, parser):
         if parser != None:
@@ -66,7 +66,7 @@ class PackerCallObf(IPacker):
         usedImports = {}
 
         p = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/dodgy-functions.txt'))
-        r = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/bening-functions.txt'))
+        r = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/all-functions.txt'))
 
         with open(p) as f:
             for line in f.readlines():
@@ -80,8 +80,6 @@ class PackerCallObf(IPacker):
 
                 dodgyFunctions[key].append(value)
 
-            random.shuffle(dodgyFunctions[key])
-
         with open(r) as f:
             for line in f.readlines():
                 line = line.strip()
@@ -94,11 +92,7 @@ class PackerCallObf(IPacker):
 
                 beningFunctions[key].append(value)
 
-            random.shuffle(beningFunctions[key])
-
         pe = pefile.PE(infile)
-
-        print('[.] Before obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())
 
         self.logger.dbg('Input file PE imports:')
 
@@ -126,18 +120,17 @@ class PackerCallObf(IPacker):
 ;
 [{k}.dll]
 '''
-
-            for uf in v:
+            for oldFun in v:
                 randomShot = (random.randint(1, 100) % 3 == 0)
 
-                if uf not in dodgyFunctions[k] and not randomShot: 
+                if oldFun not in dodgyFunctions[k] and not randomShot: 
                     continue
 
                 newFun = ''
-                while newFun == '' or newFun in dodgyFunctions[k] or len(newFun) > len(uf):
+                while newFun == '' or newFun in dodgyFunctions[k] or len(newFun) >= len(oldFun):
                     newFun = random.choice(beningFunctions[k])
 
-                config += f'{uf}={newFun}\r\n'
+                config += f'{oldFun}={newFun}\r\n'
 
         tmp = tempfile.NamedTemporaryFile(delete=False)
 
@@ -163,6 +156,10 @@ Resulting generated CallObfuscator config file:
     def process(self, arch, infile, outfile):
         configPath = self.options['callobf_config']
         autoGen = False
+
+        pe = pefile.PE(infile)
+        print('[.] Before obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())
+        pe.close()
 
         if configPath == 'generate-automatically':
             autoGen = True

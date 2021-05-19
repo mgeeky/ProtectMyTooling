@@ -311,6 +311,9 @@ def main():
         infile = os.path.abspath(options['infile'])
         outfile = os.path.abspath(options['outfile'])
 
+        if infile == outfile:
+            logger.fatal('Input file is the same as output file!')
+
         if os.path.isfile(infile):
             out = processFile(True, infile, outfile)
 
