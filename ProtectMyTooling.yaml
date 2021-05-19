@@ -57,3 +57,8 @@ callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
 #callobf_config: generate-automatically
 callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
 
+
+#
+# jadams/Packer64
+#
+packer64_path: "contrib\\packer64\\Packer.exe"

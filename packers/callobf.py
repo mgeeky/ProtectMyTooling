@@ -9,6 +9,12 @@ import string
 import os, tempfile
 import pefile
 
+#
+# Name:   CallObfuscator 
+# URL:    https://github.com/d35ha/CallObfuscator
+# Author: Mustafa Mahmoud, @d35ha
+#
+
 class PackerCallObf(IPacker):
     default_callobf_args = ''
     callobf_cmdline_template = '<command> <infile> <outfile>'
@@ -27,7 +33,7 @@ class PackerCallObf(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'CallObfuscator - An open-source, handy tool to obscure PE imported calls by hiding dangerous calls behind innocuous ones.'
+        return 'CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones'
 
     def help(self, parser):
         if parser != None:
@@ -151,6 +157,7 @@ Resulting generated CallObfuscator config file:
         try:
             tmp.write(config.encode())
             configPath = tmp.name
+
         finally:
             tmp.close()
 

@@ -7,3 +7,5 @@ contrib/*
 !contrib/ConfuserEx
 !contrib/upx
 !contrib/peCloakCapstone
+!contrib/packer64
+!contrib/callobf
