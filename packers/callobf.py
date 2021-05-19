@@ -67,7 +67,8 @@ class PackerCallObf(IPacker):
         tmp = tempfile.NamedTemporaryFile(delete=False)
 
         try:
-            tmp.write(config)
+            tmp.write(config.encode())
+            configPath = tmp.name
         finally:
             tmp.close()
 
