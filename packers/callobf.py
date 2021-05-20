@@ -110,6 +110,7 @@ class PackerCallObf(IPacker):
 
             self.logger.dbg(f'\tDLL: {dll_name}')
             for func in entry.imports:
+                if f == None or func.name == None: continue
                 f = func.name.decode('utf-8')
 
                 self.logger.dbg(f'\t\t- {f}')
@@ -125,11 +126,7 @@ class PackerCallObf(IPacker):
             if k not in dodgyFunctions.keys():
                 continue
 
-            config += f''';
-;
-;
-[{k}.dll]
-'''
+            cfg = ''
             for oldFun in v:
                 randomShot = (random.randint(1, 100) % 3 == 0)
 
@@ -140,7 +137,22 @@ class PackerCallObf(IPacker):
                 while newFun == '' or newFun in dodgyFunctions[k] or len(newFun) >= len(oldFun):
                     newFun = random.choice(beningFunctions[k])
 
-                config += f'{oldFun}={newFun}\r\n'
+                cfg += f'{oldFun}={newFun}\r\n'
+
+            if len(cfg) > 0:
+                config += f''';
+;
+;
+[{k}.dll]
+{cfg.strip()}
+'''
+
+        newlines = []
+        for a in config.split('\n'):
+            if len(a.strip()) > 0:
+                newlines.append(a.strip())
+
+        config = '\r\n'.join(newlines)
 
         tmp = tempfile.NamedTemporaryFile(delete=False)
 
