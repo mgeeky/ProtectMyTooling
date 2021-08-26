@@ -377,6 +377,7 @@ sub executePacker {
 
     berror($1, "Could not extract protected file's path!");
     berror($1, "[ProtectMyTooling] Output from packer: \n" . $output);
+    println("[ProtectMyTooling] Ran packer: " . $cmdline);
     
     return "";
 }

@@ -21,13 +21,6 @@ import string
 import tempfile
 import subprocess
 
-try:
-    import clr
-
-except ImportError:
-    output('[!] No clr module found. Install it using: $ pip3 install pythonnet')
-    sys.exit(0)
-
 settings = {
     'output' : '',
     'outputdir' : '',
@@ -56,18 +49,20 @@ def output(x):
         f.flush()
 
 
-def getClrAssemblyName(path):
-    #
-    # Reflectively load specified .NET assembly to extract that 
-    # assembly's name. All of the magic thanks to Python.NET
-    #
-    try:
-        ref = clr.System.Reflection.Assembly.Load(open(path, 'rb').read())
-        name = ref.GetName().get_Name()
-        del ref 
-        return name
-    except:
-        return ''
+def isDotNetExecutable(path):
+    pe = pefile.PE(path)
+    idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
+
+    dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+
+    if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
+        for entry in pe.DIRECTORY_ENTRY_IMPORT:
+            if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
+                for func in entry.imports:
+                    if func.name.decode() == '_CorExeMain':
+                        return True
+
+    return False
 
 def shell(cmd):
     CREATE_NO_WINDOW = 0x08000000
@@ -149,7 +144,7 @@ def parseOptions(config):
         os.path.join(settings['protect_my_tooling_dir'], 'ProtectMyTooling.py')
     ))
 
-    for m in re.finditer(r'\[\d+\] Packer:\s*(\w+)\s+', packerslistoutput):
+    for m in re.finditer(r'\[\s*\d+\] Packer:\s*(\w+)\s+', packerslistoutput):
         packerslist.append(m.group(1).lower())
 
     #output('[.] Packers available:')
@@ -255,7 +250,7 @@ def main(argv):
 
     packerschain = ''
 
-    if len(getClrAssemblyName(infile)) > 0:
+    if isDotNetExecutable(infile):
         output('[.] File is a valid .NET Assembly');
         packerschain = settings['default_dotnet_packers_chain']
 
