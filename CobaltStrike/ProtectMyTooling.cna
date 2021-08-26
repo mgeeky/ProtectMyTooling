@@ -147,7 +147,7 @@ alias protected-execute-assembly {
         }
 
         $digest = [$md digest: $content];
-        $hash = [javax.xml.bind.DatatypeConverter printHexBinary: $digest];
+        $hash = transform($digest, "hex");
         $hash = lc($hash);
 
         closef($f);
@@ -212,7 +212,7 @@ alias protected-upload {
     $md = [java.security.MessageDigest getInstance: $algo];
     $digest = [$md digest: $content];
 
-    $hash = [javax.xml.bind.DatatypeConverter printHexBinary: $digest];
+    $hash = transform($digest, "hex");
     $hash = lc($hash);
 
     if($remotepath is $null || strlen($remotepath) == 0) {
