@@ -7,7 +7,7 @@
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.4'
+VERSION = '0.6'
 
 import os
 import pefile
