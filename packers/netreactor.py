@@ -164,7 +164,7 @@ class PackerNetReactor(IPacker):
 
         # ----------
 
-        newProject = ET.tostring(et, encoding='utf-8')
+        newProject = prettyXml(ET.tostring(et, encoding='utf-8'))
         projFile.write(newProject)
 
         self.logger.dbg('''

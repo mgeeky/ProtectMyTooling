@@ -2,16 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+import re
 import hashlib
 import tempfile
 import subprocess
 
-try:
-    import clr
-
-except ImportError:
-    print('[!] No clr module found. Install it using: $ pip3 install pythonnet')
-    sys.exit(0)
+from xml.dom import minidom
 
 class ArchitectureNotSupported(Exception):
     pass
@@ -31,6 +27,26 @@ def getClrAssemblyName(path):
         return name
     except:
         return ''
+
+def isDotNetExecutable(path):
+    pe = pefile.PE(path)
+    idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
+
+    dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+
+    if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
+        for entry in pe.DIRECTORY_ENTRY_IMPORT:
+            if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
+                for func in entry.imports:
+                    if func.name.decode() == '_CorExeMain':
+                        return True
+
+    return False
+
+def prettyXml(xmlstr):
+    reparsed = minidom.parseString(xmlstr)
+    out = '\n'.join([line for line in reparsed.toprettyxml(indent=' '*2).split('\n') if line.strip()])
+    return out.encode()
 
 def shell2(cmd, alternative = False, stdErrToStdout = False, timeout = 60):
     CREATE_NO_WINDOW = 0x08000000

@@ -84,10 +84,20 @@ class PackerConfuserEx(IPacker):
         et.attrib['baseDir'] = os.path.dirname(infile)
 
         ET.SubElement(et, 'module').attrib['path'] = os.path.basename(infile)
+        ET.SubElement(et, 'probePath').text = os.path.dirname(infile)
+
+        dirA = os.path.normpath(os.path.join(os.path.dirname(infile), '..'))
+        dirB = os.path.normpath(os.path.join(os.path.dirname(infile), '../..'))
+        dirC = os.path.normpath(os.path.join(os.path.dirname(infile), '../../..'))
+
+        if os.path.isdir(dirA): ET.SubElement(et, 'probePath').text = dirA
+        if os.path.isdir(dirB): ET.SubElement(et, 'probePath').text = dirB
+        if os.path.isdir(dirC): ET.SubElement(et, 'probePath').text = dirC
 
         # ----------
 
-        newProject = ET.tostring(et, encoding='utf-8')
+        newProject = prettyXml(ET.tostring(et, encoding='utf-8'))
+
         projFile.write(newProject)
 
         self.logger.dbg('''
