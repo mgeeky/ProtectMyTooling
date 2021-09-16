@@ -179,6 +179,7 @@ Adjusted project file:
             with open(outfile + '.nrproj', 'w') as foo:
                 foo.write(newProject.decode())
 
+    @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
 
         tmpname = ''

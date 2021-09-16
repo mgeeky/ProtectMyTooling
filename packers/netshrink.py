@@ -63,6 +63,7 @@ class PackerNetshrink(IPacker):
             if self.options['netshrink_antidebug'] == 1:
                 self.netshrink_args += ' /Antidebug'
 
+    @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
 
         out = shell(self.logger, IPacker.build_cmdline(

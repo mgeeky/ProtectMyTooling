@@ -3,11 +3,15 @@
 
 import os
 import re
+import pefile
 import hashlib
 import tempfile
 import subprocess
 
+from lib.logger import Logger
 from xml.dom import minidom
+
+logger = Logger()
 
 class ArchitectureNotSupported(Exception):
     pass
@@ -42,6 +46,18 @@ def isDotNetExecutable(path):
                         return True
 
     return False
+
+def ensureInputFileIsDotNet(func):
+    def ensure(self, arch, infile, outfile):
+        global logger
+        logger = Logger(self.options)
+
+        if not isDotNetExecutable(infile):
+            logger.fatal('Specified input file is not a valid .NET EXE/DLL as required by this packer!')
+
+        return func(self, arch, infile, outfile)
+
+    return ensure
 
 def prettyXml(xmlstr):
     reparsed = minidom.parseString(xmlstr)

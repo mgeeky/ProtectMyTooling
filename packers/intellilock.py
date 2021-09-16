@@ -43,6 +43,7 @@ class PackerIntellilock(IPacker):
                 and len(self.options['intellilock_args']) > 0: 
                 self.intellilock_args += ' ' + self.options['intellilock_args']
 
+    @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
         try:
             cwd = os.getcwd()

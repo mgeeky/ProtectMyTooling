@@ -113,6 +113,8 @@ Adjusted project file:
             with open(outfile + suf, 'w') as foo:
                 foo.write(newProject.decode())
 
+
+    @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
         tmpdir = ''
         status = False

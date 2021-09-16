@@ -9,7 +9,7 @@ import sys, os
 class Logger:
     options = {
         'debug': False,
-        'colors': True,
+        'colors': False,
         'verbose': False,
         'log': sys.stdout,
     }
@@ -27,9 +27,10 @@ class Logger:
 
     colors_dict = {
         'error': colors_map['red'],
-        'trace': colors_map['magenta'],
-        'info ': colors_map['green'],
-        'debug': colors_map['grey'],
+        'fatal': colors_map['red'],
+        'info': colors_map['white'],
+        'good': colors_map['green'],
+        'debug': colors_map['magenta'],
         'other': colors_map['grey'],
     }
 
@@ -67,6 +68,11 @@ class Logger:
             col = args['color']
             if type(col) == str and col in Logger.colors_map.keys():
                 col = Logger.colors_map[col]
+
+        elif mode in Logger.colors_dict.keys():
+            col = Logger.colors_dict[mode]
+            args['color'] = col
+
         else:
             col = Logger.colors_dict.setdefault(mode, Logger.colors_map['grey'])
 
@@ -75,6 +81,10 @@ class Logger:
         othercol = Logger.colors_dict['other']
 
         if not args['color']:
+            col = ''
+            othercol = ''
+
+        if not Logger.options['colors']:
             col = ''
             othercol = ''
 
@@ -117,6 +127,9 @@ class Logger:
     def err(self, txt, **kwargs):
         Logger.out(txt, self.options['log'], 'error', **kwargs)
 
+    def ok(self, txt, **kwargs):
+        Logger.out(txt, self.options['log'], 'good', **kwargs)
+
     def fatal(self, txt, **kwargs):
-        Logger.out(txt, self.options['log'], 'error', **kwargs)
+        Logger.out(txt, self.options['log'], 'fatal', **kwargs)
         os._exit(1)

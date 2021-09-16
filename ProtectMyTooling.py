@@ -7,7 +7,7 @@
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.6'
+VERSION = '0.7'
 
 import os
 import pefile
@@ -16,7 +16,6 @@ import glob
 import pprint
 import lib.optionsparser
 from lib.packersloader import PackersLoader
-from lib.logger import Logger
 from lib.logger import Logger
 from lib.utils import *
 
@@ -221,7 +220,7 @@ def processFile(singleFile, infile, _outfile):
             os.remove(t)
 
         if result:
-            print('\n[.] File packed. Generated output: "{}"'.format(_outfile))
+            logger.info('\n[.] File packed. Generated output: "{}"'.format(_outfile))
 
     except Exception as e:
         raise
@@ -230,7 +229,7 @@ def processFile(singleFile, infile, _outfile):
         newFileSize = os.path.getsize(_outfile)
 
         if (options['verbose'] or options['debug']) and singleFile:
-            print('''
+            logger.ok('''
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
 [+] SUCCEEDED. Original file size: {} bytes, new file size {}: {}, ratio: {:.2f}%
 ++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -239,7 +238,7 @@ def processFile(singleFile, infile, _outfile):
                 ((float(newFileSize) / origFileSize * 100.0))
             ))
         else:
-            print('[+] SUCCEEDED. Original file size: {} bytes, new file size {}: {}, ratio: {:.2f}%'.format(
+            logger.ok('[+] SUCCEEDED. Original file size: {} bytes, new file size {}: {}, ratio: {:.2f}%'.format(
                 origFileSize, packersChain, newFileSize,
                 ((float(newFileSize) / origFileSize * 100.0))
             ))
@@ -250,7 +249,7 @@ def processFile(singleFile, infile, _outfile):
         return 0
 
     else:
-        print('\n[-] Something went wrong with ({})!'.format(
+        logger.err('\n[-] Something went wrong with ({})!'.format(
             os.path.basename(infile)
         ))
         return 1
