@@ -82,20 +82,38 @@ class PackerUpx(IPacker):
         ver = shell(self.logger, self.options['upx_path'] + ' --version').split('\n')[0].strip()
 
         self.logger.info(f'Working with {ver}')
+        out = ''
 
-        out = shell(self.logger, IPacker.build_cmdline(
-            PackerUpx.upx_cmdline_template,
-            self.options['upx_path'],
-            self.upx_args,
-            infile,
-            outfile
-        ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+        try:
+            out = shell(self.logger, IPacker.build_cmdline(
+                PackerUpx.upx_cmdline_template,
+                self.options['upx_path'],
+                self.upx_args,
+                infile,
+                outfile
+            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
-        if os.path.isfile(outfile):
-            if self.options['upx_corrupt'] == 1:
-                return self.tamper(outfile)
+            if os.path.isfile(outfile):
+                if self.options['upx_corrupt'] == 1:
+                    return self.tamper(outfile)
+                else:
+                    return True
             else:
-                return True
+                self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                    outfile
+                ))
+
+        except ShellCommandReturnedError as e:
+            self.logger.err(f'''Error message from packer:
+----------------------------------------
+{e}
+----------------------------------------
+''')
+
+        except Exception as e:
+            raise
+
+        return False
 
     def tamper(self, outfile):
         self.logger.info(f'Corrupting output UPX artifact so that decompression won\'t be easy...')

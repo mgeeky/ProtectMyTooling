@@ -106,13 +106,14 @@ def shell2(cmd, alternative = False, stdErrToStdout = False, timeout = 60):
     status = outs.decode(errors='ignore').strip()
 
     if len(errs) > 0:
-        error = '''
-Running shell command ({}) failed:
-
----------------------------------------------
-{}
----------------------------------------------
-'''.format(cmd, errs.decode(errors='ignore'))
+#        error = '''
+#Running shell command ({}) failed:
+#
+#---------------------------------------------
+#{}
+#---------------------------------------------
+#'''.format(cmd, errs.decode(errors='ignore'))
+        error = errs.decode(errors='ignore')
 
         if stdErrToStdout:
             return error
@@ -122,14 +123,14 @@ Running shell command ({}) failed:
     return status
 
 def shell(logger, cmd, alternative = False, output = False, timeout = 60):
-    logger.info(' Running shell (timeout: {}):\n\tcmd> {}'.format(timeout, cmd))
+    logger.info(' Running shell (timeout: {}):\n\tcmd> {}\n'.format(timeout, cmd))
     
     out = shell2(cmd, alternative, stdErrToStdout = output, timeout = timeout)
 
     if not output:
-        logger.dbg('shell("{}") returned:\n"{}"'.format(cmd, out))
+        logger.dbg('Command returned:\n------------------------------\n{}\n---------------------------\n'.format(out))
     else:
-        logger.info('shell("{}") returned:\n"{}"'.format(cmd, out), forced = True)
+        logger.info('Command returned:\n------------------------------\n{}\n---------------------------\n'.format(out), forced = True)
 
     return out
 

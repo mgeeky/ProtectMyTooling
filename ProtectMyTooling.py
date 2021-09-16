@@ -179,7 +179,7 @@ def processFile(singleFile, infile, _outfile):
 =================================================
     '''.format(packersChain))
             else:
-                print('[.] Generating output of {}...'.format(packersChain))
+                print('[.] Generating output of {}...\n'.format(packersChain))
 
             logger.dbg('\tinfile  < "{}"'.format(infile))
             logger.dbg('\toutfile > "{}"'.format(outfile))

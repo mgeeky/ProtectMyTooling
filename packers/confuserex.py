@@ -140,9 +140,35 @@ Adjusted project file:
                     shutil.move(generatedOutFile, outfile)
                     status = True
                 else:
-                    self.logger.err('Something went wrong: there is no output artefact ({})!'.format(
+                    self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
                         generatedOutFile
                     ))
+
+                    if len(out) > 0:
+                        parsedout = []
+                        num = 0
+
+                        for line in out.split('\n'):
+                            line = line.strip()
+                            num += 1
+
+                            if num == 1:
+                                parsedout.append(line)
+                                continue
+                            
+                            else:
+                                if line.startswith('[INFO]') or line.startswith('[DEBUG]'):
+                                    continue
+
+                            parsedout.append(line)
+
+                        parsedouts = '\n'.join(parsedout)
+
+                        self.logger.err(f'''Error message from packer:
+----------------------------------------
+{parsedouts}
+----------------------------------------
+    ''')
 
             except Exception as e:
                 raise
