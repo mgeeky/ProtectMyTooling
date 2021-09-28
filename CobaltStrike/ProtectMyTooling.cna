@@ -163,6 +163,7 @@ alias protected-execute-assembly {
     else {
         btask($bid, "Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
     }
+    
     bexecute_assembly!($bid, $generatedlocalpath, $args);
 }
 
@@ -261,19 +262,6 @@ sub help {
     $hlp .= "    * default_dll_x86_packers_chain - Native x86 DLL executables protectors/packers chain\n";
     $hlp .= "    * default_dll_x64_packers_chain - Native x64 DLL executables protectors/packers chain\n";
     $hlp .= "    * default_dotnet_packers_chain - .NET executables protectors/packers chain\n";
-    $hlp .= "\n";
-    $hlp .= "Supported by ProtectMyTooling packers - take a note that only ones that you configured in protect_my_tooling_config will actually work (!):\n";
-    $hlp .= "    - confuserex     - An open-source protector for .NET applications\n";
-    $hlp .= "    - enigma         - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti-features and virtualization\n";
-    $hlp .= "    - hyperion       - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.\n";
-    $hlp .= "    - intellilock    - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.\n";
-    $hlp .= "    - netreactor     - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques\n";
-    $hlp .= "    - netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression\n";
-    $hlp .= "    - pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift\n";
-    $hlp .= "    - smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques\n";
-    $hlp .= "    - themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.\n";
-    $hlp .= "    - upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.\n";
-    $hlp .= "    - vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.\n";
     $hlp .= "\n";
 
     # ===========================================================================================================

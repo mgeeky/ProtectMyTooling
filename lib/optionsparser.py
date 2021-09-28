@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+import textwrap
 import sys, os, re
 import yaml
 
@@ -15,13 +16,11 @@ OptionsDefaultValues = {
 }
 
 def feed_with_packer_options(logger, opts, parser):
-
     (packerslist, packersloader) = preload_packers(logger, opts)
 
     for name, packer in packersloader.get_packers().items():
         logger.dbg("Fetching packer {} options.".format(name))
         if hasattr(packer, 'help'):
-            
             if parser:
                 packer_options = parser.add_argument_group("Packer '{}' options".format(packer.get_name()))
                 packer.help(packer_options)
@@ -45,6 +44,8 @@ def preload_packers(logger, opts):
 def parse_options(logger, opts, version):
     global options
 
+    fullHelp = ('-h' in sys.argv or '--help' in sys.argv) and ('-v' in sys.argv or '--verbose' in sys.argv or '-d' in sys.argv or '--debug' in sys.argv)
+
     if len(sys.argv) == 2 and sys.argv[1] == '-L':
         (packerslist, packersloader) = preload_packers(logger, opts)
         num = 0
@@ -57,7 +58,10 @@ def parse_options(logger, opts, version):
     options = opts.copy()
 
     usage = "Usage: %%prog [options] <packers> <infile> <outfile>"
-    parser = ArgumentParser(usage=usage, prog="%prog " + version)
+    parser = ArgumentParser(
+        usage=usage, 
+        prog="%prog " + version
+    )
 
     parser.add_argument('packers', metavar='packers', help='Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original)) output.')
     parser.add_argument('infile', metavar='_input', help='Input file to be packed/protected.')
@@ -96,6 +100,7 @@ def parse_options(logger, opts, version):
     packers.add_argument('-L', '--list-packers', action='store_true', help='List available packers.')
 
     opts['packerslist'] = feed_with_packer_options(logger, options, parser)
+
     allPackersList = opts['packerslist'].copy()
 
     params = parser.parse_args()
