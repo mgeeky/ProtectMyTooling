@@ -5,7 +5,7 @@
 # Do not use directly.
 #
 # Author:
-#   Mariusz B. / mgeeky, '20
+#   Mariusz Banach / mgeeky, '20
 #   <mb [at] binary-offensive.com>
 #   (https://github.com/mgeeky)
 #

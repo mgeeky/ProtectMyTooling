@@ -24,7 +24,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v0.7
 
 
@@ -41,7 +41,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v0.7
 
 
@@ -79,7 +79,7 @@ C:\> py ProtectMyTooling.py --help
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v0.7
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
@@ -182,7 +182,7 @@ C:\> py ProtectMyTooling.py -L
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v0.7
 
 [ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
@@ -212,7 +212,7 @@ C:\> py ProtectMyTooling.py --help
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v0.7
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
@@ -495,7 +495,7 @@ This and other projects are outcome of sleepless nights and **plenty of hard wor
 ## Author
 
 ```   
-   Mariusz B. / mgeeky, '20-'21
+   Mariusz Banach / mgeeky, '20-'21
    <mb [at] binary-offensive.com>
    (https://github.com/mgeeky) 
 ```

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Author:
-#   Mariusz B. / mgeeky, '20-'21
+#   Mariusz Banach / mgeeky, '20-'21
 #   <mb [at] binary-offensive.com>
 #   (https://github.com/mgeeky)
 #
@@ -287,7 +287,7 @@ def main():
     print('''
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz B. / mgeeky '20-'21, <mb@binary-offensive.com>
+        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
         v{}
 '''.format(VERSION))
 
