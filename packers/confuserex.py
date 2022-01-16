@@ -168,7 +168,7 @@ Adjusted project file:
 ----------------------------------------
 {parsedouts}
 ----------------------------------------
-    ''')
+''')
 
             except Exception as e:
                 raise

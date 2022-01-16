@@ -63,7 +63,9 @@ def parse_options(logger, opts, version):
     parser.add_argument('infile', metavar='_input', help='Input file to be packed/protected.')
     parser.add_argument('outfile', metavar='output', help='Output file constituing generated sample.')
 
-    parser.add_argument("-c", "--config", dest='config', default='ProtectMyTooling.yaml',
+    defcfg = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../ProtectMyTooling.yaml'))
+
+    parser.add_argument("-c", "--config", dest='config', default=defcfg,
         help="External configuration file. Default: ProtectMyTooling.yaml")
     parser.add_argument('-t', '--timeout', dest='timeout', default=0, type=int, 
         help = 'Command execution timeout. Default: 60 seconds.')
