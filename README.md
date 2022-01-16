@@ -442,7 +442,7 @@ That plugin class must override `IPacker.py` interface, which pretty much boils 
 
 Then, your `process(...)` method could be as simple as the one visible in `packers/upx.py` implementation:
 
-```
+```py
   def process(self, arch, infile, outfile):
         ver = shell(self.logger, self.options['upx_path'] + ' --version').split('\n')[0].strip()
         self.logger.info(f'Working with {ver}')
