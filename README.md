@@ -220,17 +220,19 @@ C:\> py ProtectMyTooling.py --help
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
 positional arguments:
-  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original)) output.
+  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original))
+                        output.
   _input                Input file to be packed/protected.
   output                Output file constituing generated sample.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
                         External configuration file. Default: ProtectMyTooling.yaml
   -t TIMEOUT, --timeout TIMEOUT
                         Command execution timeout. Default: 60 seconds.
-  -a ARCH, --arch ARCH  Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise (shellcode) you'll need to specify it.
+  -a ARCH, --arch ARCH  Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise
+                        (shellcode) you'll need to specify it.
   -v, --verbose         Displays verbose output.
   -d, --debug           Displays debugging informations (implies verbose output).
   -l PATH, --log PATH   Specifies output log file.
@@ -257,7 +259,8 @@ Packer 'CallObf' options:
   --callobf-path-x64 PATH
                         (required) Path to CallObfuscator x64 executable.
   --callobf-config PATH
-                        Custom config file for CallObfuscator. If "generate-automatically" is specified, a config file will be created randomly by ProtectMyTooling
+                        Custom config file for CallObfuscator. If "generate-automatically" is specified, a config file will be created randomly by
+                        ProtectMyTooling
 
 Packer 'ConfuserEx' options:
   --confuserex-path PATH
@@ -265,7 +268,8 @@ Packer 'ConfuserEx' options:
   --confuserex-project-file PATH
                         (required) Path to .ConfuserEx .csproj project file.
   --confuserex-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .crproj extension). Valid values: 0/1. Default: 0
+                        Specifies whether to save newly generated project file along with the output generated executable (with .crproj extension). Valid
+                        values: 0/1. Default: 0
   --confuserex-args ARGS
                         Optional ConfuserEx-specific arguments to pass during compression.
 
@@ -277,7 +281,8 @@ Packer 'EnigmaProtector' options:
   --enigma-project-file PATH
                         (required) Path to The Enigma Protector .enigma base project file (template to work with).
   --enigma-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .enigma extension). Valid values: 0/1. Default: 0
+                        Specifies whether to save newly generated project file along with the output generated executable (with .enigma extension). Valid
+                        values: 0/1. Default: 0
   --enigma-product-name NAME
                         Product name to set in application's manifest.
   --enigma-product-version VER
@@ -321,7 +326,8 @@ Packer '.NET Reactor' options:
   --netreactor-resourceencryption bool
                         Enable this option to compress and encrypt embedded resources. Valid values: 0/1. Default: 1
   --netreactor-necrobit bool
-                        Uses a powerful protection technology NecroBit which completely stops decompilation. It replaces the CIL code within methods with encrypted code. Valid values: 0/1. Default: 1
+                        Uses a powerful protection technology NecroBit which completely stops decompilation. It replaces the CIL code within methods with
+                        encrypted code. Valid values: 0/1. Default: 1
   --netreactor-merge-namespaces bool
                         Enable this option to place all obfuscated types inside a single namespace. Valid values: 0/1. Default: 1
   --netreactor-short-strings bool
@@ -331,21 +337,27 @@ Packer '.NET Reactor' options:
   --netreactor-all-params bool
                         Enable this to obfuscate all method parameters. Valid values: 0/1. Default: 1
   --netreactor-incremental-obfuscation bool
-                        If you want .NET Reactor always to generate the same obfuscation strings for your type and member names, you need to enable this option. Valid values: 0/1. Default: 1
+                        If you want .NET Reactor always to generate the same obfuscation strings for your type and member names, you need to enable this
+                        option. Valid values: 0/1. Default: 1
   --netreactor-unprintable-characters bool
-                        Unprintable characters uses unprintable strings to obfuscate type and member names, but cannot be used if your assembly must run as safe code. Valid values: 0/1. Default: 1
+                        Unprintable characters uses unprintable strings to obfuscate type and member names, but cannot be used if your assembly must run
+                        as safe code. Valid values: 0/1. Default: 1
   --netreactor-obfuscate-public-types bool
                         Enable this to obfuscate all type and member names in an assembly. Valid values: 0/1. Default: 1
   --netreactor-anti-ildasm bool
                         Suppres decompilation using decompilation tools such as ILDasm. Valid values: 0/1. Default: 1
   --netreactor-native-exe bool
-                        .NET Reactor is able to generate a native x86 EXE file stub for your app. This way its not going to be possible to directly open the app within a decompiler. Valid values: 0/1. Default: 0
+                        .NET Reactor is able to generate a native x86 EXE file stub for your app. This way its not going to be possible to directly open
+                        the app within a decompiler. Valid values: 0/1. Default: 0
   --netreactor-prejit bool
-                        In combination with the Native EXE file feature and Necrobit, .NET Reactor is able to convert managed methods into REAL x86 native code. Mostly small methods (like property setters/getters) are converted into native code. Valid values: 0/1. Default: 0
+                        In combination with the Native EXE file feature and Necrobit, .NET Reactor is able to convert managed methods into REAL x86 native
+                        code. Mostly small methods (like property setters/getters) are converted into native code. Valid values: 0/1. Default: 0
   --netreactor-public-types-internalization bool
-                        If set to 1, .NET Reactor will convert all public types of an application into internal ones. This way the accessibility of types and members the assembly exposes will be reduced. Valid values: 0/1. Default: 0
+                        If set to 1, .NET Reactor will convert all public types of an application into internal ones. This way the accessibility of types
+                        and members the assembly exposes will be reduced. Valid values: 0/1. Default: 0
   --netreactor-strong-name-removal bool
-                        Enables anti Strong Name removal technique which prevents protected assemblies from being tampered by hacking tools. Warning: this option can impact the runtime performance of generated protected assembly! Valid values: 0/1. Default: 0
+                        Enables anti Strong Name removal technique which prevents protected assemblies from being tampered by hacking tools. Warning: this
+                        option can impact the runtime performance of generated protected assembly! Valid values: 0/1. Default: 0
   --netreactor-args ARGS
                         Optional netreactor-specific arguments to pass during compression.
 
@@ -368,6 +380,10 @@ Packer 'peCloak' options:
   --pecloak-script-path PATH
                         (required) Path to peCloakCapstone script file.
   --pecloak-args ARGS   Optional peCloakCapstone-specific arguments to pass during cloaking.
+
+Packer 'Peresed' options:
+  --peresed-path PATH   Path to peresed. By default will look it up in %PATH%
+  --peresed-args ARGS   Optional peresed-specific arguments to pass. They override default ones.
 
 Packer '.NET Reactor' options:
   --smartassembly-path PATH
@@ -393,7 +409,8 @@ Packer '.NET Reactor' options:
   --smartassembly-stringsencoding bool
                         Enables improved strings encoding with cache and compression enabled. Valid values: 0/1. Default: 1
   --smartassembly-controlflowobfuscate bool
-                        Sets the level of control flow obfuscation to apply to the assembly: 0 - disabled obfuscation, 4 - Unverifiable. Valid values: 0-4. Default: 4
+                        Sets the level of control flow obfuscation to apply to the assembly: 0 - disabled obfuscation, 4 - Unverifiable. Valid values:
+                        0-4. Default: 4
   --smartassembly-compressencryptresources bool
                         Enable / Disable resources compression and encryption. Valid values: 0/1. Default: 1
   --smartassembly-dynamicproxy bool
@@ -401,7 +418,8 @@ Packer '.NET Reactor' options:
   --smartassembly-pruning bool
                         Enable / Disable assembly pruning. Valid values: 0/1. Default: 1
   --smartassembly-nameobfuscate bool
-                        Enable / Disable types and methods obfuscation and field names obfuscation. The obfuscation is applied at the levels specified for the project. Valid values: 0/1. Default: 1
+                        Enable / Disable types and methods obfuscation and field names obfuscation. The obfuscation is applied at the levels specified for
+                        the project. Valid values: 0/1. Default: 1
   --smartassembly-compressassembly bool
                         Enable / Disable compression when the assembly is embedded. Valid values: 0/1. Default: 1
   --smartassembly-encryptassembly bool
@@ -421,7 +439,8 @@ Packer 'Themida' options:
 Packer 'UPX' options:
   --upx-path PATH       (required) Path to UPX binary capable of compressing x86/x64 executables.
   --upx-compress LEVEL  Compression level [1-9]: 1 - compress faster, 9 - compress better. Can also be "best" for greatest compression level possible.
-  --upx-corrupt bool    If set to 1 enables UPX metadata corruption to prevent "upx -d" unpacking. This corruption won't affect executable's ability to launch. Default: enabled (1)
+  --upx-corrupt bool    If set to 1 enables UPX metadata corruption to prevent "upx -d" unpacking. This corruption won't affect executable's ability to
+                        launch. Default: enabled (1)
   --upx-args ARGS       Optional UPX-specific arguments to pass during compression.
 
 Packer 'VMProtect' options:

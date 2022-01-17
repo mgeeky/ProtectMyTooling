@@ -32,7 +32,7 @@ class PackerPeresed(IPacker):
     def help(self, parser):
         if parser != None:
             parser.add_argument('--peresed-path', metavar='PATH', dest='peresed_path',
-                help = 'Path to peresed. By default will look it up in %PATH%')
+                help = 'Path to peresed. By default will look it up in %%PATH%%')
 
             parser.add_argument('--peresed-args', metavar='ARGS', dest='peresed_args',
                 help = 'Optional peresed-specific arguments to pass. They override default ones.')
