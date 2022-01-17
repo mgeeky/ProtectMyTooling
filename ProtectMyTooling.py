@@ -24,7 +24,7 @@ options = {
     'debug': False,
     'verbose': False,
     'silent' : False,
-    'colors' : False,
+    'colors' : True,
     'config' : '',
     'timeout' : 60,
     'arch' : '',

@@ -84,6 +84,8 @@ def parse_options(logger, opts, version):
         help="Specifies output log file.", metavar="PATH", type=str)
     parser.add_argument("-s", "--silent", dest='silent',
         help="Surpresses all of the output logging.", action="store_true")
+    parser.add_argument("-C", "--nocolors", dest='nocolors', action='store_true',
+        help="Do not use colors in output.")
 
     # Test it
     av = parser.add_argument_group("Test sample after generation")
@@ -109,6 +111,9 @@ def parse_options(logger, opts, version):
 
     opts['packerslist'] = params.packers.split(',')
     opts['timeout'] = int(params.timeout)
+
+    if params.nocolors:
+        opts['colors'] = False
 
     for i in range(len(allPackersList)):
         allPackersList[i] = os.path.basename(allPackersList[i]).replace('.py', '')
