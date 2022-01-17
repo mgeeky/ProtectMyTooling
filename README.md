@@ -24,8 +24,8 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
-        v0.7
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.8
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
@@ -41,8 +41,8 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
-        v0.7
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.8
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
@@ -79,8 +79,8 @@ C:\> py ProtectMyTooling.py --help
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
-        v0.7
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.8
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -169,6 +169,7 @@ Here's a list of options required by the Cobalt Strike integrator:
 - [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
 - [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
 - [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
+- [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
 - [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
 - [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
 - [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
@@ -182,8 +183,8 @@ C:\> py ProtectMyTooling.py -L
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
-        v0.7
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.8
 
 [ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
 [ 2] Packer: confuserex     - An open-source protector for .NET applications
@@ -194,10 +195,11 @@ C:\> py ProtectMyTooling.py -L
 [ 7] Packer: netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
 [ 8] Packer: packer64       - jadams/Packer64 - Packer for 64-bit PE exes
 [ 9] Packer: pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
-[10] Packer: smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[11] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[12] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[13] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[10] Packer: peresed        - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
+[11] Packer: smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[12] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[13] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[14] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
@@ -212,8 +214,8 @@ C:\> py ProtectMyTooling.py --help
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'21, <mb@binary-offensive.com>
-        v0.7
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.8
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 

@@ -2,3 +2,4 @@ pyyaml
 pefile
 capstone
 pythonnet
+pe_tools
