@@ -127,7 +127,7 @@ def getFileArch(infile):
         arch = 'x86' if (pe.FILE_HEADER.Machine == pefile.MACHINE_TYPE['IMAGE_FILE_MACHINE_I386']) else 'x64'
 
     except pefile.PEFormatError as e:
-        logger.fatal('Couldn not detect input file\'s architecture. Please specify it using --arch!')
+        logger.fatal('Could not detect input file\'s architecture. Please specify it using --arch!')
 
     return arch
 
@@ -153,13 +153,27 @@ def processFile(singleFile, infile, _outfile):
     
     try:
         tmps = []
-        arch = getFileArch(infile)
+        checkArch = True
+        packersOrder = options['packers'].split(',')
+
+        for i in range(len(packersOrder)):
+            packer = packersOrder[i].strip()
+            
+            if not packersloader[packer].validate_file_architecture():
+                checkArch = False
+                if (options['verbose'] or options['debug']):
+                    logger.info(f'Packer {packer} requested not to verify file\'s architecture.')
+                break
+
+        if checkArch:
+            arch = getFileArch(infile)
+        else:
+            arch = ''
+
         origFileSize = os.path.getsize(infile)
 
         print('\n[.] Processing {} file: "{}"'.format(arch, infile))
         packersChain = '<file>'
-        packersOrder = options['packers'].split(',')
-        
 
         for i in range(len(packersOrder)):
             packer = packersOrder[i].strip()

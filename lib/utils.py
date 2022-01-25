@@ -128,9 +128,9 @@ def shell(logger, cmd, alternative = False, output = False, timeout = 60):
     out = shell2(cmd, alternative, stdErrToStdout = output, timeout = timeout)
 
     if not output:
-        logger.dbg('Command returned:\n------------------------------\n{}\n---------------------------\n'.format(out))
+        logger.dbg('Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out))
     else:
-        logger.info('Command returned:\n------------------------------\n{}\n---------------------------\n'.format(out), forced = True)
+        logger.info('Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out), forced = True)
 
     return out
 

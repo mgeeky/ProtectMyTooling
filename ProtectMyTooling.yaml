@@ -62,3 +62,10 @@ callobf_config: generate-automatically
 # jadams/Packer64
 #
 packer64_path: "contrib\\packer64\\Packer.exe"
+
+
+#
+# Invoke-Obfuscation by Daniel Bohannon
+#
+invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"
+invobf_powershell: powershell.exe

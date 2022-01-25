@@ -18,6 +18,14 @@ class IPacker(ABC):
     def get_desc():
         return 'Packer class Interface'
 
+    @staticmethod
+    def validate_file_architecture():
+        '''
+        If this method is overloaded, will indicate that the Packer plugin does not want ProtectMyTooling
+        to enforce input file being EXE/DLL. The script will handle file validation itself.
+        '''
+        return True
+
     @abstractmethod
     def help(self, parser):
         '''
