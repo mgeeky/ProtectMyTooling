@@ -32,22 +32,6 @@ confuserex_path: "contrib\\ConfuserEx\\active-mkaring\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
 
 
-#
-# VMProtect
-#
-vmprotect_path: "contrib\\VMProtect\\VMProtect_Con.exe"
-vmprotect_project_file: "contrib\\project-files\\vmprotect\\full-vmprotect.vmp"
-vmprotect_args: 
-
-
-#
-# Themida (x86, x64)
-#
-themida_path_x86: "contrib\\Themida\\Themida.exe"
-themida_path_x64: "contrib\\Themida\\Themida64.exe"
-themida_project_file: "contrib\\project-files\\themida\\advanced-tiger-red.tmd"
-themida_args: 
-
 
 #
 # Call Obfuscator
@@ -67,5 +51,5 @@ packer64_path: "contrib\\packer64\\Packer.exe"
 #
 # Invoke-Obfuscation by Daniel Bohannon
 #
-invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"-
+invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"
 invobf_powershell: powershell.exe
