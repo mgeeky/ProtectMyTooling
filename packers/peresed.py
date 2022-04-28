@@ -52,7 +52,7 @@ class PackerPeresed(IPacker):
 
             if 'peresed_args' in self.options.keys() and self.options['peresed_args'] != None \
                 and len(self.options['peresed_args']) > 0: 
-                self.options['peresed_args'] = configPath(self.options['config'], self.options['peresed_args'])
+                self.options['peresed_args'] = self.options['peresed_args']
                 self.peresed_args = self.options['peresed_args']
 
     def process(self, arch, infile, outfile):

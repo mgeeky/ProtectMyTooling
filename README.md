@@ -1,6 +1,6 @@
-# ProtectMyTooling - a wrapper around PE Packers & Protectors
+# ProtectMyTooling - a wrapper around Packers, Protectors and Script Obfuscators
 
-Script that builds around supported packers & protectors to produce complex protected binaries.
+Script that builds around supported packers & protectors to produce complex protected binaries and scripts.
 
 With `ProtectMyTooling` you can quickly obfuscate your binaries without having to worry about clicking through all the Dialogs, interfaces, menus, creating projects to obfuscate a single binary, clicking through all the options available and wasting time about all that nonsense. It takes you straight to the point - to obfuscate your tool.
 
@@ -25,7 +25,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.8
+        v0.9
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
@@ -42,7 +42,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.8
+        v0.9
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
@@ -80,7 +80,7 @@ C:\> py ProtectMyTooling.py --help
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.8
+        v0.9
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -118,6 +118,55 @@ Packers handling:
 
 [...]
 ```
+
+## Supported Packers
+
+- [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
+- [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
+- [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
+- [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
+- [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
+- [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
+- [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
+- [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
+- [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
+- [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
+- [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
+- [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
+- [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
+- [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
+- [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+
+You can quickly list supported packers using `-L` option:
+
+```
+C:\> py ProtectMyTooling.py -L
+
+        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
+        Script that builds around supported packers & protectors to produce complex protected binaries.
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.9
+
+[ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
+[ 2] Packer: confuserex     - An open-source protector for .NET applications
+[ 3] Packer: enigma         - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
+[ 4] Packer: hyperion       - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
+[ 5] Packer: intellilock    - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
+[ 6] Packer: invobf         - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
+[ 7] Packer: netreactor     - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[ 8] Packer: netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
+[ 9] Packer: packer64       - jadams/Packer64 - Packer for 64-bit PE exes
+[10] Packer: pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
+[11] Packer: peresed        - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
+[12] Packer: smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[13] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[14] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[15] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+```
+
+Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
+To prepare their usage, you must first supply necessary binaries to the `contrib` directory and then configure your YAML file accordingly.
+
 
 ## Cobalt Strike Integration
 
@@ -159,63 +208,55 @@ Here's a list of options required by the Cobalt Strike integrator:
 * `default_dotnet_packers_chain` - .NET executables protectors/packers chain
 
 
-## Supported Packers
+## Formats other than PE EXE/DLL
 
-- [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
-- [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
-- [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
-- [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
-- [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
-- [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
-- [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
-- [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
-- [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
-- [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
-- [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
-- [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
-- [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
-- [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+However the program mentions that it's main purpose is to protect/pack PE executables - such as .EXE/.DLL, the architecture makes it easy to incorporate all range of obfuscators/packers/protectors/virtualizers no matter the input file format.
 
-You can quickly list supported packers using `-L` option:
+For instance, it can easily obfuscate input Powershell scripts with `InvObf` obfuscator (`Invoke-Obfuscation`):
 
 ```
-C:\> py ProtectMyTooling.py -L
+PS C:\ProtectMyTooling> py .\ProtectMyTooling.py invobf .\tests\Invoke-PowerShellTcp.ps1 .\tests\Invoke-PowerShellTcp.encoded.ps1
 
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.8
+        v0.9
 
-[ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
-[ 2] Packer: confuserex     - An open-source protector for .NET applications
-[ 3] Packer: enigma         - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
-[ 4] Packer: hyperion       - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
-[ 5] Packer: intellilock    - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
-[ 6] Packer: netreactor     - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[ 7] Packer: netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[ 8] Packer: packer64       - jadams/Packer64 - Packer for 64-bit PE exes
-[ 9] Packer: pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
-[10] Packer: peresed        - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
-[11] Packer: smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[12] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[13] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[14] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[.] Processing  file: "C:\ProtectMyTooling\tests\Invoke-PowerShellTcp.ps1"
+[.] Generating output of InvObf(<file>)...
+
+[+] SUCCEEDED. Original file size: 3042 bytes, new file size InvObf(<file>): 82684, ratio: 2718.08%
 ```
 
-Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
-To prepare their usage, you must first supply necessary binaries to the `contrib` directory and then configure your YAML file accordingly.
+In order to acommodate Packer Plugin script to the relaxed input file architecture verification regime, one needs to overload the `IPacker.validate_file_architecture()` method to make it return false:
+
+```py
+class PackerInvObf(IPacker):
+    [...]
+
+    @staticmethod
+    def get_name():
+        return 'InvObf'
+
+    @staticmethod
+    def get_desc():
+        return 'Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)'
+
+    @staticmethod
+    def validate_file_architecture():
+        return False
+```
+
 
 ## Full Help
 
 Full help displaying all the available options:
 
 ```
-C:\> py ProtectMyTooling.py --help
-
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.8
+        v0.9
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -237,6 +278,7 @@ options:
   -d, --debug           Displays debugging informations (implies verbose output).
   -l PATH, --log PATH   Specifies output log file.
   -s, --silent          Surpresses all of the output logging.
+  -C, --nocolors        Do not use colors in output.
 
 Test sample after generation:
   -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
@@ -309,6 +351,12 @@ Packer 'INTELLILOCK' options:
                         (required) Path to Intellilock executable.
   --intellilock-args ARGS
                         Optional Intellilock-specific arguments to pass during compression.
+
+Packer 'InvObf' options:
+  --invobf-powershell PATH
+                        Path to Powershell interpreter to be used by Invoke-Obfuscation. Default: "powershell.exe"
+  --invobf-path PATH    Path to the Invoke-Obfuscation script.
+  --invobf-args ARGS    Optional Invoke-Obfuscation specific arguments to pass. They override default ones.
 
 Packer '.NET Reactor' options:
   --netreactor-path PATH
