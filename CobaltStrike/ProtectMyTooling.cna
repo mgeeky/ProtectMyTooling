@@ -575,10 +575,10 @@ sub saveOptions {
         }
     }
 
-    if(!-canwrite $fileName) {
-        show_error("Cannot write to settings file: $fileName");
-        return;
-    }
+#    if(!-canwrite $fileName) {
+#        show_error("Cannot write to settings file: $fileName");
+#        return;
+#    }
 
     $handle = openf(">" . $fileName);
     if($handle is $null) {
