@@ -47,6 +47,27 @@ callobf_config: generate-automatically
 #
 packer64_path: "contrib\\packer64\\Packer.exe"
 
+#
+# Charterino/AsStrongAsFuck
+#   1 - ConstantsEncoding
+#   2 - ModuleRenaming
+#   3 - HiddenNamespace
+#   4 - ReferenceProxy
+#   5 - RenameObfuscation
+#   6 - MutatinObf
+#   7 - NumbersToModuleReference
+#   8 - JunkProtection
+#   9 - ControlFlowObfuscation
+#
+asstrongasfuck_path: "contrib\\AsStrongAsFuck\\AsStrongAsFuck.exe"
+asstrongasfuck_opts: "235789"
+
+
+#
+# AnErrupTion/LoGiC.NET
+#
+logicnet_path: "contrib\\LoGIC.NET\\LoGiC.NET.exe"
+
 
 #
 # Invoke-Obfuscation by Daniel Bohannon

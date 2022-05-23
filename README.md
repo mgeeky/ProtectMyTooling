@@ -162,6 +162,8 @@ C:\> py ProtectMyTooling.py -L
 [13] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
 [14] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
 [15] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[16] Packer: logicnet       -  LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
+[17] Packer: asstrongasfuck - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 

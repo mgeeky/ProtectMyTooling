@@ -10,3 +10,5 @@ contrib/*
 !contrib/packer64
 !contrib/callobf
 !contrib/Invoke-Obfuscation
+!contrib/AsStrongAsFuck
+!contrib/LoGIC.NET
