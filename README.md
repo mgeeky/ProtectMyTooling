@@ -25,13 +25,13 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
 
-[GOOD] 10:16:48: [+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 756224, ratio: 181.23%
+[+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 756224, ratio: 181.23%
 ```
 
 One can also obfuscate the file and immediately attempt to launch it (also with supplied optional parameters) to ensure it runs fine with options `-r --cmdline CMDLINE`:
@@ -42,13 +42,13 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 
 [.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
 
-[GOOD] 10:18:10: [+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 758272, ratio: 181.72%
+[+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 758272, ratio: 181.72%
 
 
 Running application to test it...
@@ -80,7 +80,7 @@ C:\> py ProtectMyTooling.py --help
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -89,7 +89,7 @@ positional arguments:
   _input                Input file to be packed/protected.
   output                Output file constituing generated sample.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
                         External configuration file. Default: ProtectMyTooling.yaml
@@ -100,6 +100,7 @@ optional arguments:
   -d, --debug           Displays debugging informations (implies verbose output).
   -l PATH, --log PATH   Specifies output log file.
   -s, --silent          Surpresses all of the output logging.
+  -C, --nocolors        Do not use colors in output.
 
 Test sample after generation:
   -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
@@ -121,12 +122,17 @@ Packers handling:
 
 ## Supported Packers
 
+The script supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
+Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
+
+- [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
 - [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
 - [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
 - [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
 - [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
 - [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
 - [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
+- [`LoGiC.NET`](https://github.com/Charterino/AsStrongAsFuck) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
 - [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
 - [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
 - [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
@@ -145,7 +151,7 @@ C:\> py ProtectMyTooling.py -L
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 [ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
 [ 2] Packer: confuserex     - An open-source protector for .NET applications
@@ -222,7 +228,7 @@ PS C:\ProtectMyTooling> py .\ProtectMyTooling.py invobf .\tests\Invoke-PowerShel
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 [.] Processing  file: "C:\ProtectMyTooling\tests\Invoke-PowerShellTcp.ps1"
 [.] Generating output of InvObf(<file>)...
@@ -258,7 +264,7 @@ Full help displaying all the available options:
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.10
+        v0.11
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
