@@ -227,11 +227,6 @@ class PackerType(Enum):
     PowershellObfuscator = 5
 ```
 
-`ProtectMyTooling` is expected to support few other Packers/Loaders/Generators in upcoming future:
-  - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
-  - [`sRDI`](https://github.com/monoxgas/sRDI)
-
-
 At the moment, program supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
 Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
 
