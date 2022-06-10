@@ -251,39 +251,6 @@ def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams):
         if opts[k] == None:
             opts[k] = ''
 
-#def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams):
-#    def isEmpty(x):
-#        if x is None: return True
-#        if type(x) == str and x == '': return True
-#        if ((type(x) == list) or (type(x) == tuple) or (type(x) == dict)) and len(x) == 0: 
-#            return True
-#
-#        return False
-#
-#    allkeys = set(list(opts.keys()) + list(cmdlineparams.keys()) + list(fileparams.keys()))
-#
-#    for k in allkeys:
-#        if k in cmdlineparams.keys() and k in fileparams.keys():
-#            if cmdlineparams[k] == None: cmdlineparams[k] = ''
-#            if fileparams[k] == None: fileparams[k] = ''
-#
-#            if isEmpty(cmdlineparams[k]) and (type(fileparams[k]) == bool or not isEmpty(fileparams[k])):
-#                opts[k] = fileparams[k]
-#            elif isEmpty(cmdlineparams[k]) and not isEmpty(fileparams[k]):
-#                opts[k] = fileparams[k]
-#            elif type(cmdlineparams[k]) == int and cmdlineparams[k] == 0 and type(fileparams[k]) == int and fileparams[k] > 0:
-#                opts[k] = fileparams[k]
-#            elif type(fileparams[k]) == int and fileparams[k] == 0 and type(cmdlineparams[k]) == int and cmdlineparams[k] > 0:
-#                opts[k] = cmdlineparams[k]
-#            else:
-#                opts[k] = cmdlineparams[k] 
-#
-#        elif (k in cmdlineparams.keys()) and (k not in fileparams.keys()):
-#            opts[k] = cmdlineparams[k]
-#
-#        elif (k not in cmdlineparams.keys()) and (k in fileparams.keys()):
-#            opts[k] = fileparams[k]
-
 def parseParametersFromConfigFile(configFile):
     outparams = {}
     config = {}

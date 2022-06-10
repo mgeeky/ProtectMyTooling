@@ -13,6 +13,8 @@ class PackerScareCrow(IPacker):
     default_scarecrow_args = ''
     scarecrow_cmdline_template = '<command> <options> -I <infile>'
 
+    Run_ScareCrow_On_Windows_As_WSL = True
+
     default_options = {
         'scarecrow_path' : '',
         'scarecrow_loader' : '',
@@ -39,16 +41,12 @@ class PackerScareCrow(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact'
+        return 'Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact. (works best under Linux or Win10 WSL!)'
 
     def help(self, parser):
         if parser != None:
-            parser.add_argument('--scarecrow-path', metavar='PATH', dest='scarecrow_path',
-                help = 'Path to ScareCrow. By default will look it up in %%PATH%%')
-
-            parser.add_argument('--scarecrow-args', metavar='ARGS', dest='scarecrow_args',
-                help = 'Optional ScareCrow-specific arguments to pass. They override default ones.')
-
+            parser.add_argument('--scarecrow-path', metavar='PATH', dest='scarecrow_path', help = 'Path to ScareCrow. By default will look it up in %%PATH%%')
+            parser.add_argument('--scarecrow-args', metavar='ARGS', dest='scarecrow_args', help = 'Optional ScareCrow-specific arguments to pass. They override default ones.')
             parser.add_argument('--scarecrow-loader', metavar='LOADER', choices=['binary', 'control', 'dll', 'excel', 'msiexec', 'wscript'], dest='scarecrow_domain', help = 'Sets the type of process that will sideload the malicious payload. Default: binary/dll depending on outfile extension.')
             parser.add_argument('--scarecrow-domain', metavar='DOMAIN', dest='scarecrow_domain', help = 'The domain name to use for creating a fake code signing cert. (e.g. www.acme.com). Default: ' + PackerScareCrow.default_options['scarecrow_domain'])
             parser.add_argument('--scarecrow-valid', metavar='CERT', dest='scarecrow_valid', help = 'The path to a valid code signing cert. Used instead -domain if a valid code signing cert is desired')
@@ -122,19 +120,38 @@ class PackerScareCrow(IPacker):
             self.logger.dbg('changed working directory to "{}"'.format(base))
             os.chdir(base)
 
+            _infile = infile
+
+            if os.name == 'nt' and PackerScareCrow.Run_ScareCrow_On_Windows_As_WSL:
+                _infile = os.path.basename(infile)
+                shutil.copy(infile, _infile)
+                self.options['scarecrow_path'] = './ScareCrow'
+
             cmd = IPacker.build_cmdline(
                 PackerScareCrow.scarecrow_cmdline_template,
                 self.options['scarecrow_path'],
                 self.scarecrow_args,
-                infile,
+                _infile,
                 ''
             )
+
+            if os.name == 'nt' and PackerScareCrow.Run_ScareCrow_On_Windows_As_WSL:
+                cmd = cmd.replace('"', "'")
+                cmd = f"bash -c \"{cmd}\""
 
             os.environ['PATH'] += os.path.dirname(self.options['scarecrow_path'])
             
             out = shell(self.logger, cmd, 
                 output = self.options['verbose'] or self.options['debug'], 
                 timeout = self.options['timeout'])
+
+            if os.name == 'nt' and PackerScareCrow.Run_ScareCrow_On_Windows_As_WSL:
+                os.remove(_infile)
+
+            m = re.search(r'\[\*\] ([\w\.]+) moved to ', out, re.I)
+            if m:
+                movedTo = m.group(1)
+                shutil.move(movedTo, outfile)
 
             if os.path.isfile(outfile):
                 return True

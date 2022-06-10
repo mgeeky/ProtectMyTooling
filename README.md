@@ -37,6 +37,14 @@ Installation is simple and pretty much boils down to requirements installation:
 C:\> pip install -r requirements.txt
 ```
 
+For `ScareCrow` packer to run on Windows 10, there needs to be `WSL` installed and `bash.exe` available (in `%PATH%`).
+Then, in WSL one needs to have `golang` installed in version at least `1.16`:
+
+```
+cmd> bash
+bash$ sudo apt update ; sudo apt upgrade -y ; sudo apt install golang=2:1.18~3 -y
+```
+
 
 ## Usage
 
@@ -508,12 +516,25 @@ All packers typically build some sort of a command line, or dynamically generate
 
 ---
 
+## Known Issues
+
+- `ScareCrow` is very tricky to run from Windows. What worked for me is following:
+  1. Run on Windows 10 and have WSL installed (`bash.exe` command available in Windows)
+  2. Have `golang` installed in WSL at version `1.16+` (tested on `1.18`)
+  3. Make sure to have `PackerScareCrow.Run_ScareCrow_On_Windows_As_WSL = True` set
+
+
+---
+
 ## TODO
 
+- Write custom PE injector and offer it as a "protector"
 - Add watermarking to other file formats such as Office documents, WSH scripts (VBS, JS, HTA) and containers
 - Add support for a few other Packers/Loaders/Generators in upcoming future:
   - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
   - [`sRDI`](https://github.com/monoxgas/sRDI)
+  - [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode)
+  - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
 
 ---
 

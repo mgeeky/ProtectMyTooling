@@ -47,7 +47,6 @@ amber_args:
 #
 donut_path: "contrib\\donut\\donut.exe"
 donut_args: 
-donut_path:
 donut_engine: '3'
 donut_cmdline:
 donut_thread: False
@@ -62,7 +61,6 @@ donut_exit: '1'
 #
 scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"
 scarecrow_args: 
-scarecrow_path:
 scarecrow_loader:
 scarecrow_domain:
 scarecrow_valid:
