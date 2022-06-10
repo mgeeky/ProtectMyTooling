@@ -31,7 +31,7 @@ class PackerPeresed(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).'
+        return 'Removes all existing PE Resources and signature (think of Mimikatz icon).'
 
     def help(self, parser):
         if parser != None:
