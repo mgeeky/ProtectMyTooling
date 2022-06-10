@@ -56,6 +56,7 @@ class PackerVMProtect(IPacker):
 
     @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
+        out = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(self.options['vmprotect_path'])
@@ -78,4 +79,17 @@ class PackerVMProtect(IPacker):
             self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
             os.chdir(cwd)
 
-        return os.path.isfile(outfile)
+        status = os.path.isfile(outfile)
+
+        if not status:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerVMProtect.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
+
+        return status

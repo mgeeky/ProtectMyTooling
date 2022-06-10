@@ -47,7 +47,7 @@ class PackerAsStrongAsFuck(IPacker):
                 self.logger.fatal('--asstrongasfuck-path option must be specified!')
 
             for k, v in PackerAsStrongAsFuck.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if 'asstrongasfuck_opts' in self.options.keys() and self.options['asstrongasfuck_opts'] != None \
@@ -56,6 +56,7 @@ class PackerAsStrongAsFuck(IPacker):
 
     @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
+        out = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(self.options['asstrongasfuck_path'])
@@ -82,5 +83,16 @@ class PackerAsStrongAsFuck(IPacker):
 
         if os.path.isfile(infile + '.obfuscated'):
             shutil.move(infile + '.obfuscated', outfile)
+
+        else:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerAsStrongAsFuck.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         return os.path.isfile(outfile)

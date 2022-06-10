@@ -37,6 +37,48 @@ confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
 
 #
+# Amber
+#
+amber_path: "contrib\\Amber\\amber.exe"
+amber_args: 
+
+#
+# Donut
+#
+donut_path: "contrib\\donut\\donut.exe"
+donut_args: 
+donut_path:
+donut_engine: '3'
+donut_cmdline:
+donut_thread: False
+donut_cmdline_unicode: False
+donut_method:
+donut_appdomain:
+donut_class:
+donut_exit: '1'
+
+#
+# ScareCrow
+#
+scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"
+scarecrow_args: 
+scarecrow_path:
+scarecrow_loader:
+scarecrow_domain:
+scarecrow_valid:
+scarecrow_password:
+scarecrow_inject:
+scarecrow_sandbox: False
+scarecrow_sign: False
+
+#
+# sgn
+#
+sgn_path: "contrib\\sgn\\sgn.exe"
+sgn_args: 
+
+
+#
 # Call Obfuscator
 #
 callobf_path_x86: "contrib\\CallObf\\cobf86.exe"

@@ -69,6 +69,30 @@ def isValidPE(path):
         if pe:
             pe.close()
 
+def isShellcode(path):
+    if path.lower().endswith('.bin') or path.lower().endswith('.raw') or path.lower().endswith('.shc'):
+        return True
+
+    return False
+
+def isValidPowershell(path):
+    if not path.lower().endswith('.ps1') or not path.lower().endswith('.psm1') or \
+        not path.lower().endswith('.psm') or not path.lower().endswith('.psd1'):
+        return False
+
+    keywords = (
+        'function', 'param', 'cmdletbinding', 'parameter', 'mandatory', 'foreach', 'process', 'write-host', 
+        'write-verbose', 'catch', '-not', 'new-object', 'readallbytes', '.synopsis', '.example'
+    )
+    with open(path, 'r') as f:
+        data = f.read().lower()
+
+        for word in keywords:
+            if word.lower() in data:
+                found += 1
+
+    return found > 2
+
 def isDotNetExecutable(path):
     if not isValidPE(path):
         return False
@@ -93,6 +117,30 @@ def isDotNetExecutable(path):
             pe.close()
 
     return False
+
+def ensureInputFileIsPowershell(func):
+    def ensure(self, arch, infile, outfile):
+        global logger
+        logger = Logger(self.options)
+
+        if not isValidPowershell(infile):
+            logger.fatal('Specified input file is not a valid Powershell script as required by this packer! Make sure its extension is .ps1/.psm1 to proceed')
+
+        return func(self, arch, infile, outfile)
+
+    return ensure
+
+def ensureInputFileIsShellcode(func):
+    def ensure(self, arch, infile, outfile):
+        global logger
+        logger = Logger(self.options)
+
+        if not isShellcode(infile):
+            logger.fatal('Specified input file does not resemble a Shellcode as required by this packer! Make sure its extension is .bin to proceed.')
+
+        return func(self, arch, infile, outfile)
+
+    return ensure
 
 def ensureInputFileIsDotNet(func):
     def ensure(self, arch, infile, outfile):
@@ -223,6 +271,11 @@ def shell(logger, cmd, alternative = False, output = False, timeout = 60):
     return out
 
 def configPath(basepath, path):
+    p = _configPath(basepath, path)
+
+    return os.path.abspath(p)
+
+def _configPath(basepath, path):
     if not path:
         return ''
 

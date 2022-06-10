@@ -113,7 +113,7 @@ class PackerNetReactor(IPacker):
                 self.netreactor_args += ' ' + self.options['netreactor_args']
 
             for k, v in PackerNetReactor.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             optionsMap = {
@@ -230,6 +230,12 @@ Adjusted project file:
             else:
                 status = False
                 self.logger.err('Something went wrong and we couldn\'t find generated output file ({})!'.format(generatedOutfile))
+
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerNetReactor.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         except Exception as e:
             raise

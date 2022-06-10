@@ -122,7 +122,7 @@ class PackerInvObf(IPacker):
                 self.logger.fatal('Config file not specified!')
 
             for k, v in PackerInvObf.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if 'invobf_powershell' in self.options.keys() and self.options['invobf_powershell'] != None and len(self.options['invobf_powershell']) > 0:
@@ -140,12 +140,10 @@ class PackerInvObf(IPacker):
                 self.options['invobf_args'] = self.options['invobf_args']
                 self.invobf_args = self.options['invobf_args']
 
-    @ensureInputFileIsPE
+    @ensureInputFileIsPowershell
     def process(self, arch, infile, outfile):
+        out = ''
         try:
-            if not infile.endswith('.ps1'):
-                self.logger.fatal('Input file must be Powershell script ending with .ps1 extension!')
-
             path = self.options['invobf_path']
 
             cmd = IPacker.build_cmdline(
@@ -173,6 +171,12 @@ class PackerInvObf(IPacker):
                 self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
                     outfile
                 ))
+
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerInvObf.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         except ShellCommandReturnedError as e:
             self.logger.err(f'''Error message from packer:

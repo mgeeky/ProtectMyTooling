@@ -219,6 +219,17 @@ Resulting generated CallObfuscator config file:
         if ret:
             self.renameSection(outfile)
 
+        else:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerCallObf.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
+
         return ret
 
     def renameSection(self, outfile):

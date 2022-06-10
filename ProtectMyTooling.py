@@ -35,6 +35,9 @@ options = {
     'packers': '',
     'packer_class_name': 'Packer\\w+',
     'watermark' : [],
+    'ioc' : False,
+    'custom_ioc' : '',
+    'ioc_path' : '',
 }
 
 logger = None
@@ -74,6 +77,17 @@ def getFileArch(infile):
     try:
         if options['arch'] != '': 
             return options['arch']
+
+        if lib.utils.isShellcode(infile):
+            if '64' in infile:
+                logger.info('Deduced from input file name x64 architecture.')
+                return 'x64'
+
+            elif '86' in infile or '32' in infile:
+                logger.info('Deduced from input file name x86 architecture.')
+                return 'x86'
+
+            logger.fatal('Could not deduce shellcode architecture. Use --arch to set it up.')
 
         pe = pefile.PE(infile, fast_load = True)
         arch = 'x86' if (pe.FILE_HEADER.Machine == pefile.MACHINE_TYPE['IMAGE_FILE_MACHINE_I386']) else 'x64'
@@ -291,6 +305,9 @@ def processFile(singleFile, infile, _outfile):
         if options['ioc']:
             path, ext = os.path.splitext(outfile)
             iocName = path + '-ioc.csv'
+
+            if len(options['ioc_path']) > 0:
+                iocName = options['ioc_path']
 
             fileExists = os.path.isfile(iocName)
 

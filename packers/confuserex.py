@@ -67,7 +67,7 @@ class PackerConfuserEx(IPacker):
                 self.logger.fatal('--confuserex-path option must be specified!')
 
             for k, v in PackerConfuserEx.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if 'confuserex_module' in self.options.keys() and self.options['confuserex_module'] != None \
@@ -178,6 +178,7 @@ Adjusted project file:
                 if os.path.isfile(generatedOutFile):
                     shutil.move(generatedOutFile, outfile)
                     status = True
+
                 else:
                     self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
                         generatedOutFile
@@ -203,11 +204,17 @@ Adjusted project file:
 
                         parsedouts = '\n'.join(parsedout)
 
-                        self.logger.err(f'''Error message from packer:
+                        if(len(parsedouts)) > 0:
+                            self.logger.err(f'''Error message from packer:
 ----------------------------------------
 {parsedouts}
 ----------------------------------------
 ''')
+                        elif len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerConfuserEx.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
             except Exception as e:
                 raise

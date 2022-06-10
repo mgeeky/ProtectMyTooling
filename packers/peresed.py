@@ -46,7 +46,7 @@ class PackerPeresed(IPacker):
                 self.logger.fatal('Config file not specified!')
 
             for k, v in PackerPeresed.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if 'peresed_path' in self.options.keys() and self.options['peresed_path'] != None and len(self.options['peresed_path']) > 0:
@@ -81,6 +81,12 @@ class PackerPeresed(IPacker):
                 self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
                     outfile
                 ))
+
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerPeresed.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         except ShellCommandReturnedError as e:
             self.logger.err(f'''Error message from packer:

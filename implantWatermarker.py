@@ -368,12 +368,16 @@ class PeWatermarker:
             modified = False
             self.openFile()
 
+            #
+            # do not change order of below methods
+            #
+
             modified |= self.checksum()
             modified |= self.dosStub()
-
-            # these methods shall be the last ones
-            modified |= self.overlay(modified)
             modified |= self.section(modified)
+
+            # overlay needs to be the last one
+            modified |= self.overlay(modified)
 
             if modified:
                 Logger.dbg('Saving modified PE file...')

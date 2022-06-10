@@ -51,7 +51,7 @@ class PackerNetshrink(IPacker):
             self.options['netshrink_path'] = configPath(self.options['config'], self.options['netshrink_path'])
 
             for k, v in PackerNetshrink.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if self.options['netshrink_antidebug'] not in [0, 1]:
@@ -78,4 +78,17 @@ class PackerNetshrink(IPacker):
             outfile
         ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
 
-        return os.path.isfile(outfile)
+        status = os.path.isfile(outfile)
+
+        if not status:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerNetshrink.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
+
+        return status

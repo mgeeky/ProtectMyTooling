@@ -5,7 +5,7 @@ Your perfect companion in Malware Development CI/CD pipeline, **helping you wate
 
 With `ProtectMyTooling` you can quickly obfuscate your binaries without having to worry about clicking through all the Dialogs, interfaces, menus, creating projects to obfuscate a single binary, clicking through all the options available and wasting time about all that nonsense. It takes you straight to the point - to obfuscate your tool.
 
-Aim is to offer the most convenient interface possible and allow to leverage _a chain of multiple packers_ combined on a single binary.
+Aim is to offer the most convenient interface possible and allow to leverage _a daisy-chain of multiple packers_ combined on a single binary.
 
 That's right - we can launch `ProtectMyTooling` with several packers at once:
 
@@ -13,10 +13,42 @@ That's right - we can launch `ProtectMyTooling` with several packers at once:
 C:\> py ProtectMyTooling.py hyperion,upx mimikatz.exe mimikatz-obf.exe
 ```
 
-The above example will firstly pass `mimikatz.exe` to the Hyperion for obfuscation, and then the result will be provided to UPX for compression.
+The above example will firstly pass `mimikatz.exe` to the Hyperion for obfuscation, and then the result will be provided to UPX for compression. Resulting with `UPX(Hyperion(file))`
+
+
+## Features
+
+- Supports multiple different PE Packers, .NET Obfuscators, Shellcode Loaders/Builders
+- Allows daisy-chaining packers where output from a packer is passed to the consecutive one: `callobf,hyperion,upx` will produce artifact `UPX(Hyperion(CallObf(file)))`
+- Collects IOCs at every obfuscation step so that auditing & Blue Team requests can be satisfied
+- Offers functionality to inject custom Watermarks to resulting PE artifacts - in DOS Stub, Checksum, as a standalone PE Section, to file's Overlay
+- Comes up with a handy Cobalt Strike aggressor script bringing `protected-upload` and `protected-execute-assembly` commands
+- Straightforward command line usage
+
+
+## Installation
+
+This tool was designed to work on Windows, as packers are delivered in EXE format. 
+Some features may work however on Linux just fine, nonetheless that support is not provided.
+
+Installation is simple and pretty much boils down to requirements installation:
+
+```
+C:\> pip install -r requirements.txt
+```
 
 
 ## Usage
+
+Before `ProtectMyTooling`'s first use, it is essential to adjust program's YAML configuration file `ProtectMyTooling.yaml`. 
+The order of parameters processal is following:
+
+- Firstly default parameters are used
+- Then they're overwritten by values coming from YAML
+- Finally, whatever is provided in command line will overwrite corresponding values
+
+There, supported packer paths and options shall be set to enable 
+
 
 ### Scenario 1: Simple ConfuserEx obfuscation
 
@@ -28,7 +60,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
+        v0.12
 
 
 [.] Processing x86 file: "\Rubeus.exe"
@@ -47,7 +79,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
+        v0.12
 
 
 [.] Processing x86 file: "\Rubeus.exe"
@@ -133,8 +165,8 @@ C:\> py ProtectMyTooling.py --help
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
 positional arguments:
-  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original)) output.
-  _input                Input file to be packed/protected.
+  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(file)) output.
+  infile                Input file to be packed/protected.
   output                Output file constituing generated sample.
 
 options:
@@ -152,6 +184,7 @@ options:
 
 IOCs collection:
   -i, --ioc             Collect IOCs and save them to .csv file side by side to <outfile>
+  --ioc-path IOC_PATH   Optional. Specify a path for the IOC file. By default will place outfile-ioc.csv side by side to generated output artifact.
   -I CUSTOM_IOC, --custom-ioc CUSTOM_IOC
                         Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"
 
@@ -195,33 +228,34 @@ class PackerType(Enum):
 ```
 
 `ProtectMyTooling` is expected to support few other Packers/Loaders/Generators in upcoming future:
-- [`donut`](https://github.com/TheWover/donut)
-- [`amber`](https://github.com/EgeBalci/amber)
-- [`ScareCrow`](https://github.com/optiv/ScareCrow)
-- [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
-- [`sgn`](https://github.com/EgeBalci/sgn)
+  - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
+  - [`sRDI`](https://github.com/monoxgas/sRDI)
 
 
 At the moment, program supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
 Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
 
-1. [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
-2. [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
-3. [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
-4. [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
-5. [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
-6. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
-7. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
-8. [`LoGiC.NET`](https://github.com/Charterino/AsStrongAsFuck) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
-9. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
-10. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
-11. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
-12. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
-13. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
-14. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
-15. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
-16. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
-17. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+1. [`Amber`](https://github.com/EgeBalci/amber) - Reflective PE Packer that takes EXE/DLL on input and produces EXE/PIC shellcode
+2. [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
+3. [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
+4. [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
+5. [`Donut`](https://github.com/TheWover/donut) - Popular PE loader that takes EXE/DLL/.NET on input and produces a PIC shellcode
+6. [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
+7. [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
+8. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
+9. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
+10. [`LoGiC.NET`](https://github.com/Charterino/AsStrongAsFuck) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
+11. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
+12. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
+13. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
+14. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
+15. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
+16. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
+17. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
+18. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
+19. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
+20. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
+21. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
 
 You can quickly list supported packers using `-L` option:
 
@@ -233,27 +267,114 @@ C:\> py ProtectMyTooling.py -L
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
         v0.12
 
-[ 1] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
-[ 2] callobf        -  PE EXE/DLL Protector   - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
-[ 3] confuserex     -  .NET Obfuscator        - An open-source protector for .NET applications
-[ 4] enigma         -  PE EXE/DLL Protector   - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
-[ 5] hyperion       -  PE EXE/DLL Protector   - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
-[ 6] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
-[ 7] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
-[ 8] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
-[ 9] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[10] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[11] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
-[12] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
-[13] peresed        -  PE EXE/DLL Protector   - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
-[14] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[15] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[16] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[17] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[ 1] amber          -  Shellcode Loader       - Amber takes PE file on input and produces an EXE/PIC shellcode that loads it reflectively in-memory
+[ 2] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
+[ 3] callobf        -  PE EXE/DLL Protector   - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
+[ 4] confuserex     -  .NET Obfuscator        - An open-source protector for .NET applications
+[ 5] donut          -  Shellcode Loader       - Donut takes EXE/DLL/.NET and produces a robust PIC shellcode or Py/Ruby/Powershell/C#/Hex/Base64 array
+[ 6] enigma         -  PE EXE/DLL Protector   - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
+[ 7] hyperion       -  PE EXE/DLL Protector   - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
+[ 8] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
+[ 9] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
+[10] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
+[11] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[12] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
+[13] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
+[14] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
+[15] peresed        -  PE EXE/DLL Protector   - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
+[16] scarecrow      -  Shellcode Loader       - Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact
+[17] sgn            -  Shellcode Encoder      - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode.
+[18] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[19] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[20] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[21] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
 To prepare their usage, you must first supply necessary binaries to the `contrib` directory and then configure your YAML file accordingly.
+
+
+## Artifact watermarking & IOC collection
+
+This program is intended for professional Red Teams and is perfect to be used in a typical implant-development CI/CD pipeline. 
+As a red teamer I'm always expected to deliver decent quality list of IOCs matching back to all of my implants as well as I find it essential to watermark all my implants for bookkeeping, attribution and traceability purposes.
+
+To accommodate these requirements, ProtectMyTooling brings basic support for them.
+
+### Artifact Watermarking
+
+`ProtectMyTooling` can apply watermarks after obfuscation rounds simply by using `--watermark` option.:
+
+```
+py ProtectMyTooling [...] -w dos-stub=fooooobar -w checksum=0xaabbccdd -w section=.coco,ALLYOURBASEAREBELONG
+```
+
+There is also a standalone approach, included in `implantWatermarker.py` script.
+
+It takes executable artifact on input and accepts few parameters denoting where to inject a watermark and what value shall be inserted. 
+
+Example run will set PE Checksum to 0xAABBCCDD, inserts `foooobar` to PE file's DOS Stub (bytes containing _This program cannot be run..._), appends `bazbazbaz` to file's overlay and then create a new PE section named `.coco` append it to the end of file and fill that section with preset marker.
+
+```
+py implantWatermarker.py beacon-obf.exe -c 0xaabbccdd -t fooooobar -e bazbazbaz -s .coco,ALLYOURBASEAREBELONG
+```
+
+Full watermarker usage:
+
+```
+usage: implantWatermarker.py [options] <infile>
+
+options:
+  -h, --help            show this help message and exit
+
+Required arguments:
+  infile                Input implant file
+
+Optional arguments:
+  -C, --check           Do not actually inject watermark. Check input file if it contains specified watermarks.
+  -v, --verbose         Verbose mode.
+  -d, --debug           Debug mode.
+  -o PATH, --outfile PATH
+                        Path where to save output file with watermark injected. If not given, will modify infile.
+
+PE Executables Watermarking:
+  -t STR, --dos-stub STR
+                        Insert watermark into PE DOS Stub (This program cannot be run...).
+  -c NUM, --checksum NUM
+                        Preset PE checksum with this value (4 bytes). Must be number. Can start with 0x for hex value.
+  -e STR, --overlay STR
+                        Append watermark to the file's Overlay (at the end of the file).
+  -s NAME,STR, --section NAME,STR
+                        Append a new PE section named NAME and insert watermark there. Section name must be shorter than 8 characters. Section will be marked Read-Only, non-executable.
+```
+
+Currently only PE files watermarking is supported, but in the future Office documents and other formats are to be added as well.
+
+
+### IOCs Collection
+
+IOCs may be collected by simply using `-i` option in `ProtectMyTooling` run.
+
+They're being collected at the following phases:
+
+- on the input file
+- after each obfuscation round on an intermediary file
+- on the final output file
+
+They will contain following fields saved in form of a CSV file:
+
+- `timestamp`
+- `filename`
+- `author` - formed as `username@hostname`
+- `context` - whether a record points to an input, output or intermediary file
+- `comment` - value adjusted by the user through `-I value` option
+- `md5`
+- `sha1`
+- `sha256`
+- `imphash` - PE Imports Hash, if available
+- (TODO) `typeref_hash` - .NET TypeRef Hash, if available
+
+Resulting will be a CSV file named `outfile-ioc.csv` stored side by side to generated output artifact. That file is written in APPEND mode, meaning it will receive all subsequent IOCs.
 
 
 ## Cobalt Strike Integration
@@ -340,270 +461,6 @@ class PackerInvObf(IPacker):
 ```
 
 
-## Full Help
-
-Full help displaying all the available options:
-
-```
-PS > py .\ProtectMyTooling.py -h -v
-
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
-
-usage: Usage: %prog [options] <packers> <infile> <outfile>
-
-positional arguments:
-  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original)) output.
-  _input                Input file to be packed/protected.
-  output                Output file constituing generated sample.
-
-options:
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        External configuration file. Default: ProtectMyTooling.yaml
-  -t TIMEOUT, --timeout TIMEOUT
-                        Command execution timeout. Default: 60 seconds.
-  -a ARCH, --arch ARCH  Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise (shellcode) you'll need to specify it.
-  -v, --verbose         Displays verbose output.
-  -d, --debug           Displays debugging informations (implies verbose output).
-  -l PATH, --log PATH   Specifies output log file.
-  -s, --silent          Surpresses all of the output logging.
-  -C, --nocolors        Do not use colors in output.
-
-IOCs collection:
-  -i, --ioc             Collect IOCs and save them to .csv file side by side to <outfile>
-  -I CUSTOM_IOC, --custom-ioc CUSTOM_IOC
-                        Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"
-
-Artifact Watermarking:
-  -w WHERE=STR [WHERE=STR ...], --watermark WHERE=STR [WHERE=STR ...]
-                        Inject watermark to generated artifact. Syntax: where=value, example: "-w dos-stub=Foobar". Available watermark places: dos-stub,checksum,overlay,section . Section requires NAME,STR syntax where NAME denotes PE section name, e.g. "-w section=.foo,bar" will create PE section named ".foo" with contents "bar". May be
-                        repeated.
-
-Test sample after generation:
-  -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
-  --cmdline CMDLINE     Command line for the generated sample
-
-Optional AV Handling hooks:
-  --check-av-command CHECK_AV_COMMAND
-                        Command used to check status of AV solution. This command must return "True" if AV is running.
-  --disable-av-command DISABLE_AV_COMMAND
-                        Command used to disable AV solution before processing files.
-  --enable-av-command ENABLE_AV_COMMAND
-                        Command used to re-enable AV solution after processing files. The AV will be re-enabled only if it was enabled previously.
-
-Packers handling:
-  -L, --list-packers    List available packers.
-
-Packer 'AsStrongAsFuck' options:
-  --asstrongasfuck-path PATH
-                        (required) Path to asstrongasfuck executable.
-  --asstrongasfuck-opts ARGS
-                        Optional AsStrongAsFuck obfuscation options. Default: 235789.
-
-Packer 'CallObf' options:
-  --callobf-path-x86 PATH
-                        (required) Path to CallObfuscator x86 executable.
-  --callobf-path-x64 PATH
-                        (required) Path to CallObfuscator x64 executable.
-  --callobf-config PATH
-                        Custom config file for CallObfuscator. If "generate-automatically" is specified, a config file will be created randomly by ProtectMyTooling
-
-Packer 'ConfuserEx' options:
-  --confuserex-path PATH
-                        (required) Path to ConfuserEx binary capable of obfuscating .NET executables.
-  --confuserex-project-file PATH
-                        (required) Path to .ConfuserEx .csproj project file.
-  --confuserex-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .crproj extension). Valid values: 0/1. Default: 0
-  --confuserex-args ARGS
-                        Optional ConfuserEx-specific arguments to pass during compression.
-  --confuserex-module PATH [PATH ...]
-                        (Optional) Embed specified by path DLL module into final EXE. Can be repeated.
-  --confuserex-modules-in-dir DIR [DIR ...]
-                        (Optional) Embed all DLLs in specified DIR into final EXE. Can be repeated.
-
-Packer 'EnigmaProtector' options:
-  --enigma-path-x86 PATH
-                        (required) Path to The Enigma Protector x86 executable.
-  --enigma-path-x64 PATH
-                        (required) Path to The Enigma Protector x64 executable.
-  --enigma-project-file PATH
-                        (required) Path to The Enigma Protector .enigma base project file (template to work with).
-  --enigma-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .enigma extension). Valid values: 0/1. Default: 0
-  --enigma-product-name NAME
-                        Product name to set in application's manifest.
-  --enigma-product-version VER
-                        Product version to set in application's manifest.
-  --enigma-process-blacklist PROCNAME
-                        Enigma will exit running if this process is found launched. May be repeated. Suitable for anti-analysis defenses.
-  --enigma-check-processes-every SECONDS
-                        Enigma will check processes list for blacklisted entries every N seconds. Default: 10. Use "0" to check only at startup.
-  --enigma-antidebug bool
-                        Enable Anti-Debug checks and prevent output from running under debugger. Valid values: 0/1. Default: 1
-  --enigma-antivm bool  Enable Anti-VM checks and prevent running sample in Virtual Machines such as VMWare. Valid values: 0/1. Default: 0
-  --enigma-control-sum bool
-                        Enable Program control-sum / Integrity vertification. Valid values: 0/1. Default: 1
-  --enigma-protected-exe-cmdline ARGS
-                        Allows to use initial command line arguments for the protected executable.
-  --enigma-args ARGS    Optional enigma-specific arguments to pass during compression.
-
-Packer 'Hyperion' options:
-  --hyperion-path PATH  (required) Path to hyperion binary capable of compressing x86/x64 executables.
-  --hyperion-args ARGS  Optional hyperion-specific arguments to pass during compression.
-
-Packer 'INTELLILOCK' options:
-  --intellilock-path PATH
-                        (required) Path to Intellilock executable.
-  --intellilock-args ARGS
-                        Optional Intellilock-specific arguments to pass during compression.
-
-Packer 'InvObf' options:
-  --invobf-powershell PATH
-                        Path to Powershell interpreter to be used by Invoke-Obfuscation. Default: "powershell.exe"
-  --invobf-path PATH    Path to the Invoke-Obfuscation script.
-  --invobf-args ARGS    Optional Invoke-Obfuscation specific arguments to pass. They override default ones.
-
-Packer 'LoGiC.NET' options:
-  --logicnet-path PATH  (required) Path to LogicNet executable.
-
-Packer '.NET Reactor' options:
-  --netreactor-path PATH
-                        (required) Path to netreactor executable.
-  --netreactor-project-file PATH
-                        (required) Path to .NET Reactor .nrproj project file.
-  --netreactor-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .nrproj extension).
-  --netreactor-antitamp bool
-                        This option prevents your protected assembly from being tampered by hacker tools. Valid values: 0/1. Default: 1
-  --netreactor-control-flow-obfuscation bool
-                        Mangles program flow, making it extremely difficult for humans to follow the program logic. Valid values: 0/1. Default: 1
-  --netreactor-flow-level bool
-                        Controls the level of Control Flow Obfuscation. Valid values: 1-9. Default: 9
-  --netreactor-resourceencryption bool
-                        Enable this option to compress and encrypt embedded resources. Valid values: 0/1. Default: 1
-  --netreactor-necrobit bool
-                        Uses a powerful protection technology NecroBit which completely stops decompilation. It replaces the CIL code within methods with encrypted code. Valid values: 0/1. Default: 1
-  --netreactor-merge-namespaces bool
-                        Enable this option to place all obfuscated types inside a single namespace. Valid values: 0/1. Default: 1
-  --netreactor-short-strings bool
-                        Enable to generate short strings for your obfuscated class and member names. Valid values: 0/1. Default: 1
-  --netreactor-stealth-mode bool
-                        Enable this to generate random meaningful names for obfuscated classes and members. Valid values: 0/1. Default: 1
-  --netreactor-all-params bool
-                        Enable this to obfuscate all method parameters. Valid values: 0/1. Default: 1
-  --netreactor-incremental-obfuscation bool
-                        If you want .NET Reactor always to generate the same obfuscation strings for your type and member names, you need to enable this option. Valid values: 0/1. Default: 1
-  --netreactor-unprintable-characters bool
-                        Unprintable characters uses unprintable strings to obfuscate type and member names, but cannot be used if your assembly must run as safe code. Valid values: 0/1. Default: 1
-  --netreactor-obfuscate-public-types bool
-                        Enable this to obfuscate all type and member names in an assembly. Valid values: 0/1. Default: 1
-  --netreactor-anti-ildasm bool
-                        Suppres decompilation using decompilation tools such as ILDasm. Valid values: 0/1. Default: 1
-  --netreactor-native-exe bool
-                        .NET Reactor is able to generate a native x86 EXE file stub for your app. This way its not going to be possible to directly open the app within a decompiler. Valid values: 0/1. Default: 0
-  --netreactor-prejit bool
-                        In combination with the Native EXE file feature and Necrobit, .NET Reactor is able to convert managed methods into REAL x86 native code. Mostly small methods (like property setters/getters) are converted into native code. Valid values: 0/1. Default: 0
-  --netreactor-public-types-internalization bool
-                        If set to 1, .NET Reactor will convert all public types of an application into internal ones. This way the accessibility of types and members the assembly exposes will be reduced. Valid values: 0/1. Default: 0
-  --netreactor-strong-name-removal bool
-                        Enables anti Strong Name removal technique which prevents protected assemblies from being tampered by hacking tools. Warning: this option can impact the runtime performance of generated protected assembly! Valid values: 0/1. Default: 0
-  --netreactor-args ARGS
-                        Optional netreactor-specific arguments to pass during compression.
-
-Packer '.Netshrink' options:
-  --netshrink-path PATH
-                        (required) Path to netshrink executable.
-  --netshrink-detect-netversion VER
-                        Enable .NET Framework installation detection (default: .NET v2.0). Example: ".NET v4.5"
-  --netshrink-antidebug bool
-                        Enable Anti-Debug checks and prevent output from running under debugger. Valid values: 0/1. Default: 1
-  --netshrink-args ARGS
-                        Optional netshrink-specific arguments to pass during compression.
-
-Packer 'packer64' options:
-  --packer64-path PATH  (required) Path to Packer64 executable.
-
-Packer 'peCloak' options:
-  --pecloak-python-path PATH
-                        (required) Path to Python2.7 interpreter.
-  --pecloak-script-path PATH
-                        (required) Path to peCloakCapstone script file.
-  --pecloak-args ARGS   Optional peCloakCapstone-specific arguments to pass during cloaking.
-
-Packer 'Peresed' options:
-  --peresed-path PATH   Path to peresed. By default will look it up in %PATH%
-  --peresed-args ARGS   Optional peresed-specific arguments to pass. They override default ones.
-
-Packer '.NET Reactor' options:
-  --smartassembly-path PATH
-                        (required) Path to smartassembly executable.
-  --smartassembly-project-file PATH
-                        (required) Path to .NET Reactor .nrproj project file.
-  --smartassembly-save-generated-project-file bool
-                        Specifies whether to save newly generated project file along with the output generated executable (with .nrproj extension).
-  --smartassembly-tamperprotection bool
-                        Apply tamper protection to the assembly. Valid values: 0/1. Default: 1
-  --smartassembly-sealclasses bool
-                        Seal classes that are not inherited. Valid values: 0/1. Default: 1
-  --smartassembly-preventildasm bool
-                        Prevent Microsoft IL Disassembler from opening your assembly. Valid values: 0/1. Default: 1
-  --smartassembly-typemethodobfuscation bool
-                        Apply types / methods name mangling at the specified level to assemblies with nameobfuscate:true. Valid values: 1/2/3. Default: 3
-  --smartassembly-fieldobfuscation bool
-                        Apply fields name mangling at the specified level to assemblies with nameobfuscate:true. Valid values: 1/2/3. Default: 3
-  --smartassembly-methodparentobfuscation bool
-                        Apply method parent obfuscation to the assembly. Valid values: 0/1. Default: 1
-  --smartassembly-cgsobfuscation bool
-                        Obfuscate compiler-generated serializable types. Valid values: 0/1. Default: 1
-  --smartassembly-stringsencoding bool
-                        Enables improved strings encoding with cache and compression enabled. Valid values: 0/1. Default: 1
-  --smartassembly-controlflowobfuscate bool
-                        Sets the level of control flow obfuscation to apply to the assembly: 0 - disabled obfuscation, 4 - Unverifiable. Valid values: 0-4. Default: 4
-  --smartassembly-compressencryptresources bool
-                        Enable / Disable resources compression and encryption. Valid values: 0/1. Default: 1
-  --smartassembly-dynamicproxy bool
-                        Enable / Disable the references dynamic proxy. Valid values: 0/1. Default: 1
-  --smartassembly-pruning bool
-                        Enable / Disable assembly pruning. Valid values: 0/1. Default: 1
-  --smartassembly-nameobfuscate bool
-                        Enable / Disable types and methods obfuscation and field names obfuscation. The obfuscation is applied at the levels specified for the project. Valid values: 0/1. Default: 1
-  --smartassembly-compressassembly bool
-                        Enable / Disable compression when the assembly is embedded. Valid values: 0/1. Default: 1
-  --smartassembly-encryptassembly bool
-                        Enable / Disable compression when the assembly is embedded. Valid values: 0/1. Default: 1
-  --smartassembly-args ARGS
-                        Optional smartassembly-specific arguments to pass during compression.
-
-Packer 'Themida' options:
-  --themida-path-x86 PATH
-                        (required) Path to Themida x86 executable.
-  --themida-path-x64 PATH
-                        (required) Path to Themida x64 executable.
-  --themida-project-file PATH
-                        (required) Path to Themida .tmd project file.
-  --themida-args ARGS   Optional themida-specific arguments to pass during compression.
-
-Packer 'UPX' options:
-  --upx-path PATH       (required) Path to UPX binary capable of compressing x86/x64 executables.
-  --upx-compress LEVEL  Compression level [1-9]: 1 - compress faster, 9 - compress better. Can also be "best" for greatest compression level possible.
-  --upx-corrupt bool    If set to 1 enables UPX metadata corruption to prevent "upx -d" unpacking. This corruption won't affect executable's ability to launch. Default: enabled (1)
-  --upx-args ARGS       Optional UPX-specific arguments to pass during compression.
-
-Packer 'VMProtect' options:
-  --vmprotect-path PATH
-                        (required) Path to vmprotect executable.
-  --vmprotect-project-file PATH
-                        (required) Path to .NET Reactor .nrproj project file.
-  --vmprotect-args ARGS
-                        Optional vmprotect-specific arguments to pass during compression.
-```
-
-Options supplied through the command line _should_ override the ones defined in a config file.
-
 
 ## Adding support for a new Packer
 
@@ -658,12 +515,10 @@ All packers typically build some sort of a command line, or dynamically generate
 
 ## TODO
 
+- Add watermarking to other file formats such as Office documents, WSH scripts (VBS, JS, HTA) and containers
 - Add support for a few other Packers/Loaders/Generators in upcoming future:
-  - [`donut`](https://github.com/TheWover/donut)
-  - [`amber`](https://github.com/EgeBalci/amber)
-  - [`ScareCrow`](https://github.com/optiv/ScareCrow)
   - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
-  - [`sgn`](https://github.com/EgeBalci/sgn)
+  - [`sRDI`](https://github.com/monoxgas/sRDI)
 
 ---
 

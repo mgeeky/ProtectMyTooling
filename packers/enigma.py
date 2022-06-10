@@ -86,7 +86,7 @@ class PackerEnigma(IPacker):
             self.options['enigma_project_file'] = os.path.abspath(configPath(self.options['config'], self.options['enigma_project_file']))
 
             for k, v in PackerEnigma.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if not os.path.isfile(self.options['enigma_path_x86']) or not os.path.isfile(self.options['enigma_path_x64']):
@@ -197,6 +197,8 @@ Adjusted project file:
             raise ArchitectureNotSupported('Architecture {} not supported as there was no corresponding The Enigma Protector path configured!\nPlease configure it using: --enigma-path-{}'.format(arch, arch))
 
         tmpname = ''
+        out = ''
+        
         try:
             cwd = os.getcwd()
             base = os.path.dirname(path)
@@ -225,7 +227,19 @@ Adjusted project file:
             self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
             os.chdir(cwd)
 
-            if os.path.isfile(tmpname): 
-                os.remove(tmpname)
+        if os.path.isfile(tmpname): 
+            os.remove(tmpname)
+            return True
 
-        return os.path.isfile(outfile)
+        else:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerEnigma.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
+
+            return False

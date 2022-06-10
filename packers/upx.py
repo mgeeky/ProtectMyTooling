@@ -57,7 +57,7 @@ class PackerUpx(IPacker):
                 self.logger.fatal('--upx-path option must be specified!')
 
             for k, v in PackerUpx.default_options.items():
-                if k not in self.options.keys():
+                if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             try:
@@ -107,6 +107,12 @@ class PackerUpx(IPacker):
                 self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
                     outfile
                 ))
+
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerUpx.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         except ShellCommandReturnedError as e:
             self.logger.err(f'''Error message from packer:

@@ -86,7 +86,7 @@ def parse_options(logger, opts, version):
     )
 
     parser.add_argument('packers', metavar='packers', help='Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(original)) output.')
-    parser.add_argument('infile', metavar='_input', help='Input file to be packed/protected.')
+    parser.add_argument('infile', metavar='infile', help='Input file to be packed/protected.')
     parser.add_argument('outfile', metavar='output', help='Output file constituing generated sample.')
 
     defcfg = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../ProtectMyTooling.yaml'))
@@ -111,6 +111,7 @@ def parse_options(logger, opts, version):
     
     ioc = parser.add_argument_group("IOCs collection")
     ioc.add_argument('-i', '--ioc', action='store_true', help = 'Collect IOCs and save them to .csv file side by side to <outfile>')
+    ioc.add_argument('--ioc-path', default='', help = 'Optional. Specify a path for the IOC file. By default will place outfile-ioc.csv side by side to generated output artifact.')
     ioc.add_argument('-I', '--custom-ioc', default='', help = 'Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"')
 
     wat = parser.add_argument_group("Artifact Watermarking")
@@ -149,6 +150,14 @@ def parse_options(logger, opts, version):
 
     if params.nocolors:
         opts['colors'] = False
+
+    if len(opts['arch']) > 0:
+        opts['arch'] = opts['arch'].lower()
+        if not opts['arch'].startswith('x'):
+            opts['arch'] = 'x' + opts['arch']
+
+        if opts['arch'] != 'x86' and opts['arch'] != 'x64':
+            logger.fatal('Invalid --arch specified! Must be one of -a x86 / -a x64')
 
     for i in range(len(allPackersList)):
         allPackersList[i] = os.path.basename(allPackersList[i]).replace('.py', '')

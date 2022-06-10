@@ -4,6 +4,9 @@
 from abc import ABC, abstractmethod
 from lib.utils import *
 
+import sys, os
+import lib.logger
+
 class IPacker(ABC):
 
     def __init__(self, logger, options):
@@ -49,6 +52,11 @@ class IPacker(ABC):
     def build_cmdline(template, command, options = [], infile = '', outfile = ''):
         out = template
         out = out.replace('<command>', command)
+
+        if len(command) == 0 or not os.path.isfile(command):
+            lib.logger.Logger.out(f'FATAL: Packer command file does not exist: "{command}"\nCannot build shell command line to run the packer! Check your YAML or ProtectMyTooling parameters', 
+                sys.stdout, '[!] ', color='red')
+            os._exit(1)
 
         if len(options) > 0: 
             if type(options) == type([]): out = out.replace('<options>', ' '.join(options))

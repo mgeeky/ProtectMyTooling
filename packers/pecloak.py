@@ -75,6 +75,7 @@ class PackerPeCloak(IPacker):
         )
 
         succeeded = False
+        out = ''
 
         try:
             copyfile(infile, outfile)
@@ -128,5 +129,16 @@ class PackerPeCloak(IPacker):
 
                 move(tmpoutfile, outfile)
                 succeeded = True
+
+        if not succeeded:
+            self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
+                outfile
+            ))
+
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerPeCloak.get_name()} returned:
+----------------------------------------
+{out}
+----------------------------------------
+''', forced = True, noprefix=True)
 
         return succeeded
