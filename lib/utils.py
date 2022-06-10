@@ -28,6 +28,7 @@ class PackerType(Enum):
     ShellcodeLoader      = 3
     ShellcodeEncoder     = 4
     PowershellObfuscator = 5
+    ShellcodeConverter   = 6
 
 packerTypeNames = {
     PackerType.Unsupported          : 'Unsupported',
@@ -36,6 +37,7 @@ packerTypeNames = {
     PackerType.ShellcodeLoader      : 'Shellcode Loader',
     PackerType.ShellcodeEncoder     : 'Shellcode Encoder',
     PackerType.PowershellObfuscator : 'Powershell Obfuscator',
+    PackerType.ShellcodeConverter   : 'Shellcode Converter',
 }
 
 logger = Logger()

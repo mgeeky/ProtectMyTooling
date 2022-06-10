@@ -70,6 +70,12 @@ scarecrow_sandbox: False
 scarecrow_sign: False
 
 #
+# pe2shc
+#
+pe2shc_path: "contrib\\pe2shc\\pe2shc.exe"
+pe2shc_args: 
+
+#
 # sgn
 #
 sgn_path: "contrib\\sgn\\sgn.exe"

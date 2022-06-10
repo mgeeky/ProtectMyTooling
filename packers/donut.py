@@ -34,7 +34,7 @@ class PackerDonut(IPacker):
 
     @staticmethod
     def get_type():
-        return PackerType.ShellcodeLoader
+        return PackerType.ShellcodeConverter
 
     @staticmethod
     def get_desc():
