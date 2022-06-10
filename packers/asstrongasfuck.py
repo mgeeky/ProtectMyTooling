@@ -22,6 +22,10 @@ class PackerAsStrongAsFuck(IPacker):
         return 'AsStrongAsFuck'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return 'AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)'
 

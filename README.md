@@ -1,6 +1,7 @@
 # ProtectMyTooling - a wrapper around Packers, Protectors and Script Obfuscators
 
 Script that builds around supported packers & protectors to produce complex protected binaries and scripts.
+Your perfect companion in Malware Development CI/CD pipeline, **helping you watermark your artifacts and collect IOCs**
 
 With `ProtectMyTooling` you can quickly obfuscate your binaries without having to worry about clicking through all the Dialogs, interfaces, menus, creating projects to obfuscate a single binary, clicking through all the options available and wasting time about all that nonsense. It takes you straight to the point - to obfuscate your tool.
 
@@ -17,6 +18,8 @@ The above example will firstly pass `mimikatz.exe` to the Hyperion for obfuscati
 
 ## Usage
 
+### Scenario 1: Simple ConfuserEx obfuscation
+
 Usage is very simple, all it takes is to pass the name of obfuscator to choose, input and output file paths:
 
 ```
@@ -28,11 +31,13 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
         v0.11
 
 
-[.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
+[.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
 
 [+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 756224, ratio: 181.23%
 ```
+
+### Scenario 2: Simple ConfuserEx obfuscation followed by artifact test
 
 One can also obfuscate the file and immediately attempt to launch it (also with supplied optional parameters) to ensure it runs fine with options `-r --cmdline CMDLINE`:
 
@@ -45,7 +50,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "h
         v0.11
 
 
-[.] Processing x86 file: "d:\dev2\ProtectMyTooling\Rubeus.exe"
+[.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
 
 [+] SUCCEEDED. Original file size: 417280 bytes, new file size ConfuserEx(<file>): 758272, ratio: 181.72%
@@ -71,8 +76,51 @@ Running application to test it...
 [!] /user:X and /domain:Y need to be supplied to calculate AES and DES hash types!
 ```
 
+### Scenario 3: Complex malware obfuscation with watermarking and IOCs collection
 
-Other options include:
+Below use case takes `beacon.exe` on input and feeds it consecutively into `CallObf` -> `UPX` -> `Hyperion` packers.
+
+Then it will inject specified `fooobar` watermark to the final generated output artifact's DOS Stub as well as modify that artifact's checksum with value `0xAABBCCDD`.
+
+Finally, ProtectMyTooling will capture all IOCs (md5, sha1, sha256, imphash, and other metadata) and save them in auxiliary CSV file. That file can be used for IOC matching as engagement unfolds.
+
+```
+PS> py .\ProtectMyTooling.py callobf,upx,hyperion beacon.exe beacon-obf.exe -i -I operation_chimera -w dos-stub=fooobar -w checksum=0xaabbccdd
+
+        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
+        Script that builds around supported packers & protectors to produce complex protected binaries.
+        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+        v0.12
+
+[.] Processing x64 file: "beacon.exe"
+[>] Generating output of CallObf(<file>)...
+
+[.] Before obfuscation file's PE IMPHASH:       17b461a082950fc6332228572138b80c
+[.] After obfuscation file's PE IMPHASH:        378d9692fe91eb54206e98c224a25f43
+[>] Generating output of UPX(CallObf(<file>))...
+
+[>] Generating output of Hyperion(UPX(CallObf(<file>)))...
+
+[+] Setting PE checksum to 2864434397 (0xaabbccdd)
+[+] Successfully watermarked resulting artifact file.
+[+] IOCs written to: beacon-obf-ioc.csv
+
+[+] SUCCEEDED. Original file size: 288256 bytes, new file size Hyperion(UPX(CallObf(<file>))): 175616, ratio: 60.92%
+```
+
+Produced IOCs evidence CSV file will look as follows:
+
+```csv
+timestamp,filename,author,context,comment,md5,sha1,sha256,imphash
+2022-06-10 03:15:52,beacon.exe,mgeeky@commandoVM,Input File,test,dcd6e13754ee753928744e27e98abd16,298de19d4a987d87ac83f5d2d78338121ddb3cb7,0a64768c46831d98c5667d26dc731408a5871accefd38806b2709c66cd9d21e4,17b461a082950fc6332228572138b80c
+2022-06-10 03:15:52,y49981l3.bin,mgeeky@commandoVM,Obfuscation artifact: CallObf(<file>),test,50bbce4c3cc928e274ba15bff0795a8c,15bde0d7fbba1841f7433510fa9aa829f8441aeb,e216cd8205f13a5e3c5320ba7fb88a3dbb6f53ee8490aa8b4e1baf2c6684d27b,378d9692fe91eb54206e98c224a25f43
+2022-06-10 03:15:53,nyu2rbyx.bin,mgeeky@commandoVM,Obfuscation artifact: UPX(CallObf(<file>)),test,4d3584f10084cded5c6da7a63d42f758,e4966576bdb67e389ab1562e24079ba9bd565d32,97ba4b17c9bd9c12c06c7ac2dc17428d509b64fc8ca9e88ee2de02c36532be10,9aebf3da4677af9275c461261e5abde3
+2022-06-10 03:15:53,beacon-obf.exe,mgeeky@commandoVM,Obfuscation artifact: Hyperion(UPX(CallObf(<file>))),test,8b706ff39dd4c8f2b031c8fa6e3c25f5,c64aad468b1ecadada3557cb3f6371e899d59790,087c6353279eb5cf04715ef096a18f83ef8184aa52bc1d5884e33980028bc365,a46ea633057f9600559d5c6b328bf83d
+2022-06-10 03:15:53,beacon-obf.exe,mgeeky@commandoVM,Output obfuscated artifact,test,043318125c60d36e0b745fd38582c0b8,a7717d1c47cbcdf872101bd488e53b8482202f7f,b3cf4311d249d4a981eb17a33c9b89eff656fff239e0d7bb044074018ec00e20,a46ea633057f9600559d5c6b328bf83d
+```
+
+
+### Other options include
 
 ```
 C:\> py ProtectMyTooling.py --help
@@ -80,7 +128,7 @@ C:\> py ProtectMyTooling.py --help
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
+        v0.12
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -102,6 +150,16 @@ options:
   -s, --silent          Surpresses all of the output logging.
   -C, --nocolors        Do not use colors in output.
 
+IOCs collection:
+  -i, --ioc             Collect IOCs and save them to .csv file side by side to <outfile>
+  -I CUSTOM_IOC, --custom-ioc CUSTOM_IOC
+                        Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"
+
+Artifact Watermarking:
+  -w WHERE=STR [WHERE=STR ...], --watermark WHERE=STR [WHERE=STR ...]
+                        Inject watermark to generated artifact. Syntax: where=value, example: "-w dos-stub=Foobar". Available watermark places: dos-stub,checksum,overlay,section . Section requires NAME,STR syntax where NAME denotes PE section name, e.g. "-w section=.foo,bar" will create PE section named ".foo" with contents "bar". May be
+                        repeated.
+
 Test sample after generation:
   -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
   --cmdline CMDLINE     Command line for the generated sample
@@ -117,12 +175,34 @@ Optional AV Handling hooks:
 Packers handling:
   -L, --list-packers    List available packers.
 
-[...]
+PROTIP: Use "py ProtectMyTooling.py -h -v" to see all packer-specific options.
 ```
 
 ## Supported Packers
 
-The script supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
+`ProtectMyTooling` was designed to support not only Obfuscators/Packers but also all sort of builders/generators/shellcode loaders usable from the command line.
+
+Each Packer plugin denotes its purpose by presenting itself with one of the enum values:
+
+```py
+class PackerType(Enum):
+    Unsupported          = 0
+    DotNetObfuscator     = 1
+    PEProtector          = 2
+    ShellcodeLoader      = 3
+    ShellcodeEncoder     = 4
+    PowershellObfuscator = 5
+```
+
+`ProtectMyTooling` is expected to support few other Packers/Loaders/Generators in upcoming future:
+- [`donut`](https://github.com/TheWover/donut)
+- [`amber`](https://github.com/EgeBalci/amber)
+- [`ScareCrow`](https://github.com/optiv/ScareCrow)
+- [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
+- [`sgn`](https://github.com/EgeBalci/sgn)
+
+
+At the moment, program supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
 Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
 
 1. [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
@@ -151,25 +231,25 @@ C:\> py ProtectMyTooling.py -L
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
+        v0.12
 
-[ 1] Packer: callobf        - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
-[ 2] Packer: confuserex     - An open-source protector for .NET applications
-[ 3] Packer: enigma         - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
-[ 4] Packer: hyperion       - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
-[ 5] Packer: intellilock    - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
-[ 6] Packer: invobf         - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
-[ 7] Packer: netreactor     - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[ 8] Packer: netshrink      - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[ 9] Packer: packer64       - jadams/Packer64 - Packer for 64-bit PE exes
-[10] Packer: pecloak        - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
-[11] Packer: peresed        - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
-[12] Packer: smartassembly  - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[13] Packer: themida        - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[14] Packer: upx            - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[15] Packer: vmprotect      - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
-[16] Packer: logicnet       -  LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
-[17] Packer: asstrongasfuck - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
+[ 1] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
+[ 2] callobf        -  PE EXE/DLL Protector   - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
+[ 3] confuserex     -  .NET Obfuscator        - An open-source protector for .NET applications
+[ 4] enigma         -  PE EXE/DLL Protector   - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
+[ 5] hyperion       -  PE EXE/DLL Protector   - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
+[ 6] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
+[ 7] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
+[ 8] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
+[ 9] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[10] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
+[11] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
+[12] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
+[13] peresed        -  PE EXE/DLL Protector   - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
+[14] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[15] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[16] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[17] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
@@ -251,6 +331,10 @@ class PackerInvObf(IPacker):
         return 'Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)'
 
     @staticmethod
+    def get_type():
+        return PackerType.PowershellObfuscator
+
+    @staticmethod
     def validate_file_architecture():
         return False
 ```
@@ -261,10 +345,12 @@ class PackerInvObf(IPacker):
 Full help displaying all the available options:
 
 ```
+PS > py .\ProtectMyTooling.py -h -v
+
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
         Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
+        v0.12
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -285,6 +371,16 @@ options:
   -l PATH, --log PATH   Specifies output log file.
   -s, --silent          Surpresses all of the output logging.
   -C, --nocolors        Do not use colors in output.
+
+IOCs collection:
+  -i, --ioc             Collect IOCs and save them to .csv file side by side to <outfile>
+  -I CUSTOM_IOC, --custom-ioc CUSTOM_IOC
+                        Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"
+
+Artifact Watermarking:
+  -w WHERE=STR [WHERE=STR ...], --watermark WHERE=STR [WHERE=STR ...]
+                        Inject watermark to generated artifact. Syntax: where=value, example: "-w dos-stub=Foobar". Available watermark places: dos-stub,checksum,overlay,section . Section requires NAME,STR syntax where NAME denotes PE section name, e.g. "-w section=.foo,bar" will create PE section named ".foo" with contents "bar". May be
+                        repeated.
 
 Test sample after generation:
   -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
@@ -365,6 +461,12 @@ Packer 'INTELLILOCK' options:
   --intellilock-args ARGS
                         Optional Intellilock-specific arguments to pass during compression.
 
+Packer 'InvObf' options:
+  --invobf-powershell PATH
+                        Path to Powershell interpreter to be used by Invoke-Obfuscation. Default: "powershell.exe"
+  --invobf-path PATH    Path to the Invoke-Obfuscation script.
+  --invobf-args ARGS    Optional Invoke-Obfuscation specific arguments to pass. They override default ones.
+
 Packer 'LoGiC.NET' options:
   --logicnet-path PATH  (required) Path to LogicNet executable.
 
@@ -431,6 +533,10 @@ Packer 'peCloak' options:
   --pecloak-script-path PATH
                         (required) Path to peCloakCapstone script file.
   --pecloak-args ARGS   Optional peCloakCapstone-specific arguments to pass during cloaking.
+
+Packer 'Peresed' options:
+  --peresed-path PATH   Path to peresed. By default will look it up in %PATH%
+  --peresed-args ARGS   Optional peresed-specific arguments to pass. They override default ones.
 
 Packer '.NET Reactor' options:
   --smartassembly-path PATH
@@ -508,6 +614,7 @@ That plugin class must override `IPacker.py` interface, which pretty much boils 
 Then, your `process(...)` method could be as simple as the one visible in `packers/upx.py` implementation:
 
 ```py
+  @ensureInputFileIsPE
   def process(self, arch, infile, outfile):
         ver = shell(self.logger, self.options['upx_path'] + ' --version').split('\n')[0].strip()
         self.logger.info(f'Working with {ver}')
@@ -547,6 +654,16 @@ Then, your `process(...)` method could be as simple as the one visible in `packe
 
 All packers typically build some sort of a command line, or dynamically generate XML files and ultimately call out to `shell(...)` to execute the packer using its CLI interface (for instance _ConfuserEx_ has an executable named `ConfuserEx.CLI.exe`). 
 
+---
+
+## TODO
+
+- Add support for a few other Packers/Loaders/Generators in upcoming future:
+  - [`donut`](https://github.com/TheWover/donut)
+  - [`amber`](https://github.com/EgeBalci/amber)
+  - [`ScareCrow`](https://github.com/optiv/ScareCrow)
+  - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
+  - [`sgn`](https://github.com/EgeBalci/sgn)
 
 ---
 

@@ -19,6 +19,10 @@ class PackerIntellilock(IPacker):
         return 'INTELLILOCK'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return '(paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.'
 

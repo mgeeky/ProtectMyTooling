@@ -23,6 +23,10 @@ class PackerNetshrink(IPacker):
         return '.Netshrink'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return '(paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression'
 

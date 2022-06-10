@@ -3,21 +3,46 @@
 
 import os
 import re
+import socket
 import pefile
 import hashlib
 import tempfile
+import getpass
 import subprocess
 
+from datetime import datetime
 from lib.logger import Logger
 from xml.dom import minidom
-
-logger = Logger()
+from enum import Enum
 
 class ArchitectureNotSupported(Exception):
     pass
 
 class ShellCommandReturnedError(Exception):
     pass
+
+class PackerType(Enum):
+    Unsupported          = 0
+    DotNetObfuscator     = 1
+    PEProtector          = 2
+    ShellcodeLoader      = 3
+    ShellcodeEncoder     = 4
+    PowershellObfuscator = 5
+
+packerTypeNames = {
+    PackerType.Unsupported          : 'Unsupported',
+    PackerType.DotNetObfuscator     : '.NET Obfuscator',
+    PackerType.PEProtector          : 'PE EXE/DLL Protector',
+    PackerType.ShellcodeLoader      : 'Shellcode Loader',
+    PackerType.ShellcodeEncoder     : 'Shellcode Encoder',
+    PackerType.PowershellObfuscator : 'Powershell Obfuscator',
+}
+
+logger = Logger()
+
+SkipTheseModuleNames = (
+    'PackerType'
+)
 
 def getClrAssemblyName(path):
     #
@@ -32,18 +57,40 @@ def getClrAssemblyName(path):
     except:
         return ''
 
+def isValidPE(path):
+    pe = None
+    try:
+        pe = pefile.PE(path)
+        pe.close()
+        return True
+    except pefile.PEFormatError:
+        return False
+    finally:
+        if pe:
+            pe.close()
+
 def isDotNetExecutable(path):
-    pe = pefile.PE(path)
-    idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
+    if not isValidPE(path):
+        return False
 
-    dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+    pe = None
+    try:
+        pe = pefile.PE(path)
+        idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
 
-    if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
-        for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
-                for func in entry.imports:
-                    if func.name.decode() == '_CorExeMain':
-                        return True
+        dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+
+        if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
+            for entry in pe.DIRECTORY_ENTRY_IMPORT:
+                if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
+                    for func in entry.imports:
+                        if func.name.decode() == '_CorExeMain':
+                            return True
+    except Exception as e:
+        raise
+    finally:
+        if pe:
+            pe.close()
 
     return False
 
@@ -59,10 +106,51 @@ def ensureInputFileIsDotNet(func):
 
     return ensure
 
+def ensureInputFileIsPE(func):
+    def ensure(self, arch, infile, outfile):
+        global logger
+        logger = Logger(self.options)
+
+        if not isValidPE(infile):
+            logger.fatal('Specified input file is not a valid PE executable (EXE/DLL) as required by this packer!')
+
+        return func(self, arch, infile, outfile)
+
+    return ensure
+
 def prettyXml(xmlstr):
     reparsed = minidom.parseString(xmlstr)
     out = '\n'.join([line for line in reparsed.toprettyxml(indent=' '*2).split('\n') if line.strip()])
     return out.encode()
+
+def collectIOCs(filepath, context, comment):
+    iocs = {}
+    iocs['filename'] = os.path.basename(filepath)
+    iocs['timestamp'] = datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    iocs['author'] = f'{getpass.getuser()}@{socket.gethostname()}'
+    iocs['context'] = context
+    iocs['comment'] = comment
+
+    with open(filepath, 'rb') as f:
+        data = f.read()
+
+        iocs['md5'] = hashlib.md5(data).hexdigest()
+        iocs['sha1'] = hashlib.sha1(data).hexdigest()
+        iocs['sha256'] = hashlib.sha256(data).hexdigest()
+
+        if isValidPE(filepath):
+            pe = pefile.PE(filepath)
+            iocs['imphash'] = pe.get_imphash()
+            pe.close()
+        else:
+            iocs['imphash'] = 'N/A'
+
+        if isDotNetExecutable(filepath):
+            iocs['typeref_hash'] = 'not-yet-implemented'
+        else:
+            iocs['typeref_hash'] = 'N/A'
+
+    return iocs
 
 def shell2(cmd, alternative = False, stdErrToStdout = False, timeout = 60):
     CREATE_NO_WINDOW = 0x08000000
@@ -127,8 +215,8 @@ def shell(logger, cmd, alternative = False, output = False, timeout = 60):
     
     out = shell2(cmd, alternative, stdErrToStdout = output, timeout = timeout)
 
-    if not output:
-        logger.dbg('Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out))
+    if not output or (type(output) == str and len(output) == 0):
+        logger.dbg('Command did not produce any output.')
     else:
         logger.info('Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out), forced = True)
 

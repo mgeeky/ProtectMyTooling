@@ -18,6 +18,10 @@ class PackerLogicNet(IPacker):
         return 'LoGiC.NET'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return 'LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)'
 

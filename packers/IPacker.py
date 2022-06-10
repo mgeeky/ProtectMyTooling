@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from abc import ABC, abstractmethod
+from lib.utils import *
 
 class IPacker(ABC):
 
@@ -12,6 +13,11 @@ class IPacker(ABC):
     @abstractmethod
     def get_name():
         return 'IPacker'
+
+    @staticmethod
+    @abstractmethod
+    def get_type():
+        return PackerType.Unsupported
 
     @staticmethod
     @abstractmethod

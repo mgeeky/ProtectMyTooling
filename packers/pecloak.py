@@ -24,6 +24,10 @@ class PackerPeCloak(IPacker):
         return 'peCloak'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return 'A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift'
 
@@ -55,6 +59,7 @@ class PackerPeCloak(IPacker):
     def buildArgs(self, infile):
         pass
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
 
         if arch != 'x86':

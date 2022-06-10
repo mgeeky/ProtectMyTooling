@@ -43,6 +43,10 @@ class PackerNetReactor(IPacker):
         return '.NET Reactor'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return '(paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques'
 

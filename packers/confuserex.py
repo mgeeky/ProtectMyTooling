@@ -29,6 +29,10 @@ class PackerConfuserEx(IPacker):
         return 'ConfuserEx'
 
     @staticmethod
+    def get_type():
+        return PackerType.DotNetObfuscator
+
+    @staticmethod
     def get_desc():
         return 'An open-source protector for .NET applications'
 

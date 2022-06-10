@@ -22,6 +22,10 @@ class PackerVMProtect(IPacker):
         return 'VMProtect'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return '(paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.'
 
@@ -50,6 +54,7 @@ class PackerVMProtect(IPacker):
                 and len(self.options['vmprotect_args']) > 0: 
                 self.vmprotect_args += ' ' + self.options['vmprotect_args']
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         try:
             cwd = os.getcwd()

@@ -32,6 +32,10 @@ class PackerCallObf(IPacker):
         return 'CallObf'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return 'CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones'
 
@@ -54,7 +58,7 @@ class PackerCallObf(IPacker):
             self.options['callobf_path_x64'] = configPath(self.options['config'], self.options['callobf_path_x64'])
 
             if not os.path.isfile(self.options['callobf_path_x86']) or not os.path.isfile(self.options['callobf_path_x64']):
-                self.logger.fatal('Both --callobf-path-x86 and --calobf-path-x64 option must be specified!')
+                self.logger.fatal('Both --callobf-path-x86 and --callobf-path-x64 option must be specified!')
 
             if self.options['callobf_config'] != 'generate-automatically':
                 if not os.path.isfile(self.options['callobf_config']):
@@ -175,7 +179,7 @@ Resulting generated CallObfuscator config file:
 
         return configPath
 
-
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         configPath = self.options['callobf_config']
         autoGen = False
@@ -220,46 +224,56 @@ Resulting generated CallObfuscator config file:
     def renameSection(self, outfile):
         self.logger.info(f'Renaming .cobf PE section...')
 
-        pe = pefile.PE(outfile)
+        pe = None
 
-        newSectionNames = (
-            '.info',
-            '.meta',
-            '.udata',
-            '.jdata',
-            '.ldata',
-            '.vdata',
-            '.hinfo',
-            '.finfo',
-            '.blob',
-            '.bcert',
-            '.bsec',
-            '.odat',
-            '.adat',
-            '.edat',
-            '.tdat',
-            '.cdat',
-        )
+        try:
+            pe = pefile.PE(outfile)
 
-        section_table_offset = (pe.DOS_HEADER.e_lfanew + 4 + 
-            pe.FILE_HEADER.sizeof() + pe.FILE_HEADER.SizeOfOptionalHeader)
+            newSectionNames = (
+                '.info',
+                '.meta',
+                '.udata',
+                '.jdata',
+                '.ldata',
+                '.vdata',
+                '.hinfo',
+                '.finfo',
+                '.blob',
+                '.bcert',
+                '.bsec',
+                '.odat',
+                '.adat',
+                '.edat',
+                '.tdat',
+                '.cdat',
+            )
 
-        sectnum = 0
-        for sect in pe.sections:
-            section_offset = section_table_offset + sectnum * 0x28
-            sectnum += 1
+            section_table_offset = (pe.DOS_HEADER.e_lfanew + 4 + 
+                pe.FILE_HEADER.sizeof() + pe.FILE_HEADER.SizeOfOptionalHeader)
 
-            if sect.Name.decode().lower().startswith('.cobf'):
-                newSectName = random.choice(newSectionNames)
-                newname = newSectName.encode() + ((8 - len(newSectName)) * b'\x00')
-                
-                self.logger.dbg('\tRenamed CallObfuscator section ({}) => ({})'.format(
-                    sect.Name.decode(), newSectName
-                ))
-                
-                pe.set_bytes_at_offset(section_offset, newname)
-                break
+            sectnum = 0
+            for sect in pe.sections:
+                section_offset = section_table_offset + sectnum * 0x28
+                sectnum += 1
 
-        pe.parse_sections(section_table_offset)
-        pe.write(outfile)
-        print('[.] After obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())
+                if sect.Name.decode().lower().startswith('.cobf'):
+                    newSectName = random.choice(newSectionNames)
+                    newname = newSectName.encode() + ((8 - len(newSectName)) * b'\x00')
+                    
+                    self.logger.dbg('\tRenamed CallObfuscator section ({}) => ({})'.format(
+                        sect.Name.decode(), newSectName
+                    ))
+                    
+                    pe.set_bytes_at_offset(section_offset, newname)
+                    break
+
+            pe.parse_sections(section_table_offset)
+            pe.write(outfile)
+            print('[.] After obfuscation file\'s PE IMPHASH:\t' + pe.get_imphash())
+
+        except Exception as e:
+            self.logger.err(f'Exception thrown while renaming sections!\n{e}')
+
+        finally:
+            if pe:
+                pe.close()

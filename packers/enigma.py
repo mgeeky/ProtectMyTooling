@@ -29,6 +29,10 @@ class PackerEnigma(IPacker):
         return 'EnigmaProtector'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return '(paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization'
 
@@ -183,6 +187,7 @@ Adjusted project file:
             with open(outfile + suf, 'w') as foo:
                 foo.write(newProject.decode())
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         path = self.options['enigma_path_x86']
         if arch == 'x64':

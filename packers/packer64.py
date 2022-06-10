@@ -32,6 +32,10 @@ class PackerPacker64(IPacker):
         return 'packer64'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return 'jadams/Packer64 - Packer for 64-bit PE exes'
 
@@ -46,6 +50,7 @@ class PackerPacker64(IPacker):
             if not os.path.isfile(self.options['packer64_path']):
                 self.logger.fatal('--packer64-path option must be specified!')
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
 
         if arch != 'x64':

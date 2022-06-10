@@ -1101,11 +1101,15 @@ def main(argv):
 	print header # print display header
 	
 	# open file for modification
+	pe = None
 	try:
 		pe =  pefile.PE(file)
 	except:
 		print "[!] ERROR: Cannot open file [%s] for modification" % file
 		sys.exit()
+	finally:
+        if pe:
+            pe.close()
 
 	# get entry point
 	ep, ep_ava = get_entry(pe)

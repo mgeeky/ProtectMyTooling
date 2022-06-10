@@ -18,6 +18,10 @@ class PackerThemida(IPacker):
         return 'Themida'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return '(paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.'
 
@@ -53,6 +57,7 @@ class PackerThemida(IPacker):
                 and len(self.options['themida_args']) > 0: 
                 self.themida_args += ' ' + self.options['themida_args']
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         path = self.options['themida_path_x86']
         if arch == 'x64':

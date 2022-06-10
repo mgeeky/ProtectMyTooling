@@ -7,18 +7,21 @@
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.11'
+VERSION = '0.12'
 
 import os
 import pefile
 import shutil
 import glob
+import time
 import pprint
+import atexit
 import lib.optionsparser
 from lib.packersloader import PackersLoader
 from lib.logger import Logger
 from lib.utils import *
 
+from implantWatermarker import PeWatermarker
 
 options = {
     'debug': False,
@@ -31,18 +34,23 @@ options = {
     'log': None,
     'packers': '',
     'packer_class_name': 'Packer\\w+',
+    'watermark' : [],
 }
 
 logger = None
 packersloader = None
+av_enable_status = -1
 
 def init():
     global logger
+    global options
     global packersloader
 
     logger = Logger()
 
-    lib.optionsparser.parse_options(logger, options, VERSION)
+    opts = lib.optionsparser.parse_options(logger, options, VERSION)
+    options.update(opts)
+    
     logger = Logger(options)
     packersloader = PackersLoader(logger, options)
 
@@ -61,64 +69,8 @@ def launchPacker(arch, packer, infile, outfile):
 
     return packersloader[packer].process(arch, infile, outfile)
 
-def checkAv():
-    outstatus = -1
-
-    logger.info("Checking AV status...")
-
-    if 'check_av_command' in options.keys() and 'disable_av_command' in options.keys() \
-        and 'enable_av_command' in options.keys() and options['check_av_command']:
-
-        out = shell(logger, options['check_av_command'])
-        logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
-
-        if out.lower() == 'false':
-            logger.info('AV seemingly enabled.')
-            outstatus = 1
-        elif out.lower() == 'true':
-            logger.info('AV seemingly disabled.')
-            outstatus = 0
-    else:
-        return outstatus
-    
-    if outstatus == -1:
-        logger.info('Unknown AV status.')
-
-    return outstatus
-
-def handleAv(status):
-    outstatus = -1
-
-    if 'disable_av_command' not in options.keys() or not options['disable_av_command'] or \
-        'enable_av_command' not in options.keys() or not options['enable_av_command']:
-        logger.info("No Enable/Disable AV commands were specified, skipping AV orchestration.")
-        return outstatus
-
-    if status == 0:
-        outstatus = checkAv()
-
-        if outstatus == 1:
-            logger.dbg('Disabling AV...')
-
-            out = shell(logger, options['disable_av_command'])
-
-            logger.dbg('AV disable command returned: "{}"'.format(str(out))) 
-            logger.info('AV should be disabled now.')
-
-        return outstatus
-
-    elif status == 1:
-        logger.dbg('Enabling AV...')
-
-        out = shell(logger, options['enable_av_command'])
-
-        logger.dbg('AV enable command returned: "{}"'.format(str(out))) 
-        logger.info('AV should be enabled now.')
-
-    else:
-        return -1
-
 def getFileArch(infile):
+    pe = None
     try:
         if options['arch'] != '': 
             return options['arch']
@@ -129,11 +81,83 @@ def getFileArch(infile):
     except pefile.PEFormatError as e:
         logger.fatal('Could not detect input file\'s architecture. Please specify it using --arch!')
 
+    finally:
+        if pe:
+            pe.close()
+
     return arch
+
+def injectWatermark(outfile):
+    try:
+        if len(options['watermark']) == 0:
+            return False
+
+        temp = tempfile.NamedTemporaryFile(delete=False)
+        shutil.copy(outfile, temp.name)
+
+        opts = {
+            'verbose' : options['verbose'],
+            'debug' : options['debug'],
+            'check' : False,
+        }
+
+        for k in lib.optionsparser.AvailableWatermarkSpots:
+            k = k.replace('-', '_')
+            if k == 'checksum':
+                opts[k] = 0
+                continue
+
+            opts[k] = ''
+
+        for watermark in options['watermark']:
+            spot, marker = watermark.split('=')
+            spot = spot.replace('-', '_')
+
+            if 'checksum' == spot:
+                try:
+                    marker = marker.lower()
+                    base = 10
+
+                    if marker.startswith('0x') or \
+                        'a' in marker or 'b' in marker or 'c' in marker or \
+                        'd' in marker or 'e' in marker or 'f' in marker:
+                        base = 16
+
+                    num = int(marker, base)
+
+                    if num >= 2**32:
+                        logger.fatal('Specified checksum number in --watermark is too large! Must be no bigger than 2^32-1 (0xffffffff)!')
+
+                    opts[spot] = num
+
+                except Exception as e:
+                    logger.fatal('Invalid --watermark checksum=NUM value, could not be casted to integer!')
+            else:
+                opts[spot] = marker
+
+        pewat = PeWatermarker(opts, logger, outfile, temp.name)
+        result = pewat.watermark()
+
+        if result:
+            logger.ok('Successfully watermarked resulting artifact file.')
+            shutil.copy(temp.name, outfile)
+        else:
+            logger.err('Could not watermark resulting artifact file.')
+
+        return result
+
+    except Exception as e:
+        raise
+        return False
+
+    finally:
+        temp.close()
+        os.unlink(temp.name)
 
 def validateOutfile(outfile):
     return os.path.isfile(outfile)
 
+    pe = None
     try:
         pe = pefile.PE(outfile)
 
@@ -144,12 +168,21 @@ def validateOutfile(outfile):
         logger.err('Output file validation failed as it has corrupted PE structure: ' + str(e))
         return False
 
+    finally:
+        if pe:
+            pe.close()
+
 def testRun(outfile):
     print('\n\nRunning application to test it...\n')
     print(shell(logger, '"{}" {}'.format(outfile, options['cmdline'])))
 
 def processFile(singleFile, infile, _outfile):
     result = False
+
+    iocsCollected = []
+
+    if options['ioc']:
+        iocsCollected.append(lib.utils.collectIOCs(infile, 'Input File', options['custom_ioc']))
     
     try:
         tmps = []
@@ -193,7 +226,7 @@ def processFile(singleFile, infile, _outfile):
 =================================================
     '''.format(packersChain))
             else:
-                print('[.] Generating output of {}...\n'.format(packersChain))
+                logger.info('[>] Generating output of {}...\n'.format(packersChain), forced = True, noprefix=True, color = 'yellow')
 
             logger.dbg('\tinfile  < "{}"'.format(infile))
             logger.dbg('\toutfile > "{}"'.format(outfile))
@@ -220,6 +253,9 @@ def processFile(singleFile, infile, _outfile):
             else:
                 result = True
 
+                if options['ioc']:
+                    iocsCollected.append(lib.utils.collectIOCs(outfile, 'Obfuscation artifact: ' + packersChain, options['custom_ioc']))
+
             if not os.path.isfile(outfile):
                 if singleFile:
                     logger.fatal('Output file does not exist (maybe AV kicked in?). FATAL.')
@@ -231,16 +267,58 @@ def processFile(singleFile, infile, _outfile):
 
         for t in tmps:
             logger.dbg('Removing intermediary file: {}'.format(t))
-            os.remove(t)
+            try:
+                os.remove(t)
+            except Exception as e:
+                logger.err(f'Could not remove intermediary file: {t}\n\tException thrown: {e}')
 
         if result:
-            logger.info('\n[.] File packed. Generated output: "{}"'.format(_outfile))
+            logger.info('\n[.] File packed. Generated output: "{}"'.format(_outfile), noprefix=True)
 
     except Exception as e:
         raise
 
+    if len(options['watermark']) > 0:
+        logger.info('Injecting watermark...')
+        injectWatermark(_outfile)
+
+    if options['ioc']:
+        iocsCollected.append(lib.utils.collectIOCs(_outfile, 'Output obfuscated artifact', options['custom_ioc']))
+
     if result and validateOutfile(_outfile):
         newFileSize = os.path.getsize(_outfile)
+
+        if options['ioc']:
+            path, ext = os.path.splitext(outfile)
+            iocName = path + '-ioc.csv'
+
+            fileExists = os.path.isfile(iocName)
+
+            with open(iocName, 'a') as f:
+                columns = (
+                    'timestamp',
+                    'filename',
+                    'author',
+                    'context',
+                    'comment',
+                    'md5',
+                    'sha1',
+                    'sha256',
+                    'imphash',
+                    #'typeref_hash',
+                )
+
+                if not fileExists:
+                    f.write(','.join(columns) + '\n')
+
+                for e in iocsCollected:
+                    elems = []
+                    for col in columns:
+                        elems.append(e[col])
+
+                    f.write(','.join(elems) + '\n')
+
+            logger.ok(f'IOCs written to: {iocName}')
 
         if (options['verbose'] or options['debug']) and singleFile:
             logger.ok('''
@@ -250,12 +328,13 @@ def processFile(singleFile, infile, _outfile):
 '''.format(
                 origFileSize, packersChain, newFileSize,
                 ((float(newFileSize) / origFileSize * 100.0))
-            ))
+            ), noprefix=True)
+
         else:
-            logger.ok('[+] SUCCEEDED. Original file size: {} bytes, new file size {}: {}, ratio: {:.2f}%'.format(
+            logger.ok('\n[+] SUCCEEDED. Original file size: {} bytes, new file size {}: {}, ratio: {:.2f}%'.format(
                 origFileSize, packersChain, newFileSize,
                 ((float(newFileSize) / origFileSize * 100.0))
-            ))
+            ), noprefix=True)
 
         if singleFile and options['testrun']:
             testRun(outfile)
@@ -265,13 +344,15 @@ def processFile(singleFile, infile, _outfile):
     else:
         logger.err('\n[-] Something went wrong with ({})!'.format(
             os.path.basename(infile)
-        ))
+        ), noprefix=True)
         return 1
 
 def processDir(infile, outdir):
     patterns = (
         os.path.join(infile, '*.exe'),
         os.path.join(infile, '*.dll'),
+        os.path.join(infile, '*.cpl'),
+        os.path.join(infile, '*.xll'),
         #os.path.join(infile, '*.scr'),
         #os.path.join(infile, '*.sys'),
     )
@@ -297,7 +378,79 @@ def processDir(infile, outdir):
             #elif os.path.isdir(file):
             #    processDir(file, outdir)
 
+def checkAv(options, logger):
+    outstatus = -1
+
+    logger.info("Checking AV status...")
+
+    if 'check_av_command' in options.keys() and 'disable_av_command' in options.keys() \
+        and 'enable_av_command' in options.keys() and options['check_av_command']:
+
+        out = shell(logger, options['check_av_command'])
+        logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
+
+        if out.lower() == 'false':
+            logger.info('AV seemingly enabled.')
+            outstatus = 1
+        elif out.lower() == 'true':
+            logger.info('AV seemingly disabled.')
+            outstatus = 0
+    else:
+        return outstatus
+    
+    if outstatus == -1:
+        logger.info('Unknown AV status.')
+
+    return outstatus
+
+def handleAv(options, logger, status):
+    outstatus = -1
+
+    if 'disable_av_command' not in options.keys() or not options['disable_av_command'] or \
+        'enable_av_command' not in options.keys() or not options['enable_av_command']:
+        logger.info("No Enable/Disable AV commands were specified, skipping AV orchestration.")
+        return outstatus
+
+    if status == 0:
+        outstatus = checkAv(options, logger)
+
+        if outstatus == 1:
+            logger.dbg('Disabling AV...')
+
+            out = shell(logger, options['disable_av_command'])
+
+            logger.dbg('AV disable command returned: "{}"'.format(str(out))) 
+            logger.info('AV should be disabled now. Waiting 5 seconds...')
+
+            time.sleep(5.0)
+
+        initialAvStatus = outstatus
+        return outstatus
+
+    elif status == 1:
+        logger.dbg('Enabling AV in 5 seconds...')
+        time.sleep(5.0)
+
+        out = shell(logger, options['enable_av_command'])
+
+        logger.dbg('AV enable command returned: "{}"'.format(str(out))) 
+        logger.info('AV should be enabled now.')
+
+    else:
+        logger.info('Unknown AV handle status.')
+        return -1
+
+@atexit.register
+def reEnableAvAtExit():
+    try:
+        handleAv(options, logger, av_enable_status)
+
+    except lib.utils.ShellCommandReturnedError as e:
+        logger.error("Error occured while trying to re-enable AV:\n{}".format(str(e)))
+
 def main():
+    global av_enable_status
+
     print('''
         :: ProtectMyTooling - a wrapper for PE Packers & Protectors
         Script that builds around supported packers & protectors to produce complex protected binaries.
@@ -311,15 +464,14 @@ def main():
     if not init():
         return 1
 
-    status = -1
     out = 0
 
     try:
         try:
-            status = handleAv(0)
+            av_enable_status = handleAv(options, logger, 0)
 
         except lib.utils.ShellCommandReturnedError as e:
-            logger.err("Error occured while trying to disable AV (Continuing anyway):\n{}".format(str(e)))
+            logger.fatal("Error occured while trying to disable AV:\n{}".format(str(e)))
 
         infile = os.path.abspath(options['infile'])
         outfile = os.path.abspath(options['outfile'])
@@ -340,12 +492,7 @@ def main():
     except Exception as e:
         raise
 
-    finally:
-        try:
-            handleAv(status)
-        except lib.utils.ShellCommandReturnedError as e:
-            logger.error("Error occured while trying to re-enable AV (Continuing anyway):\n{}".format(str(e)))
-
+    print()
     return out
 
 if __name__ == '__main__':

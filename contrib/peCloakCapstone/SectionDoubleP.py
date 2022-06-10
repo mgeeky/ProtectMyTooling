@@ -284,39 +284,3 @@ def print_section_info(pe):
     """
     for i in md.disasm(data,ep_ava):
         print "%s %s" % (i.mnemonic,i.op_str)
-
-def main(argv):
-    pe =  pefile.PE("putty.exe")
-    
-    sections = SectionDoubleP(pe)
-    
-    # JMP 0044C4DF
-    # NOP
-    # 0x0044C4DF is the entry point of putty.exe (at least of my version) when it's mapped at
-    # 0x00400000.
-    data="\xE9\xDA\xF4\xFC\xFF\x90"
-    
-    try:
-        # Characteristics: Executable as code, Readable, Contains executable code
-        pe = sections.push_back(Characteristics=0x60000020, Data=data)
-        pe = sections.push_back(Characteristics=0x60000020, Data=data)
-    except SectionDoublePError as e:
-        print e
-    
-    print "Information on every section after two sections have been added:"
-    print_section_info(pe)
-    
-    try:
-        sections.pop_back()
-    except SectionDoublePError as e:
-        print e
-    
-    print "\nInformation on every section after one of the added sections has been removed:"
-    print_section_info(pe)
-    
-    pe.OPTIONAL_HEADER.AddressOfEntryPoint = pe.sections[-1].VirtualAddress
-    
-    pe.write(filename="putty - modded.exe")
-
-if __name__ == '__main__':
-    main(sys.argv[1:])

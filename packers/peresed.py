@@ -26,6 +26,10 @@ class PackerPeresed(IPacker):
         return 'Peresed'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return 'Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).'
 
@@ -55,6 +59,7 @@ class PackerPeresed(IPacker):
                 self.options['peresed_args'] = self.options['peresed_args']
                 self.peresed_args = self.options['peresed_args']
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         try:
             cmd = IPacker.build_cmdline(

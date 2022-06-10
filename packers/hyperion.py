@@ -18,6 +18,10 @@ class PackerHyperion(IPacker):
         return 'Hyperion'
 
     @staticmethod
+    def get_type():
+        return PackerType.PEProtector
+
+    @staticmethod
     def get_desc():
         return 'Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.'
 
@@ -42,12 +46,15 @@ class PackerHyperion(IPacker):
                 and len(self.options['hyperion_args']) > 0: 
                 self.hyperion_args += ' ' + self.options['hyperion_args']
 
-
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
-        ver = shell(self.logger, self.options['hyperion_path'] + ' --version')
-        ver = ' '.join(ver.split('\r\n')[0:2]).strip().replace('Version ', '')
+        out = shell(self.logger, self.options['hyperion_path'] + ' --help')
+        ver = ''
 
-        self.logger.info(f'Working with {ver}')
+        m = re.search(r'Version\s+([\d\.]+)', out, re.I)
+        if m:
+            ver = m.group(1)
+            self.logger.info(f'Working with Hyperion v{ver}')
 
         try:
             cwd = os.getcwd()

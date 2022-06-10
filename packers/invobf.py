@@ -95,6 +95,10 @@ class PackerInvObf(IPacker):
         return 'InvObf'
 
     @staticmethod
+    def get_type():
+        return PackerType.PowershellObfuscator
+
+    @staticmethod
     def get_desc():
         return 'Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)'
 
@@ -136,6 +140,7 @@ class PackerInvObf(IPacker):
                 self.options['invobf_args'] = self.options['invobf_args']
                 self.invobf_args = self.options['invobf_args']
 
+    @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         try:
             if not infile.endswith('.ps1'):

@@ -50,17 +50,27 @@ def output(x):
 
 
 def isDotNetExecutable(path):
-    pe = pefile.PE(path)
-    idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
+    pe = None
 
-    dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+    try:
+        pe = pefile.PE(path)
+        idx = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR']
 
-    if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
-        for entry in pe.DIRECTORY_ENTRY_IMPORT:
-            if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
-                for func in entry.imports:
-                    if func.name.decode() == '_CorExeMain':
-                        return True
+        dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
+
+        if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
+            for entry in pe.DIRECTORY_ENTRY_IMPORT:
+                if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
+                    for func in entry.imports:
+                        if func.name.decode() == '_CorExeMain':
+                            return True
+
+    except Exception as e:
+        raise
+
+    finally:
+        if pe:
+            pe.close()
 
     return False
 
@@ -179,6 +189,7 @@ def parseOptions(config):
     return True
 
 def isPeFile(infile):
+    pe = None
     try:
         pe = pefile.PE(infile)
         arch = 'x86' if (pe.FILE_HEADER.Machine == pefile.MACHINE_TYPE['IMAGE_FILE_MACHINE_I386']) else 'x64'
@@ -188,6 +199,10 @@ def isPeFile(infile):
 
     except pefile.PEFormatError as e:
         return (False, None, None)
+
+    finally:
+        if pe:
+            pe.close()
 
 def clearCacheDir():
     if os.path.isdir(settings['protected_executables_cache_dir']):

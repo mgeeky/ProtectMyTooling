@@ -4,6 +4,7 @@ import sys, re
 import inspect
 from io import StringIO
 import csv
+import lib.utils
 
 from lib.logger import Logger
 
@@ -131,15 +132,20 @@ class PackersLoader:
 
             try:
                 handle = None
-                pat = re.compile(self.options['packer_class_name'])
+                pat = re.compile('(' + self.options['packer_class_name'] + ')')
                 for attr in dir(module):
-                    if pat.match(attr):
+                    m = pat.match(attr)
+                    if m:
+                        if m.group(1) in lib.utils.SkipTheseModuleNames:
+                            continue
+
                         handle = getattr(module, attr)
                 
                 if handle == None:
-                    raise TypeError('Packer does not expose class of corresponding name: ' + self.options['packer_class_name'])
+                    raise TypeError('Packer does not expose class of corresponding name: (' + self.options['packer_class_name'] + ')')
 
                 found = False
+                inspect.getmro(handle)
                 for base in inspect.getmro(handle):
                     if base.__name__ == 'IPacker':
                         found = True

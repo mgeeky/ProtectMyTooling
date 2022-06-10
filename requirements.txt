@@ -1,5 +1,6 @@
 pyyaml
 pefile
 capstone
-pythonnet
+pythonnet==3.0.0a2
 pe_tools
+yara-python

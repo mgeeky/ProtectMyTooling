@@ -1,0 +1,1 @@
+IMAGE_BASE equ 0x400000

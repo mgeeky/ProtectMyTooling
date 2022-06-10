@@ -3,10 +3,12 @@ verbose: 0
 debug: 0
 timeout: 180
 
-#check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
-#disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
-#enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $false"'
-#
+ioc: False
+watermark: []
+
+check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
+disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
+enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $false"'
 
 # UPX (x86, x64)
 upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"
@@ -30,7 +32,6 @@ hyperion_args:
 #
 confuserex_path: "contrib\\ConfuserEx\\active-mkaring\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
-
 
 
 #

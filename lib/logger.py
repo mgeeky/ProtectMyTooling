@@ -5,7 +5,6 @@
 import time
 import sys, os
 
-
 class Logger:
     options = {
         'debug': False,
@@ -69,32 +68,17 @@ class Logger:
             if type(col) == str and col in Logger.colors_map.keys():
                 col = Logger.colors_map[col]
 
-        elif mode in Logger.colors_dict.keys():
-            col = Logger.colors_dict[mode]
-            args['color'] = col
-
         else:
             col = Logger.colors_dict.setdefault(mode, Logger.colors_map['grey'])
 
-        tm = str(time.strftime("%H:%M:%S", time.gmtime()))
-
-        othercol = Logger.colors_dict['other']
-
         if not args['color']:
             col = ''
-            othercol = ''
 
         if not Logger.options['colors']:
             col = ''
-            othercol = ''
 
-        prefix = ''
-        if mode:
-            mode = '[%s] ' % mode
-            
-        if not args['noprefix']:
-            prefix = Logger.with_color(othercol, '%s%s: ' 
-                % (mode.upper(), tm))
+        if args['noprefix']:
+            mode = ''
         
         nl = ''
         if 'newline' in args:
@@ -103,33 +87,33 @@ class Logger:
 
         if type(fd) == str:
             with open(fd, 'a') as f:
-                f.write(prefix + txt + nl)
+                f.write(mode + txt + nl)
                 f.flush()
 
-            sys.stdout.write(prefix + Logger.with_color(col, txt) + nl)
+            sys.stdout.write(Logger.with_color(col, mode + txt) + nl)
             sys.stdout.flush()
 
         else:
-            fd.write(prefix + Logger.with_color(col, txt) + nl)
+            fd.write(Logger.with_color(col, mode + txt) + nl)
 
     # Info shall be used as an ordinary logging facility, for every desired output.
     def info(self, txt, forced = False, **kwargs):
         if (self.options['verbose'] or \
             self.options['debug'] or (type(self.options['log']) == str and self.options['log'] != 'none')):
-            Logger.out(txt, self.options['log'], 'info', **kwargs)
+            Logger.out(txt, self.options['log'], '[.] ', **kwargs)
         elif forced:
-            Logger.out(txt, self.options['log'], 'info', **kwargs)
+            Logger.out(txt, self.options['log'], '[.] ', **kwargs)
 
     def dbg(self, txt, **kwargs):
         if self.options['debug']:
-            Logger.out(txt, self.options['log'], 'debug', **kwargs)
+            Logger.out(txt, self.options['log'], '[dbg] ', **kwargs)
 
     def err(self, txt, **kwargs):
-        Logger.out(txt, self.options['log'], 'error', **kwargs)
+        Logger.out(txt, self.options['log'], '[-] ', color='magenta', **kwargs)
 
     def ok(self, txt, **kwargs):
-        Logger.out(txt, self.options['log'], 'good', **kwargs)
+        Logger.out(txt, self.options['log'], '[+] ', color='green', **kwargs)
 
     def fatal(self, txt, **kwargs):
-        Logger.out(txt, self.options['log'], 'fatal', **kwargs)
+        Logger.out(txt, self.options['log'], '[!] ', color='red', **kwargs)
         os._exit(1)
