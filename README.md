@@ -1,5 +1,7 @@
 ![1.png](images/1.png)
 
+# ProtectMyTooling
+
 Script that wraps around multitude of packers, protectors, obfuscators, shellcode loaders, encoders, generators to produce complex protected Red Team implants.
 Your perfect companion in Malware Development CI/CD pipeline, **helping watermark your artifacts, collect IOCs, backdoor and more**
 
@@ -241,6 +243,7 @@ C:\> py ProtectMyTooling.py -L
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
 To prepare their usage, you must first supply necessary binaries to the `contrib` directory and then configure your YAML file accordingly.
 
+# RedWatermarker - built-in Artifact watermarking
 
 ## Artifact watermarking & IOC collection
 
@@ -356,7 +359,7 @@ They will contain following fields saved in form of a CSV file:
 Resulting will be a CSV file named `outfile-ioc.csv` stored side by side to generated output artifact. That file is written in APPEND mode, meaning it will receive all subsequent IOCs.
 
 
-## PE Backdooring
+# RedBackdoorer - built-in PE Backdooring
 
 `ProtectMyTooling` utilizes my own `RedBackdoorer.py` script which provides few methods for backdooring PE executables. 
 Support comes as a dedicated packer named `backdoor`. Example usage:
