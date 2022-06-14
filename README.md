@@ -1,9 +1,7 @@
 ![1.png](images/1.png)
 
-# ProtectMyTooling - a wrapper around Packers, Protectors and Script Obfuscators
-
-Script that builds around supported packers & protectors to produce complex protected binaries and scripts.
-Your perfect companion in Malware Development CI/CD pipeline, **helping you watermark your artifacts and collect IOCs**
+Script that wraps around multitude of packers, protectors, obfuscators, shellcode loaders, encoders, generators to produce complex protected Red Team implants.
+Your perfect companion in Malware Development CI/CD pipeline, **helping watermark your artifacts, collect IOCs, backdoor and more**
 
 With `ProtectMyTooling` you can quickly obfuscate your binaries without having to worry about clicking through all the Dialogs, interfaces, menus, creating projects to obfuscate a single binary, clicking through all the options available and wasting time about all that nonsense. It takes you straight to the point - to obfuscate your tool.
 
