@@ -6,6 +6,7 @@ from lib.utils import *
 
 import os
 import re
+import sys
 import pe_tools
 
 class PackerPeresed(IPacker):
@@ -13,7 +14,7 @@ class PackerPeresed(IPacker):
     peresed_cmdline_template = '<command> <options> --output <outfile> <infile>'
 
     default_options = {
-        'peresed_path' : 'peresed',
+        'peresed_path' : f'{sys.executable} -m pe_tools.peresed',
     }
 
     def __init__(self, logger, options):
@@ -49,7 +50,8 @@ class PackerPeresed(IPacker):
                 if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
-            if 'peresed_path' in self.options.keys() and self.options['peresed_path'] != None and len(self.options['peresed_path']) > 0:
+            if 'peresed_path' in self.options.keys() and self.options['peresed_path'] != None and len(self.options['peresed_path']) > 0 \
+                and self.options['peresed_path'] != PackerPeresed.default_options['peresed_path']:
                 self.options['peresed_path'] = configPath(self.options['config'], self.options['peresed_path'])
             else:
                 self.options['peresed_path'] = PackerPeresed.default_options['peresed_path']
@@ -62,12 +64,19 @@ class PackerPeresed(IPacker):
     @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         try:
+            cwd = os.getcwd()
+            base = os.path.dirname(infile)
+
+            self.logger.dbg('changed working directory to "{}"'.format(base))
+            os.chdir(base)
+
             cmd = IPacker.build_cmdline(
                 PackerPeresed.peresed_cmdline_template,
                 self.options['peresed_path'],
                 self.peresed_args,
                 infile,
-                outfile
+                outfile,
+                dontCheckExists = True
             )
             
             out = shell(self.logger, cmd, 
@@ -97,5 +106,9 @@ class PackerPeresed(IPacker):
 
         except Exception as e:
             raise
+
+        finally:
+            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+            os.chdir(cwd)
 
         return False

@@ -33,6 +33,20 @@ hyperion_args:
 confuserex_path: "contrib\\ConfuserEx\\active-mkaring\\Confuser.CLI.exe"
 confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
 
+#
+# RedBackdoorer
+#
+# we'll used default one
+backdoor_path:
+backdoor_save: 1
+backdoor_run: 1
+backdoor_args:
+
+#
+# peresed
+#
+# we'll used default one: "python3 -m pe_tools.peresed"
+peresed_path:
 
 #
 # Call Obfuscator
@@ -119,3 +133,9 @@ logicnet_path: "contrib\\LoGIC.NET\\LoGiC.NET.exe"
 #
 invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"
 invobf_powershell: powershell.exe
+
+#
+# peCloak
+#
+pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+pecloak_python_path: python2

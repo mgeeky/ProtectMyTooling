@@ -29,7 +29,7 @@ class PackerPeCloak(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift'
+        return 'A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7'
 
     def help(self, parser):
         if parser != None:
@@ -89,7 +89,8 @@ class PackerPeCloak(IPacker):
                 command,
                 self.pecloak_args,
                 '',
-                outfile
+                outfile,
+                dontCheckExists = True
             ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
             succeeded = True
 

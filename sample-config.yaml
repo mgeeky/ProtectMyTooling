@@ -43,6 +43,15 @@ amber_path: "contrib\\Amber\\amber.exe"
 amber_args: 
 
 #
+# RedBackdoorer
+#
+# we'll used default one
+backdoor_path:
+backdoor_save: 1
+backdoor_run: 1
+backdoor_args:
+
+#
 # Donut
 #
 donut_path: "contrib\\donut\\donut.exe"
@@ -68,6 +77,12 @@ scarecrow_password:
 scarecrow_inject:
 scarecrow_sandbox: False
 scarecrow_sign: False
+
+#
+# peresed
+#
+# we'll used default one: "python3 -m pe_tools.peresed"
+peresed_path:
 
 #
 # pe2shc
@@ -116,6 +131,11 @@ asstrongasfuck_opts: "235789"
 #
 logicnet_path: "contrib\\LoGIC.NET\\LoGiC.NET.exe"
 
+#
+# peCloak
+#
+pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+pecloak_python_path: python2
 
 #
 # Invoke-Obfuscation by Daniel Bohannon

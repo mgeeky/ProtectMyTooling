@@ -4,3 +4,5 @@ capstone
 pythonnet==3.0.0a2
 pe_tools
 yara-python
+capstone
+keystone-engine

@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 #
+# Author:
+#     Mariusz Banach / mgeeky '22, (@mariuszbit)
+#     <mb@binary-offensive.com>
+#
 # Requirements:
 #   - pefile
 #   - yara-python
@@ -599,7 +603,7 @@ def opts(argv):
     global options
 
     o = argparse.ArgumentParser(
-        usage = 'implantWatermarker.py [options] <infile>'
+        usage = 'RedWatermarker.py [options] <infile>'
     )
     
     req = o.add_argument_group('Required arguments')
@@ -651,15 +655,48 @@ def opts(argv):
     return args
 
 def main(argv):
+    
+    try:
+        print('''
+                      ;                                                                                                               
+                      ED.                                                                                                             
+                     ,E#Wi                                                                                                            
+  j.               f#iE###G.                                                                                                          
+  EW,            .E#t E#fD#W;                                                                                                         
+  E##j          i#W,  E#t t##L                                                                                                        
+  E###D.       L#D.   E#t  .E#K,                                                                                                      
+  E#jG#W;    :K#Wfff; E#t    j##f                                                                                                     
+  E#t t##f   i##WLLLLtE#t    :E#K:                                                                                                    
+  E#t  :K#E:  .E#L    E#t   t##L                                                                                                      
+  E#KDDDD###i   f#E:  E#t .D#W;                  ,;                                                      G:              ,;           
+  E#f,t#Wi,,,    ,WW; E#tiW#G.                 f#i j.                                          j.        E#,    :      f#i j.         
+  E#t  ;#W: ;     .D#;E#K##i .. GEEEEEEEL    .E#t  EW,                 ..       :           .. EW,       E#t  .GE    .E#t  EW,        
+  DWi   ,K.DL       ttE##D. ;W, ,;;L#K;;.   i#W,   E##j               ,W,     .Et          ;W, E##j      E#t j#K;   i#W,   E##j       
+  f.     :K#L     LWL E#t  j##,    t#E     L#D.    E###D.            t##,    ,W#t         j##, E###D.    E#GK#f    L#D.    E###D.     
+  EW:   ;W##L   .E#f  L:  G###,    t#E   :K#Wfff;  E#jG#W;          L###,   j###t        G###, E#jG#W;   E##D.   :K#Wfff;  E#jG#W;    
+  E#t  t#KE#L  ,W#;     :E####,    t#E   i##WLLLLt E#t t##f       .E#j##,  G#fE#t      :E####, E#t t##f  E##Wi   i##WLLLLt E#t t##f   
+  E#t f#D.L#L t#K:     ;W#DG##,    t#E    .E#L     E#t  :K#E:    ;WW; ##,:K#i E#t     ;W#DG##, E#t  :K#E:E#jL#D:  .E#L     E#t  :K#E: 
+  E#jG#f  L#LL#G      j###DW##,    t#E      f#E:   E#KDDDD###i  j#E.  ##f#W,  E#t    j###DW##, E#KDDDD###E#t ,K#j   f#E:   E#KDDDD###i
+  E###;   L###j      G##i,,G##,    t#E       ,WW;  E#f,t#Wi,,,.D#L    ###K:   E#t   G##i,,G##, E#f,t#Wi,,E#t   jD    ,WW;  E#f,t#Wi,,,
+  E#K:    L#W;     :K#K:   L##,    t#E        .D#; E#t  ;#W: :K#t     ##D.    E#t :K#K:   L##, E#t  ;#W: j#t          .D#; E#t  ;#W:  
+  EG      LE.     ;##D.    L##,     fE          tt DWi   ,KK:...      #G      .. ;##D.    L##, DWi   ,KK: ,;            tt DWi   ,KK: 
+  ;       ;@      ,,,      .,,       :                                j          ,,,      .,,                                         
+                                                                                                                                      
+''')
+    except:
+        print('''
+
+    :: RedWatermarker
+''')
+
+    print(r'''    Watermark thy implants, track them in VirusTotal
+    Mariusz Banach / mgeeky '22, (@mariuszbit)
+    <mb@binary-offensive.com>
+''')
+
     args = opts(argv)
     if not args:
         return False
-
-    print('''
-    :: Implants Watermarker
-    Injects specified watermark to your Red Team implants
-    Mariusz Banach / mgeeky
-''')
 
     outfile = ''
     temp = None

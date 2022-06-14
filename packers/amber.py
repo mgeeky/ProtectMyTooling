@@ -63,7 +63,8 @@ class PackerAmber(IPacker):
         try:
             build = False
             if outfile.lower().endswith('.exe') or outfile.lower().endswith('.dll') or \
-                outfile.lower().endswith('.cpl') or outfile.lower().endswith('.xll'): 
+                outfile.lower().endswith('.cpl') or outfile.lower().endswith('.xll') or \
+                isValidPE(infile): 
                 self.amber_args += '-build'
                 build = True
 
@@ -77,7 +78,7 @@ class PackerAmber(IPacker):
 
             if build:
                 path, ext = os.path.splitext(infile)
-                _outfile = path + '_packed' + ext
+                _outfile = path + '_packed.exe'
             else:
                 _outfile = infile + '.bin'
             

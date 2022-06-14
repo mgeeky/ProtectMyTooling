@@ -7,7 +7,7 @@
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.12'
+VERSION = '0.13'
 
 import os
 import pefile
@@ -21,7 +21,7 @@ from lib.packersloader import PackersLoader
 from lib.logger import Logger
 from lib.utils import *
 
-from implantWatermarker import PeWatermarker
+from RedWatermarker import PeWatermarker
 
 options = {
     'debug': False,
@@ -287,7 +287,9 @@ def processFile(singleFile, infile, _outfile):
                 logger.err(f'Could not remove intermediary file: {t}\n\tException thrown: {e}')
 
         if result:
-            logger.info('\n[.] File packed. Generated output: "{}"'.format(_outfile), noprefix=True)
+            logger.info(f'''
+[+] File packed. 
+    Generated output : {_outfile}''', noprefix=True)
 
     except Exception as e:
         raise
@@ -468,11 +470,36 @@ def reEnableAvAtExit():
 def main():
     global av_enable_status
 
-    print('''
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v{}
+    try:
+        print(r'''
+    ::::::::::.:::::::..      ...  :::::::::::.,::::::  .,-::::::::::::::::
+     `;;;```.;;;;;;``;;;;  .;;;;;;;;;;;;;;;'''''';;;;'''''',;;;'````;;;;;;;;''''''
+      `]]nnn]]' [[[,/[[[' ,[[     \[[,  [[     [[cccc [[[           [[     
+       $$$""    $$$$$$c   $$$,     $$$  $$     $$"""" $$$           $$     
+       888o     888b "88bo"888,_ _,88P  88,    888oo,_`88bo,__,o,   88,    
+    .  YMMMb :.-:.MM   ::-. "YMMMMMP"   MMM    """"YUMMM"YUMMMMMP"  MMM    
+    ;;,.    ;;;';;.   ;;;;'                                                
+    [[[[, ,[[[[, '[[,[[['                                                  
+    $$$$$$$$"$$$   c$$"                                                    
+    888 Y88" 888o,8P"`                                                     
+    ::::::::::::mM...        ...     :::    :::::.    :::. .,-:::::/       
+    ;;;;;;;;''''''.;;;;;;;.  .;;;;;;;.  ;;;    ;;`;;;;,  `;;,;;-'````'        
+         [[   ,[[     \[[,[[     \[[,[[[    [[[ [[[[[. '[[[[   [[[[[[/     
+         $$   $$$,     $$$$$,     $$$$$'    $$$ $$$ "Y$c$"$$c.    "$$      
+         88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o     
+         MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM   
+''')
+    except:
+        print('''
+
+    :: ProtectMyTooling
+''')
+
+    print(r'''    Red Team implants protection swiss knife.
+
+    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    v{}
 '''.format(VERSION))
 
     if not os.name == 'nt':

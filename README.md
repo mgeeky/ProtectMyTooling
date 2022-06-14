@@ -1,3 +1,5 @@
+![1.png](images/1.png)
+
 # ProtectMyTooling - a wrapper around Packers, Protectors and Script Obfuscators
 
 Script that builds around supported packers & protectors to produce complex protected binaries and scripts.
@@ -65,11 +67,28 @@ Usage is very simple, all it takes is to pass the name of obfuscator to choose, 
 ```
 C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
 
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
+    ::::::::::.:::::::..      ...  :::::::::::.,::::::  .,-::::::::::::::::
+     `;;;```.;;;;;;``;;;;  .;;;;;;;;;;;;;;;\''';;;;\'\''',;;;'````;;;;;;;;\'\'''
+      `]]nnn]]' [[[,/[[[' ,[[     \[[,  [[     [[cccc [[[           [[
+       $$$""    $$$$$$c   $$$,     $$$  $$     $$"""" $$$           $$
+       888o     888b "88bo"888,_ _,88P  88,    888oo,_`88bo,__,o,   88,
+    .  YMMMb :.-:.MM   ::-. "YMMMMMP"   MMM    """"YUMMM"YUMMMMMP"  MMM
+    ;;,.    ;;;';;.   ;;;;'
+    [[[[, ,[[[[, '[[,[[['
+    $$$$$$$$"$$$   c$$"
+    888 Y88" 888o,8P"`
+    ::::::::::::mM...        ...     :::    :::::.    :::. .,-:::::/
+    ;;;;;;;;\'''.;;;;;;;.  .;;;;;;;.  ;;;    ;;`;;;;,  `;;,;;-'````'
+         [[   ,[[     \[[,[[     \[[,[[[    [[[ [[[[[. '[[[[   [[[[[[/
+         $$   $$$,     $$$$$,     $$$$$'    $$$ $$$ "Y$c$"$$c.    "$$
+         88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o
+         MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM
 
+    Red Team implants protection swiss knife.
+
+    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    v0.13
 
 [.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
@@ -84,11 +103,7 @@ One can also obfuscate the file and immediately attempt to launch it (also with 
 ```
 C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe -r --cmdline "hash /password:foobar"
 
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
-
+    [...]
 
 [.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
@@ -127,10 +142,7 @@ Finally, ProtectMyTooling will capture all IOCs (md5, sha1, sha256, imphash, and
 ```
 PS> py .\ProtectMyTooling.py callobf,upx,hyperion beacon.exe beacon-obf.exe -i -I operation_chimera -w dos-stub=fooobar -w checksum=0xaabbccdd
 
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
+    [...]
 
 [.] Processing x64 file: "beacon.exe"
 [>] Generating output of CallObf(<file>)...
@@ -165,10 +177,28 @@ timestamp,filename,author,context,comment,md5,sha1,sha256,imphash
 ```
 C:\> py ProtectMyTooling.py --help
 
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
+    ::::::::::.:::::::..      ...  :::::::::::.,::::::  .,-::::::::::::::::
+     `;;;```.;;;;;;``;;;;  .;;;;;;;;;;;;;;;\''';;;;\'\''',;;;'````;;;;;;;;\'\'''
+      `]]nnn]]' [[[,/[[[' ,[[     \[[,  [[     [[cccc [[[           [[
+       $$$""    $$$$$$c   $$$,     $$$  $$     $$"""" $$$           $$
+       888o     888b "88bo"888,_ _,88P  88,    888oo,_`88bo,__,o,   88,
+    .  YMMMb :.-:.MM   ::-. "YMMMMMP"   MMM    """"YUMMM"YUMMMMMP"  MMM
+    ;;,.    ;;;';;.   ;;;;'
+    [[[[, ,[[[[, '[[,[[['
+    $$$$$$$$"$$$   c$$"
+    888 Y88" 888o,8P"`
+    ::::::::::::mM...        ...     :::    :::::.    :::. .,-:::::/
+    ;;;;;;;;\'''.;;;;;;;.  .;;;;;;;.  ;;;    ;;`;;;;,  `;;,;;-'````'
+         [[   ,[[     \[[,[[     \[[,[[[    [[[ [[[[[. '[[[[   [[[[[[/
+         $$   $$$,     $$$$$,     $$$$$'    $$$ $$$ "Y$c$"$$c.    "$$
+         88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o
+         MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM
+
+    Red Team implants protection swiss knife.
+
+    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    v0.13
 
 usage: Usage: %prog [options] <packers> <infile> <outfile>
 
@@ -267,33 +297,37 @@ You can quickly list supported packers using `-L` option:
 ```
 C:\> py ProtectMyTooling.py -L
 
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.12
+    [...]
+
+    Red Team implants protection swiss knife.
+
+    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    v0.13
 
 [ 1] amber          -  Shellcode Loader       - Amber takes PE file on input and produces an EXE/PIC shellcode that loads it reflectively in-memory
 [ 2] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
-[ 3] callobf        -  PE EXE/DLL Protector   - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
-[ 4] confuserex     -  .NET Obfuscator        - An open-source protector for .NET applications
-[ 5] donut          -  Shellcode Converter    - Donut takes EXE/DLL/.NET and produces a robust PIC shellcode or Py/Ruby/Powershell/C#/Hex/Base64 array
-[ 6] enigma         -  PE EXE/DLL Protector   - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
-[ 7] hyperion       -  PE EXE/DLL Protector   - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
-[ 8] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
-[ 9] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
-[10] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
-[11] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[12] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[13] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
-[14] pe2shc         -  Shellcode Converter    - pe_to_shellcode by Hasherezade, takes PE EXE/DLL and produces PIC shellcode
-[15] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak | T_V3rn1x | @SecuritySift
-[16] peresed        -  PE EXE/DLL Protector   - Uses "peresed" from avast/pe_tools to remove all existing PE Resources and signature (think of Mimikatz icon).
-[17] scarecrow      -  Shellcode Loader       - Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact. (works best under Linux or Win10 WSL!)
-[18] sgn            -  Shellcode Encoder      - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode.
-[19] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[20] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[21] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[22] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[ 3] backdoor       -  Shellcode Loader       - RedBackdoorer - backdoors legitimate PE executable with specified shellcode
+[ 4] callobf        -  PE EXE/DLL Protector   - CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones
+[ 5] confuserex     -  .NET Obfuscator        - An open-source protector for .NET applications
+[ 6] donut          -  Shellcode Converter    - Donut takes EXE/DLL/.NET and produces a robust PIC shellcode or Py/Ruby/Powershell/C#/Hex/Base64 array
+[ 7] enigma         -  PE EXE/DLL Protector   - (paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization
+[ 8] hyperion       -  PE EXE/DLL Protector   - Robust PE EXE runtime AES encrypter for x86/x64 with own-key brute-forcing logic.
+[ 9] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
+[10] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
+[11] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
+[12] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[13] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
+[14] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
+[15] pe2shc         -  Shellcode Converter    - pe_to_shellcode by Hasherezade, takes PE EXE/DLL and produces PIC shellcode
+[16] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7
+[17] peresed        -  PE EXE/DLL Protector   - Removes all existing PE Resources and signature (think of Mimikatz icon).
+[18] scarecrow      -  Shellcode Loader       - Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact. (works best under Linux or Win10 WSL!)
+[19] sgn            -  Shellcode Encoder      - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode.
+[20] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[21] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[22] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[23] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
@@ -315,20 +349,20 @@ To accommodate these requirements, ProtectMyTooling brings basic support for the
 py ProtectMyTooling [...] -w dos-stub=fooooobar -w checksum=0xaabbccdd -w section=.coco,ALLYOURBASEAREBELONG
 ```
 
-There is also a standalone approach, included in `implantWatermarker.py` script.
+There is also a standalone approach, included in `RedWatermarker.py` script.
 
 It takes executable artifact on input and accepts few parameters denoting where to inject a watermark and what value shall be inserted. 
 
 Example run will set PE Checksum to 0xAABBCCDD, inserts `foooobar` to PE file's DOS Stub (bytes containing _This program cannot be run..._), appends `bazbazbaz` to file's overlay and then create a new PE section named `.coco` append it to the end of file and fill that section with preset marker.
 
 ```
-py implantWatermarker.py beacon-obf.exe -c 0xaabbccdd -t fooooobar -e bazbazbaz -s .coco,ALLYOURBASEAREBELONG
+py RedWatermarker.py beacon-obf.exe -c 0xaabbccdd -t fooooobar -e bazbazbaz -s .coco,ALLYOURBASEAREBELONG
 ```
 
 Full watermarker usage:
 
 ```
-usage: implantWatermarker.py [options] <infile>
+usage: RedWatermarker.py [options] <infile>
 
 options:
   -h, --help            show this help message and exit
@@ -421,101 +455,6 @@ Here's a list of options required by the Cobalt Strike integrator:
 * `default_dll_x86_packers_chain` - Native x86 DLL executables protectors/packers chain
 * `default_dll_x64_packers_chain` - Native x64 DLL executables protectors/packers chain
 * `default_dotnet_packers_chain` - .NET executables protectors/packers chain
-
-
-## Formats other than PE EXE/DLL
-
-However the program mentions that it's main purpose is to protect/pack PE executables - such as .EXE/.DLL, the architecture makes it easy to incorporate all range of obfuscators/packers/protectors/virtualizers no matter the input file format.
-
-For instance, it can easily obfuscate input Powershell scripts with `InvObf` obfuscator (`Invoke-Obfuscation`):
-
-```
-PS C:\ProtectMyTooling> py .\ProtectMyTooling.py invobf .\tests\Invoke-PowerShellTcp.ps1 .\tests\Invoke-PowerShellTcp.encoded.ps1
-
-        :: ProtectMyTooling - a wrapper for PE Packers & Protectors
-        Script that builds around supported packers & protectors to produce complex protected binaries.
-        Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-        v0.11
-
-[.] Processing  file: "C:\ProtectMyTooling\tests\Invoke-PowerShellTcp.ps1"
-[.] Generating output of InvObf(<file>)...
-
-[+] SUCCEEDED. Original file size: 3042 bytes, new file size InvObf(<file>): 82684, ratio: 2718.08%
-```
-
-In order to acommodate Packer Plugin script to the relaxed input file architecture verification regime, one needs to overload the `IPacker.validate_file_architecture()` method to make it return false:
-
-```py
-class PackerInvObf(IPacker):
-    [...]
-
-    @staticmethod
-    def get_name():
-        return 'InvObf'
-
-    @staticmethod
-    def get_desc():
-        return 'Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)'
-
-    @staticmethod
-    def get_type():
-        return PackerType.PowershellObfuscator
-
-    @staticmethod
-    def validate_file_architecture():
-        return False
-```
-
-
-
-## Adding support for a new Packer
-
-In order to support a new packer, one has to create a plugin Python class and store it `packers` directory.
-
-That plugin class must override `IPacker.py` interface, which pretty much boils down to necessity of overloading a few methods.
-
-Then, your `process(...)` method could be as simple as the one visible in `packers/upx.py` implementation:
-
-```py
-  @ensureInputFileIsPE
-  def process(self, arch, infile, outfile):
-        ver = shell(self.logger, self.options['upx_path'] + ' --version').split('\n')[0].strip()
-        self.logger.info(f'Working with {ver}')
-        out = ''
-
-        try:
-            out = shell(self.logger, IPacker.build_cmdline(
-                PackerUpx.upx_cmdline_template,
-                self.options['upx_path'],
-                self.upx_args,
-                infile,
-                outfile
-            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
-
-            if os.path.isfile(outfile):
-                if self.options['upx_corrupt'] == 1:
-                    return self.tamper(outfile)
-                else:
-                    return True
-            else:
-                self.logger.err('Something went wrong: there is no output artefact ({})!\n'.format(
-                    outfile
-                ))
-
-        except ShellCommandReturnedError as e:
-            self.logger.err(f'''Error message from packer:
-----------------------------------------
-{e}
-----------------------------------------
-''')
-
-        except Exception as e:
-            raise
-
-        return False
-```
-
-All packers typically build some sort of a command line, or dynamically generate XML files and ultimately call out to `shell(...)` to execute the packer using its CLI interface (for instance _ConfuserEx_ has an executable named `ConfuserEx.CLI.exe`). 
 
 ---
 
