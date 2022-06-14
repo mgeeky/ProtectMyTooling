@@ -473,7 +473,7 @@ Example:
     py peInjector.py 1,2 beacon.bin putty.exe putty-infected.exe
 ```
 
-## Cobalt Strike Integration
+# Cobalt Strike Integration
 
 There is also a script that integrates `ProtectMyTooling.py` used as a wrapper around configured PE/.NET Packers/Protectors in order to easily transform input executables into their protected and compressed output forms and then upload or use them from within CobaltStrike.
 
@@ -496,7 +496,7 @@ To use it:
 
 Basically these commands will open input files, pass the firstly to the `CobaltStrike/cobaltProtectMyTooling.py` script, which in turn calls out to `ProtectMyTooling.py`. As soon as the binary gets obfuscated, it will be passed to your beacon for execution/uploading. 
 
-### Cobalt Strike related Options
+## Cobalt Strike related Options
 
 Here's a list of options required by the Cobalt Strike integrator:
 
