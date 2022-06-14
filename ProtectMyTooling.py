@@ -219,7 +219,7 @@ def processFile(singleFile, infile, _outfile):
 
         origFileSize = os.path.getsize(infile)
 
-        print('\n[.] Processing {} file: "{}"'.format(arch, infile))
+        print('[.] Processing {} file :  {}'.format(arch, infile))
         packersChain = '<file>'
 
         for i in range(len(packersOrder)):
@@ -240,7 +240,7 @@ def processFile(singleFile, infile, _outfile):
 =================================================
     '''.format(packersChain))
             else:
-                logger.info('[>] Generating output of {}...\n'.format(packersChain), forced = True, noprefix=True, color = 'yellow')
+                logger.info('[>] Generating output of {}...'.format(packersChain), forced = True, noprefix=True, color = 'yellow')
 
             logger.dbg('\tinfile  < "{}"'.format(infile))
             logger.dbg('\toutfile > "{}"'.format(outfile))

