@@ -1137,7 +1137,7 @@ Example:
     req.add_argument('infile', help = 'PE file to backdoor')
     
     opt = o.add_argument_group('Optional arguments')
-    opt.add_argument('-o', '--outfile', metavar='PATH', default='', help = 'Path where to save output file with watermark injected. If not given, will modify infile.')
+    opt.add_argument('-o', '--outfile', metavar='PATH', default='', help = 'Path where to save backdoored output file. If not given, will modify infile.')
     opt.add_argument('-v', '--verbose', action='store_true', help = 'Verbose mode.')
 
     bak = o.add_argument_group('Backdooring options')
