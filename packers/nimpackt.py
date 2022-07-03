@@ -43,7 +43,7 @@ class PackerNimpackt(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)'
+        return 'Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn\'t work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)'
 
     def help(self, parser):
         if parser != None:
@@ -156,8 +156,7 @@ class PackerNimpackt(IPacker):
                 timeout = self.options['timeout'])
 
             #
-            # I personally hate it how NimPackt dynamically computes mangled, twisted output artifact file name, making me "reverse" its logic
-            # to predict upfront how my output will be named. Terribly bad design idea, shame Cas :(
+            # It's a pain what NimPackt does with output file name leaving it hardly predictable...
             #
             mangledOutFileName = ''
             outDir = os.path.join(os.path.dirname(self.options['nimpackt_path']), 'output')
