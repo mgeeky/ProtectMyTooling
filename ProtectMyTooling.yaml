@@ -77,6 +77,23 @@ donut_class:
 donut_exit: '1'
 
 #
+# NimPackt-v1
+#
+nimpackt_path: "contrib\\NimPackt-v1\\NimPackt.py"
+nimpackt_args: 
+nimpackt_bake_args:
+nimpackt_nopatchamsi: False
+nimpackt_nodisableetw: False
+nimpackt_nounhook: False
+nimpackt_nosyscalls: False
+nimpackt_sleep: False
+nimpackt_32bit: False
+nimpackt_showconsole: False
+nimpackt_inject_remote: False
+nimpackt_target:
+nimpackt_existing: False
+
+#
 # ScareCrow
 #
 scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"
