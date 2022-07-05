@@ -67,6 +67,7 @@ class PackerThemida(IPacker):
             self.logger.fatal('Architecture {} not supported as there was no corresponding Themida Protector path configured!\nPlease configure it using: --themida-path-{}'.format(arch, arch))
 
         out = ''
+        cwd = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(path)
@@ -90,8 +91,9 @@ class PackerThemida(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         status = os.path.isfile(outfile)
 

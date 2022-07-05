@@ -57,6 +57,7 @@ class PackerAsStrongAsFuck(IPacker):
     @ensureInputFileIsDotNet
     def process(self, arch, infile, outfile):
         out = ''
+        cwd = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(self.options['asstrongasfuck_path'])
@@ -78,8 +79,9 @@ class PackerAsStrongAsFuck(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         if os.path.isfile(infile + '.obfuscated'):
             shutil.move(infile + '.obfuscated', outfile)

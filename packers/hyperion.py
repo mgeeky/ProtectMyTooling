@@ -50,6 +50,7 @@ class PackerHyperion(IPacker):
     def process(self, arch, infile, outfile):
         out = shell(self.logger, self.options['hyperion_path'] + ' --help')
         ver = ''
+        cwd = ''
 
         m = re.search(r'Version\s+([\d\.]+)', out, re.I)
         if m:
@@ -75,8 +76,9 @@ class PackerHyperion(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         status = os.path.isfile(outfile)
 

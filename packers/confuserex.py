@@ -151,6 +151,7 @@ Adjusted project file:
     def process(self, arch, infile, outfile):
         tmpdir = ''
         status = False
+        cwd = ''
 
         with tempfile.TemporaryDirectory() as tmpdir:
             generatedOutFile = os.path.join(tmpdir, os.path.basename(infile))
@@ -220,8 +221,9 @@ Adjusted project file:
                 raise
 
             finally:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-                os.chdir(cwd)
+                if len(cwd) > 0:
+                    self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                    os.chdir(cwd)
 
                 if os.path.isfile(tmpname): 
                     os.remove(tmpname)

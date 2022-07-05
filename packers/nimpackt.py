@@ -83,7 +83,11 @@ class PackerNimpackt(IPacker):
                 self.nimpackt_args = self.options['nimpackt_args']
 
     def process(self, arch, infile, outfile):
+        cwd = ''
+
         try:
+            ver = shell(self.logger, 'nim --version').split('\n')[0].strip()
+
             cwd = os.getcwd()
             base = os.path.dirname(infile)
 
@@ -204,7 +208,8 @@ class PackerNimpackt(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         return False

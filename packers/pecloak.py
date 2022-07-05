@@ -116,8 +116,9 @@ class PackerPeCloak(IPacker):
                 raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         if succeeded:
             pat = re.compile(r'New file saved \[([^\]]+)\]')

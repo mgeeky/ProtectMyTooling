@@ -187,6 +187,7 @@ Adjusted project file:
     def process(self, arch, infile, outfile):
 
         tmpname = ''
+        cwd = ''
         status = False
 
         try:
@@ -241,8 +242,9 @@ Adjusted project file:
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
             if os.path.isfile(tmpname): 
                 os.remove(tmpname)

@@ -77,6 +77,7 @@ class PackerScareCrow(IPacker):
 
     @ensureInputFileIsShellcode
     def process(self, arch, infile, outfile):
+        cwd = ''
         try:
             if arch != 'x64':
                 self.logger.fatal('ScareCrow works only with x64 shellcodes. Make sure your shellcode file contains "64" in name or use "-a 64" parameter.')
@@ -178,8 +179,9 @@ class PackerScareCrow(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
             scarePath = os.path.dirname(self.options['scarecrow_path'])
 

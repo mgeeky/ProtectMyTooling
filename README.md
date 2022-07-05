@@ -30,14 +30,14 @@ The above example will firstly pass `mimikatz.exe` to the Hyperion for obfuscati
 
 ## Installation
 
-This tool was designed to work on Windows, as packers are delivered in EXE format. 
-Some features may work however on Linux just fine, nonetheless that support is not provided.
+**This tool was designed to work on Windows, as most packers natively target that platform.**
 
-Installation is simple and pretty much boils down to requirements installation:
+Some features may work however on Linux just fine, nonetheless that support is not fully tested, please report bugs and issues.
+
+Installation is straightforward:
 
 ```
 PS C:\ProtectMyTooling> .\install.ps1
-PS C:\ProtectMyTooling> pip install -r requirements.txt
 ```
 
 For `ScareCrow` packer to run on Windows 10, there needs to be `WSL` installed and `bash.exe` available (in `%PATH%`).
@@ -535,6 +535,7 @@ Here's a list of options required by the Cobalt Strike integrator:
   - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
   - [`sRDI`](https://github.com/monoxgas/sRDI)
   - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
+  - [`PEZor`](https://github.com/phra/PEzor)
 
 ---
 

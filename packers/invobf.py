@@ -143,6 +143,7 @@ class PackerInvObf(IPacker):
     @ensureInputFileIsPowershell
     def process(self, arch, infile, outfile):
         out = ''
+        cwd = ''
         try:
             path = self.options['invobf_path']
 
@@ -189,7 +190,8 @@ class PackerInvObf(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         return False

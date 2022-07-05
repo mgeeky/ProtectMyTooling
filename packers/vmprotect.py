@@ -57,6 +57,7 @@ class PackerVMProtect(IPacker):
     @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
         out = ''
+        cwd = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(self.options['vmprotect_path'])
@@ -76,8 +77,9 @@ class PackerVMProtect(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         status = os.path.isfile(outfile)
 

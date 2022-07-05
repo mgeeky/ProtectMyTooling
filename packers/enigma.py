@@ -198,6 +198,7 @@ Adjusted project file:
 
         tmpname = ''
         out = ''
+        cwd = ''
         
         try:
             cwd = os.getcwd()
@@ -224,8 +225,9 @@ Adjusted project file:
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         if os.path.isfile(tmpname): 
             os.remove(tmpname)

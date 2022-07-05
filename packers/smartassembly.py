@@ -191,6 +191,7 @@ Adjusted project file:
         )
 
         cmdline = ''
+        cwd = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(self.options['smartassembly_path'])
@@ -231,7 +232,8 @@ Adjusted project file:
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         return status

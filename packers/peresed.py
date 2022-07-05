@@ -63,6 +63,7 @@ class PackerPeresed(IPacker):
 
     @ensureInputFileIsPE
     def process(self, arch, infile, outfile):
+        cwd = ''
         try:
             cwd = os.getcwd()
             base = os.path.dirname(infile)
@@ -108,7 +109,8 @@ class PackerPeresed(IPacker):
             raise
 
         finally:
-            self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
-            os.chdir(cwd)
+            if len(cwd) > 0:
+                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                os.chdir(cwd)
 
         return False
