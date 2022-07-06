@@ -119,11 +119,16 @@ def isDotNetExecutable(path):
         dir_entry = pe.OPTIONAL_HEADER.DATA_DIRECTORY[idx]
 
         if dir_entry.VirtualAddress != 0 and dir_entry.Size > 0:
-            for entry in pe.DIRECTORY_ENTRY_IMPORT:
-                if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
-                    for func in entry.imports:
-                        if func.name.decode() == '_CorExeMain':
-                            return True
+            if pe.OPTIONAL_HEADER.DATA_DIRECTORY[pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_IMPORT']].VirtualAddress != 0:
+                for entry in pe.DIRECTORY_ENTRY_IMPORT:
+                    if entry.dll.decode('utf-8').lower() == 'mscoree.dll':
+                        for func in entry.imports:
+                            if func.name.decode() == '_CorExeMain':
+                                return True
+            else:
+                logger.err(f'Something is wrong with your PE file: {path} - it doesn\'t have Import Table? Can\'t tell if its .NET or not. Assuming yes.')
+                return True
+
     except Exception as e:
         raise
 
@@ -142,7 +147,6 @@ def getFileFormat(infile):
     elif isShellcode(infile): form = 'Shellcode'
 
     return form
-
 
 def ensureInputFileIsPowershell(func):
     def ensure(self, arch, infile, outfile):

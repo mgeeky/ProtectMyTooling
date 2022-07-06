@@ -134,6 +134,17 @@ pe2shc_path: "contrib\\pe2shc\\pe2shc.exe"
 pe2shc_args: 
 
 #
+# sRDI
+#
+srdi_path: 'contrib\\sRDI\\ConvertToShellcode.py'
+srdi_function: ''
+srdi_data: ''
+srdi_obfuscate_imports: True
+srdi_import_delay: 2
+srdi_clear_header: True
+srdi_pass_shellcode_base: True
+
+#
 # sgn
 #
 sgn_path: "contrib\\sgn\\sgn.exe"

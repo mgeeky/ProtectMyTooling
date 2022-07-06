@@ -138,6 +138,16 @@ nimsyscall_pump:
 nimsyscall_signdomain: 'www.microsoft.com'
 nimsyscall_remoteprocess:
 
+#
+# sRDI
+#
+srdi_path: 'contrib\\sRDI\\ConvertToShellcode.py'
+srdi_function: ''
+srdi_data: ''
+srdi_obfuscate_imports: True
+srdi_import_delay: 2
+srdi_clear_header: True
+srdi_pass_shellcode_base: True
 
 #
 # ScareCrow
