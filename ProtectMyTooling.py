@@ -557,6 +557,7 @@ def main():
         raise
 
     print(f'''
+------------------
 Friendly reminder:
     - If your produced binary crashes or doesn't run as expected - try using different packers chain.
          Packers don't guarantee stability of produced binaries, therefore ProtectMyTooling cannot as well.

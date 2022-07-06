@@ -563,7 +563,6 @@ Here's a list of options required by the Cobalt Strike integrator:
 - Add watermarking to other file formats such as Office documents, WSH scripts (VBS, JS, HTA) and containers
 - Add support for a few other Packers/Loaders/Generators in upcoming future:
   - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
-  - [`sRDI`](https://github.com/monoxgas/sRDI)
   - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
   - [`PEZor`](https://github.com/phra/PEzor)
   - [`msfevenom`](https://github.com/rapid7/metasploit-framework) - two variants, one for input shellcode, the other for executable
