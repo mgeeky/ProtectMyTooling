@@ -38,7 +38,7 @@ class PackerNimSyscall(IPacker):
         'nimsyscall_sleepycrypt': False,
         'nimsyscall_hellsgate': False,
         'nimsyscall_syswhispers': True,
-        # that one is causing segmentation faults, watch out
+        # --jump -> that one is causing segmentation faults, watch out
         'nimsyscall_jump': False,
         'nimsyscall_shellcode': False,
         'nimsyscall_remoteinject': False,
