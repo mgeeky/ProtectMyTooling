@@ -101,7 +101,7 @@ class PackerNimcrypt2(IPacker):
                 exemode = 'raw'
 
             elif isValidPE(infile):
-                self.logger.info(f'{PackerNimcrypt2.get_name()} will convert input Shellcode into output {outformat}')
+                self.logger.info(f'{PackerNimcrypt2.get_name()} will convert input PE into output {outformat}')
                 exemode = 'pe'
 
             else:

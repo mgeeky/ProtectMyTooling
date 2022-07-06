@@ -108,6 +108,13 @@ nimcrypt2_no_sandbox: False
 nimcrypt2_no_ppid_spoof: False
 
 #
+# NimSyscallPacker
+#
+nimsyscall_path: "contrib\\NimSyscallPacker\\NimSyscallLoader.exe"
+nimsyscall_args:
+
+
+#
 # ScareCrow
 #
 scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"

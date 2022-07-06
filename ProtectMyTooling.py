@@ -481,8 +481,7 @@ def reEnableAvAtExit():
     except lib.utils.ShellCommandReturnedError as e:
         logger.error("Error occured while trying to re-enable AV:\n{}".format(str(e)))
 
-def main():
-    global av_enable_status
+def banner():
 
     try:
         print(r'''
@@ -503,13 +502,20 @@ def main():
          88,  "888,_ _,88"888,_ _,88o88oo,._888 888    Y88`Y8bo,,,o88o     
          MMM    "YMMMMMP"  "YMMMMMP"""""YUMMMMM MMM     YM  `'YMUP"YMM   
 ''')
+
     except:
         print('''
 
     :: ProtectMyTooling
 ''')
 
-    print(r'''    Red Team implants protection swiss knife.
+
+def main():
+    global av_enable_status
+
+    banner()
+
+    print(r'''    Red Team implants static signatures evasion hammer.
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>

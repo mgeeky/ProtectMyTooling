@@ -45,7 +45,13 @@ class Logger:
         if not c:
             return s
         return "\x1b[%dm%s\x1b[0m" % (c, s)
-        
+
+    @staticmethod
+    def colorize(txt, col):
+        if not Logger.options['colors']:
+            return txt
+            
+        return Logger.with_color(Logger.colors_map[col], txt)
 
     # Invocation:
     #   def out(txt, mode='info ', fd=None, color=None, noprefix=False, newline=True):

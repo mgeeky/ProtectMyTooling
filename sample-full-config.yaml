@@ -97,10 +97,47 @@ nimcrypt2_no_sandbox: False
 nimcrypt2_no_ppid_spoof: False
 
 #
-# NimSyscallLoader
+# NimSyscallPacker
 #
-nimcrypt2_path: "contrib\\NimSyscallLoader\\NimSyscallLoader.exe"
-nimcrypt2_args: 
+nimsyscall_path: "contrib\\NimSyscallPacker\\NimSyscallLoader.exe"
+nimsyscall_args:
+nimsyscall_noetw: False
+nimsyscall_noamsi: False
+nimsyscall_noargs: False
+nimsyscall_hide: True
+nimsyscall_reflective: False
+nimsyscall_debug: False
+nimsyscall_x86: False
+nimsyscall_large: False
+nimsyscall_comvaretw: False
+nimsyscall_unhook: True
+nimsyscall_obfuscate: False
+nimsyscall_sgn: True
+nimsyscall_replace: True
+nimsyscall_selfdelete: False
+nimsyscall_obfuscatefunctions: False
+nimsyscall_sign: True
+nimsyscall_llvm: False
+nimsyscall_sleepycrypt: False
+nimsyscall_hellsgate: False
+nimsyscall_syswhispers: True
+nimsyscall_jump: True
+nimsyscall_shellcode: False
+nimsyscall_remoteinject: False
+nimsyscall_remotepatchamsi: False
+nimsyscall_remotepatchetw: False
+nimsyscall_peinject: False
+nimsyscall_peload: True
+nimsyscall_csharp: False
+nimsyscall_key: 
+nimsyscall_dllexportfunc: 
+nimsyscall_sleep: 10
+nimsyscall_sandbox: 'MemorySpace'
+nimsyscall_domain:
+nimsyscall_pump:
+nimsyscall_signdomain: 'www.microsoft.com'
+nimsyscall_remoteprocess:
+
 
 #
 # ScareCrow
