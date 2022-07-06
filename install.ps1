@@ -4,12 +4,12 @@ pip3 install -r requirements.txt
 
 if ((Get-Command "python2" -ErrorAction SilentlyContinue) -eq $null) 
 {
-    Write-Error "`nWARNING: Some packers work only on Python2 which you seem to not have installed. Consider installing it to use: peCloakCapstone`n" 
+    Write-Host "`nWARNING: Some packers work only on Python2 which you seem to not have installed. Consider installing it to use: peCloakCapstone`n" -ForegroundColor green 
 }
 
 if ((Get-Command "nim.exe" -ErrorAction SilentlyContinue) -eq $null) 
 {
-    Write-Error "`nERROR: For Nim-related packers to work, you need to install Nim on your Windows! Consider using Chocolatey manager: choco install nim -y`n"
+    Write-Host "`nERROR: For Nim-related packers to work, you need to install Nim on your Windows! Consider using Chocolatey manager: choco install nim -y`n" -ForegroundColor green
 }
 else
 {
@@ -22,7 +22,7 @@ else
 
 if ((Get-Command "bash.exe" -ErrorAction SilentlyContinue) -eq $null) 
 {
-    Write-Error "`nWARNING: You don't seem to have Bash.exe in your Windows (no WSL installed?). Some linux-native packers might not work: ScareCrow`n"  
+    Write-Host "`nWARNING: You don't seem to have Bash.exe in your Windows (no WSL installed?). Some linux-native packers might not work: ScareCrow`n"  -ForegroundColor green 
 }
 else
 {
