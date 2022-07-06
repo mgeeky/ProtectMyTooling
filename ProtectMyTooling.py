@@ -552,10 +552,9 @@ def main():
 
     print(f'''
 Friendly reminder:
-
-    If your produced binary crashes or doesn't run as expected - try using different packers chain.
-    While chaining, carefully match output->input payload formats according to what consecutive packer expects.
-    Packers don't guarantee stability of produced binaries, therefore ProtectMyTooling cannot as well.
+    - If your produced binary crashes or doesn't run as expected - try using different packers chain.
+         Packers don't guarantee stability of produced binaries, therefore ProtectMyTooling cannot as well.
+    - While chaining, carefully match output->input payload formats according to what consecutive packer expects.
 ''')
 
     return out
