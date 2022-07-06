@@ -57,6 +57,13 @@ cmd> bash
 bash$ sudo apt update ; sudo apt upgrade -y ; sudo apt install golang=2:1.18~3 -y
 ```
 
+## Friendly reminder
+
+- If your produced binary crashes or doesn't run as expected - try using different packers chain.
+- Packers don't guarantee stability of produced binaries, therefore ProtectMyTooling cannot as well.
+- While chaining, carefully match output->input payload formats according to what consecutive packer expects.
+
+---
 
 ## Usage
 
@@ -68,12 +75,6 @@ The order of parameters processal is following:
 - Finally, whatever is provided in command line will overwrite corresponding values
 
 There, supported packer paths and options shall be set to enable.
-
-**Friendly reminder:**
-  - If your produced binary crashes or doesn't run as expected - try using different packers chain.
-    - Packers don't guarantee stability of produced binaries, therefore ProtectMyTooling cannot as well.
-  - While chaining, carefully match output->input payload formats according to what consecutive packer expects.
-
 
 ### Scenario 1: Simple ConfuserEx obfuscation
 
