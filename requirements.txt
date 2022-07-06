@@ -6,6 +6,6 @@ pe_tools
 yara-python
 capstone
 keystone-engine
-pycryptodome 
+pycryptodome
 argparse
 donut-shellcode
