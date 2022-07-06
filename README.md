@@ -536,6 +536,7 @@ Here's a list of options required by the Cobalt Strike integrator:
   - [`sRDI`](https://github.com/monoxgas/sRDI)
   - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
   - [`PEZor`](https://github.com/phra/PEzor)
+  - [`msfevenom`](https://github.com/rapid7/metasploit-framework) - two variants, one for input shellcode, the other for executable
 
 ---
 

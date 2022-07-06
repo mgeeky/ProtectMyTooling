@@ -176,6 +176,9 @@ class PackerNimpackt(IPacker):
             if os.path.isfile(mangledOutFileName):
                 shutil.move(mangledOutFileName, outfile)
 
+                if outformat == 'dll' or outformat == 'exe':
+                    changePESubsystemToGUI(outfile)
+
                 if outformat == 'dll':
                     print(f'''
 

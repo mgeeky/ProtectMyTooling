@@ -4,6 +4,7 @@
 import os
 import re
 import socket
+import shutil
 import pefile
 import hashlib
 import tempfile
@@ -167,6 +168,38 @@ def ensureInputFileIsPE(func):
         return func(self, arch, infile, outfile)
 
     return ensure
+
+def changePESubsystemToGUI(infile):
+    if not isValidPE(infile):
+        return False
+
+    pe = None
+    tmp = ''
+
+    try:
+        temp = tempfile.NamedTemporaryFile(delete=False)
+        tmp = temp.name
+        shutil.copy(infile, tmp)
+
+        pe = pefile.PE(tmp)
+        pe.OPTIONAL_HEADER.Subsystem = 2
+        pe.write(infile)
+
+        logger.info(f'Changed {os.path.basename(infile)} PE Subsystem to WINDOWS_GUI.')
+
+        return True
+
+    except Exception as e:
+        raise
+
+    finally:
+        if pe:
+            pe.close()
+
+        if len(tmp) > 0 and os.path.exists(tmp):
+            os.remove(tmp)
+
+    return False
 
 def prettyXml(xmlstr):
     reparsed = minidom.parseString(xmlstr)

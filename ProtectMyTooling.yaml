@@ -94,6 +94,20 @@ nimpackt_target:
 nimpackt_existing: False
 
 #
+# Nimcrypt2
+#
+nimcrypt2_path: "contrib\\Nimcrypt2\\nimcrypt.exe"
+nimcrypt2_args: 
+nimcrypt2_unhook: True
+nimcrypt2_process: 
+nimcrypt2_encrypt_strings: True
+nimcrypt2_get_syscallstub: False
+nimcrypt2_llvm_obfuscator: False
+nimcrypt2_no_randomization: False
+nimcrypt2_no_sandbox: False
+nimcrypt2_no_ppid_spoof: False
+
+#
 # ScareCrow
 #
 scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"

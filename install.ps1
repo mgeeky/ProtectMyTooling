@@ -9,12 +9,12 @@ if ((Get-Command "python2" -ErrorAction SilentlyContinue) -eq $null)
 
 if ((Get-Command "nim.exe" -ErrorAction SilentlyContinue) -eq $null) 
 {
-    Write-Error "`nERROR: For NimPackt-v1 and other Nim-related packers to work, you need to install Nim on your Windows!`n"
+    Write-Error "`nERROR: For Nim-related packers to work, you need to install Nim on your Windows!`n"
 }
 else
 {
-    Write-Host "`n== Step 2: Installs NimPackt-v1 dependencies...`n"
-    nimble -y install winim nimcrypto
+    Write-Host "`n== Step 2: Installs nim dependencies...`n"
+    nimble -y install winim nimcrypto docopt ptr_math strenc
 }
 
 if ((Get-Command "bash.exe" -ErrorAction SilentlyContinue) -eq $null) 
