@@ -93,4 +93,7 @@ class PackerHyperion(IPacker):
 ----------------------------------------
 ''', forced = True, noprefix=True)
 
+        else:
+            print(f'Now that {PackerHyperion.get_name()} produced binary, remember that it\'s taking a longer while before it executes due to decryption key Brute-Force involved. :-)')
+
         return status
