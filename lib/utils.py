@@ -44,8 +44,19 @@ packerTypeNames = {
 logger = Logger()
 
 SkipTheseModuleNames = (
-    'PackerType'
+    'PackerType',
 )
+
+#
+# Sometimes there might be clashes between packer script name and existing python module in sys.modules.
+# Example could be:
+#    packers/donut.py -> clashing with pip install donut-shellcode module named "donut"
+#
+# In these cases, we're gonna substitute user-provided packer name with existing packer script filename.
+#
+RenamePackerNameToPackerFile = {
+    'donut' : 'donut-packer',
+}
 
 def getClrAssemblyName(path):
     #
@@ -115,11 +126,23 @@ def isDotNetExecutable(path):
                             return True
     except Exception as e:
         raise
+
     finally:
         if pe:
             pe.close()
 
     return False
+
+def getFileFormat(infile):
+    form = ''
+
+    if isValidPE(infile): form = 'PE file'
+    elif isValidPowershell(infile): form = 'Powershell script'
+    elif isDotNetExecutable(infile): form = '.NET executable'
+    elif isShellcode(infile): form = 'Shellcode'
+
+    return form
+
 
 def ensureInputFileIsPowershell(func):
     def ensure(self, arch, infile, outfile):
@@ -174,6 +197,7 @@ def changePESubsystemToGUI(infile):
         return False
 
     pe = None
+    temp = None
     tmp = ''
 
     try:
@@ -195,6 +219,9 @@ def changePESubsystemToGUI(infile):
     finally:
         if pe:
             pe.close()
+
+        if temp:
+            temp.close()
 
         if len(tmp) > 0 and os.path.exists(tmp):
             os.remove(tmp)

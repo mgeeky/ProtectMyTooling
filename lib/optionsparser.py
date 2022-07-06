@@ -162,9 +162,12 @@ def parse_options(logger, opts, version):
     for i in range(len(allPackersList)):
         allPackersList[i] = os.path.basename(allPackersList[i]).replace('.py', '')
 
+    keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+    
     for p in opts['packerslist']:
         if p not in allPackersList:
-            logger.fatal('Packer "{}" is not implemented.'.format(p))
+            if p not in keys:
+                logger.fatal('Packer "{}" is not implemented.'.format(p))
 
     if not os.path.isfile(params.infile) and not os.path.isdir(params.infile):
         logger.fatal('Specified input file does not exist: "{}"'.format(params.infile))

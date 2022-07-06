@@ -8,3 +8,4 @@ capstone
 keystone-engine
 pycryptodome 
 argparse
+donut-shellcode

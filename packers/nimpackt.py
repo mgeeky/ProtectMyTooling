@@ -95,7 +95,7 @@ class PackerNimpackt(IPacker):
             ext = ext[1:].lower()
 
             if ext not in ('exe', 'dll'):
-                self.logger.fatal(f'{PackerNimpackt.get_name()} must produce output EXE or DLL artifact! Make sure your <outfile> has proper extension set')
+                self.logger.err(f'{PackerNimpackt.get_name()} must produce output EXE or DLL artifact! Make sure your <outfile> has proper extension set. Carrying on anyway.')
 
             outformat = ext
             exemode = ''
@@ -172,6 +172,11 @@ class PackerNimpackt(IPacker):
             
             if not os.path.isfile(mangledOutFileName):
                 mangledOutFileName = os.path.join(outDir, normalisedInfile + f'.{outformat}')
+
+            changedExtPath = '.'.join(mangledOutFileName.split('.')[:-1]) + '.exe'
+
+            if not os.path.isfile(mangledOutFileName) and os.path.isfile(changedExtPath):
+                mangledOutFileName = changedExtPath
 
             if os.path.isfile(mangledOutFileName):
                 shutil.move(mangledOutFileName, outfile)

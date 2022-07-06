@@ -98,7 +98,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.13
+    v0.14
 
 [.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
@@ -225,7 +225,7 @@ C:\> py ProtectMyTooling.py -L
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.13
+    v0.14
 
 [ 1] amber          -  Shellcode Loader       - Amber takes PE file on input and produces an EXE/PIC shellcode that loads it reflectively in-memory
 [ 2] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
@@ -404,7 +404,7 @@ PS> py ProtectMyTooling.py sgn,backdoor,amber beacon64.bin dbgview64-infected.ex
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.13
+    v0.14
 
 [.] Processing x64 file :  beacon64.bin
 [>] Generating output of sgn(<file>)...
@@ -534,6 +534,15 @@ Here's a list of options required by the Cobalt Strike integrator:
   1. Run on Windows 10 and have WSL installed (`bash.exe` command available in Windows)
   2. Have `golang` installed in WSL at version `1.16+` (tested on `1.18`)
   3. Make sure to have `PackerScareCrow.Run_ScareCrow_On_Windows_As_WSL = True` set
+
+---
+
+## Credits due & used technology
+
+- All packer, obfuscator, converter, loader credits goes to their authors. This tool is merely a wrapper around their technology!
+  - Hopefully none of them mind me adding such wrappers. Should there be concerns - please reach out to me.
+  
+- _ProtectMyTooling_ also uses [`denim.exe`](https://github.com/moloch--/denim) by **moloch--** by some Nim-based packers.
 
 
 ---

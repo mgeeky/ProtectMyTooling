@@ -94,7 +94,7 @@ class PackerDonut(IPacker):
             elif outfile.lower().endswith('.hex'): _format = 8
 
             if (_format == 1 and not outfile.lower().endswith('.bin')):
-                self.logger.fatal('Donut produces only .bin shellcode files! Make sure your <outfile> has .bin extension or any other supported by Donut --format parameter.')
+                self.logger.err('Donut produces only .bin shellcode files! Make sure your <outfile> has .bin extension or any other supported by Donut --format parameter. Carrying on anyway.')
 
             self.donut_args = self.donut_args.replace('<arch>', str(_arch))
             self.donut_args = self.donut_args.replace('<format>', str(_format))

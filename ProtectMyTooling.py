@@ -7,7 +7,7 @@
 #   (https://github.com/mgeeky)
 #
 
-VERSION = '0.13'
+VERSION = '0.14'
 
 import os
 import pefile
@@ -67,6 +67,10 @@ def init():
     return True
 
 def launchPacker(arch, packer, infile, outfile):
+    keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+    if packer in keys:
+        packer = lib.utils.RenamePackerNameToPackerFile[packer]
+
     if not packer in packersloader.get_packers().keys():
         logger.fatal('Requested packer ({}) was not loaded! Fatal error.'.format(packer))
 
@@ -245,6 +249,11 @@ def processFile(singleFile, infile, _outfile):
             logger.dbg('\tinfile  < "{}"'.format(infile))
             logger.dbg('\toutfile > "{}"'.format(outfile))
 
+            form = getFileFormat(infile)
+            if form == '': form = 'nothing really'
+
+            logger.info(f'Input file format resembles: {form}', color='yellow')
+
             if not os.path.isfile(infile):
                 if singleFile:
                     logger.fatal('For some reason input file no longer exists (maybe AV kicked in?). FATAL.')
@@ -276,6 +285,11 @@ def processFile(singleFile, infile, _outfile):
                 else:
                     logger.err('Output file does not exist (maybe AV kicked in?)')
                     return
+
+            form = getFileFormat(outfile)
+            if form == '': form = 'nothing really'
+            
+            logger.info(f'Output file format resembles: {form}', color='cyan')
 
             infile = outfile
 

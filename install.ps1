@@ -13,8 +13,11 @@ if ((Get-Command "nim.exe" -ErrorAction SilentlyContinue) -eq $null)
 }
 else
 {
-    Write-Host "`n== Step 2: Installs nim dependencies...`n"
+    Write-Host "`n== Step 2a: Installs nim dependencies...`n"
     nimble -y install winim nimcrypto docopt ptr_math strenc
+
+    Write-Host "`n== Step 2b: Installs denim.exe (github.com/moloch--/denim) dependencies...`n"
+    .\contrib\denim\denim.exe setup
 }
 
 if ((Get-Command "bash.exe" -ErrorAction SilentlyContinue) -eq $null) 

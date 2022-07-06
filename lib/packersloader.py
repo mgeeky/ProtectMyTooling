@@ -55,6 +55,10 @@ class PackersLoader:
         self.called = True
 
     def __getitem__(self, key):
+        keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+        if key in keys:
+            key = lib.utils.RenamePackerNameToPackerFile[key]
+
         return self.packerslist[key]
 
     def __setitem__(self, key, val):
@@ -94,7 +98,6 @@ class PackersLoader:
 
         return decomposed
 
-
     def load(self, path):
         instance = None
 
@@ -118,6 +121,10 @@ class PackersLoader:
             # Packer already loaded.
             return
 
+        keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+        if name in keys:
+            name = lib.utils.RenamePackerNameToPackerFile[name]
+
         self.logger.dbg('Attempting to load packer: %s ("%s")...' % (name, packer))
        
         try:
@@ -133,6 +140,7 @@ class PackersLoader:
             try:
                 handle = None
                 pat = re.compile('(' + self.options['packer_class_name'] + ')')
+
                 for attr in dir(module):
                     m = pat.match(attr)
                     if m:
@@ -141,7 +149,7 @@ class PackersLoader:
 
                         handle = getattr(module, attr)
                 
-                if handle == None:
+                if handle == None :
                     raise TypeError('Packer does not expose class of corresponding name: (' + self.options['packer_class_name'] + ')')
 
                 found = False
