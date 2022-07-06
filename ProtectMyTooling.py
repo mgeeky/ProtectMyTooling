@@ -7,42 +7,42 @@
 #   (https://github.com/mgeeky)
 #
 
+from RedWatermarker import PeWatermarker
+from lib.utils import *
+from lib.logger import Logger
+from lib.packersloader import PackersLoader
+import lib.optionsparser
+import atexit
+import pprint
+import time
+import glob
+import shutil
+import pefile
+import os
 VERSION = '0.14'
 
-import os
-import pefile
-import shutil
-import glob
-import time
-import pprint
-import atexit
-import lib.optionsparser
-from lib.packersloader import PackersLoader
-from lib.logger import Logger
-from lib.utils import *
-
-from RedWatermarker import PeWatermarker
 
 options = {
     'debug': False,
     'verbose': False,
-    'silent' : False,
-    'colors' : True,
-    'config' : '',
-    'timeout' : 60,
-    'arch' : '',
+    'silent': False,
+    'colors': True,
+    'config': '',
+    'timeout': 60,
+    'arch': '',
     'log': None,
     'packers': '',
     'packer_class_name': 'Packer\\w+',
-    'watermark' : [],
-    'ioc' : False,
-    'custom_ioc' : '',
-    'ioc_path' : '',
+    'watermark': [],
+    'ioc': False,
+    'custom_ioc': '',
+    'ioc_path': '',
 }
 
 logger = None
 packersloader = None
 av_enable_status = -1
+
 
 def init():
     global logger
@@ -53,7 +53,7 @@ def init():
 
     opts = lib.optionsparser.parse_options(logger, options, VERSION)
     options.update(opts)
-    
+
     logger = Logger(options)
     packersloader = PackersLoader(logger, options)
 
@@ -66,20 +66,23 @@ def init():
 
     return True
 
+
 def launchPacker(arch, packer, infile, outfile):
     keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
     if packer in keys:
         packer = lib.utils.RenamePackerNameToPackerFile[packer]
 
     if not packer in packersloader.get_packers().keys():
-        logger.fatal('Requested packer ({}) was not loaded! Fatal error.'.format(packer))
+        logger.fatal(
+            'Requested packer ({}) was not loaded! Fatal error.'.format(packer))
 
     return packersloader[packer].process(arch, infile, outfile)
+
 
 def getFileArch(infile):
     pe = None
     try:
-        if options['arch'] != '': 
+        if options['arch'] != '':
             return options['arch']
 
         if lib.utils.isShellcode(infile):
@@ -91,19 +94,23 @@ def getFileArch(infile):
                 logger.info('Deduced from input file name x86 architecture.')
                 return 'x86'
 
-            logger.fatal('Could not deduce shellcode architecture. Use --arch to set it up.')
+            logger.fatal(
+                'Could not deduce shellcode architecture. Use --arch to set it up.')
 
-        pe = pefile.PE(infile, fast_load = True)
-        arch = 'x86' if (pe.FILE_HEADER.Machine == pefile.MACHINE_TYPE['IMAGE_FILE_MACHINE_I386']) else 'x64'
+        pe = pefile.PE(infile, fast_load=True)
+        arch = 'x86' if (pe.FILE_HEADER.Machine ==
+                         pefile.MACHINE_TYPE['IMAGE_FILE_MACHINE_I386']) else 'x64'
 
     except pefile.PEFormatError as e:
-        logger.fatal('Could not detect input file\'s architecture. Please specify it using --arch!')
+        logger.fatal(
+            'Could not detect input file\'s architecture. Please specify it using --arch!')
 
     finally:
         if pe:
             pe.close()
 
     return arch
+
 
 def injectWatermark(outfile):
     try:
@@ -114,9 +121,9 @@ def injectWatermark(outfile):
         shutil.copy(outfile, temp.name)
 
         opts = {
-            'verbose' : options['verbose'],
-            'debug' : options['debug'],
-            'check' : False,
+            'verbose': options['verbose'],
+            'debug': options['debug'],
+            'check': False,
         }
 
         for k in lib.optionsparser.AvailableWatermarkSpots:
@@ -138,18 +145,20 @@ def injectWatermark(outfile):
 
                     if marker.startswith('0x') or \
                         'a' in marker or 'b' in marker or 'c' in marker or \
-                        'd' in marker or 'e' in marker or 'f' in marker:
+                            'd' in marker or 'e' in marker or 'f' in marker:
                         base = 16
 
                     num = int(marker, base)
 
                     if num >= 2**32:
-                        logger.fatal('Specified checksum number in --watermark is too large! Must be no bigger than 2^32-1 (0xffffffff)!')
+                        logger.fatal(
+                            'Specified checksum number in --watermark is too large! Must be no bigger than 2^32-1 (0xffffffff)!')
 
                     opts[spot] = num
 
                 except Exception as e:
-                    logger.fatal('Invalid --watermark checksum=NUM value, could not be casted to integer!')
+                    logger.fatal(
+                        'Invalid --watermark checksum=NUM value, could not be casted to integer!')
             else:
                 opts[spot] = marker
 
@@ -172,6 +181,7 @@ def injectWatermark(outfile):
         temp.close()
         os.unlink(temp.name)
 
+
 def validateOutfile(outfile):
     return os.path.isfile(outfile)
 
@@ -183,16 +193,19 @@ def validateOutfile(outfile):
         return True
 
     except pefile.PEFormatError as e:
-        logger.err('Output file validation failed as it has corrupted PE structure: ' + str(e))
+        logger.err(
+            'Output file validation failed as it has corrupted PE structure: ' + str(e))
         return False
 
     finally:
         if pe:
             pe.close()
 
+
 def testRun(outfile):
     print('\n\nRunning application to test it...\n')
     print(shell(logger, '"{}" {}'.format(outfile, options['cmdline'])))
+
 
 def processFile(singleFile, infile, _outfile):
     result = False
@@ -200,8 +213,9 @@ def processFile(singleFile, infile, _outfile):
     iocsCollected = []
 
     if options['ioc']:
-        iocsCollected.append(lib.utils.collectIOCs(infile, 'Input File', options['custom_ioc']))
-    
+        iocsCollected.append(lib.utils.collectIOCs(
+            infile, 'Input File', options['custom_ioc']))
+
     try:
         tmps = []
         checkArch = True
@@ -209,11 +223,12 @@ def processFile(singleFile, infile, _outfile):
 
         for i in range(len(packersOrder)):
             packer = packersOrder[i].strip()
-            
+
             if not packersloader[packer].validate_file_architecture():
                 checkArch = False
                 if (options['verbose'] or options['debug']):
-                    logger.info(f'Packer {packer} requested not to verify file\'s architecture.')
+                    logger.info(
+                        f'Packer {packer} requested not to verify file\'s architecture.')
                 break
 
         if checkArch:
@@ -228,14 +243,15 @@ def processFile(singleFile, infile, _outfile):
 
         for i in range(len(packersOrder)):
             packer = packersOrder[i].strip()
-            
+
             if i + 1 < len(packersOrder):
                 outfile = get_tempfile_name('.bin')
                 tmps.append(outfile)
             else:
                 outfile = _outfile
 
-            packersChain = '{}({})'.format(packersloader[packer].get_name(), packersChain)
+            packersChain = '{}({})'.format(
+                packersloader[packer].get_name(), packersChain)
 
             if (options['verbose'] or options['debug']) and singleFile:
                 print('''
@@ -244,21 +260,25 @@ def processFile(singleFile, infile, _outfile):
 =================================================
     '''.format(packersChain))
             else:
-                logger.info('[>] Generating output of {}...'.format(packersChain), forced = True, noprefix=True, color = 'yellow')
+                logger.info('[>] Generating output of {}...'.format(
+                    packersChain), forced=True, noprefix=True, color='yellow')
 
             logger.dbg('\tinfile  < "{}"'.format(infile))
             logger.dbg('\toutfile > "{}"'.format(outfile))
 
             form = getFileFormat(infile)
-            if form == '': form = 'nothing really'
+            if form == '':
+                form = 'nothing really'
 
             logger.info(f'Input file format resembles: {form}', color='yellow')
 
             if not os.path.isfile(infile):
                 if singleFile:
-                    logger.fatal('For some reason input file no longer exists (maybe AV kicked in?). FATAL.')
+                    logger.fatal(
+                        'For some reason input file no longer exists (maybe AV kicked in?). FATAL.')
                 else:
-                    logger.err('For some reason input file no longer exists (maybe AV kicked in?)')
+                    logger.err(
+                        'For some reason input file no longer exists (maybe AV kicked in?)')
                     return
 
             if not launchPacker(arch, packer, infile, outfile):
@@ -277,18 +297,22 @@ def processFile(singleFile, infile, _outfile):
                 result = True
 
                 if options['ioc']:
-                    iocsCollected.append(lib.utils.collectIOCs(outfile, 'Obfuscation artifact: ' + packersChain, options['custom_ioc']))
+                    iocsCollected.append(lib.utils.collectIOCs(
+                        outfile, 'Obfuscation artifact: ' + packersChain, options['custom_ioc']))
 
             if not os.path.isfile(outfile):
                 if singleFile:
-                    logger.fatal('Output file does not exist (maybe AV kicked in?). FATAL.')
+                    logger.fatal(
+                        'Output file does not exist (maybe AV kicked in?). FATAL.')
                 else:
-                    logger.err('Output file does not exist (maybe AV kicked in?)')
+                    logger.err(
+                        'Output file does not exist (maybe AV kicked in?)')
                     return
 
             form = getFileFormat(outfile)
-            if form == '': form = 'nothing really'
-            
+            if form == '':
+                form = 'nothing really'
+
             logger.info(f'Output file format resembles: {form}', color='cyan')
 
             infile = outfile
@@ -298,7 +322,8 @@ def processFile(singleFile, infile, _outfile):
             try:
                 os.remove(t)
             except Exception as e:
-                logger.err(f'Could not remove intermediary file: {t}\n\tException thrown: {e}')
+                logger.err(
+                    f'Could not remove intermediary file: {t}\n\tException thrown: {e}')
 
         if result:
             logger.info(f'''
@@ -312,13 +337,16 @@ def processFile(singleFile, infile, _outfile):
         logger.info('Injecting watermark...')
         injectWatermark(_outfile)
 
-    if options['ioc']:
-        iocsCollected.append(lib.utils.collectIOCs(_outfile, 'Output obfuscated artifact', options['custom_ioc']))
-
     if result and validateOutfile(_outfile):
         newFileSize = os.path.getsize(_outfile)
 
+        if options['hide_console']:
+            changePESubsystemToGUI(_outfile)
+
         if options['ioc']:
+            iocsCollected.append(lib.utils.collectIOCs(
+                _outfile, 'Output obfuscated artifact', options['custom_ioc']))
+
             path, ext = os.path.splitext(outfile)
             iocName = path + '-ioc.csv'
 
@@ -338,7 +366,7 @@ def processFile(singleFile, infile, _outfile):
                     'sha1',
                     'sha256',
                     'imphash',
-                    #'typeref_hash',
+                    # 'typeref_hash',
                 )
 
                 if not fileExists:
@@ -380,6 +408,7 @@ def processFile(singleFile, infile, _outfile):
         ), noprefix=True)
         return 1
 
+
 def processDir(infile, outdir):
     patterns = (
         os.path.join(infile, '*.exe'),
@@ -408,8 +437,9 @@ def processDir(infile, outdir):
                         file, str(e)
                     ))
 
-            #elif os.path.isdir(file):
+            # elif os.path.isdir(file):
             #    processDir(file, outdir)
+
 
 def checkAv(options, logger):
     outstatus = -1
@@ -417,7 +447,7 @@ def checkAv(options, logger):
     logger.info("Checking AV status...")
 
     if 'check_av_command' in options.keys() and 'disable_av_command' in options.keys() \
-        and 'enable_av_command' in options.keys() and options['check_av_command']:
+            and 'enable_av_command' in options.keys() and options['check_av_command']:
 
         out = shell(logger, options['check_av_command'])
         logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
@@ -430,18 +460,20 @@ def checkAv(options, logger):
             outstatus = 0
     else:
         return outstatus
-    
+
     if outstatus == -1:
         logger.info('Unknown AV status.')
 
     return outstatus
 
+
 def handleAv(options, logger, status):
     outstatus = -1
 
     if 'disable_av_command' not in options.keys() or not options['disable_av_command'] or \
-        'enable_av_command' not in options.keys() or not options['enable_av_command']:
-        logger.info("No Enable/Disable AV commands were specified, skipping AV orchestration.")
+            'enable_av_command' not in options.keys() or not options['enable_av_command']:
+        logger.info(
+            "No Enable/Disable AV commands were specified, skipping AV orchestration.")
         return outstatus
 
     if status == 0:
@@ -452,7 +484,7 @@ def handleAv(options, logger, status):
 
             out = shell(logger, options['disable_av_command'])
 
-            logger.dbg('AV disable command returned: "{}"'.format(str(out))) 
+            logger.dbg('AV disable command returned: "{}"'.format(str(out)))
             logger.info('AV should be disabled now. Waiting 5 seconds...')
 
             time.sleep(5.0)
@@ -466,12 +498,13 @@ def handleAv(options, logger, status):
 
         out = shell(logger, options['enable_av_command'])
 
-        logger.dbg('AV enable command returned: "{}"'.format(str(out))) 
+        logger.dbg('AV enable command returned: "{}"'.format(str(out)))
         logger.info('AV should be enabled now.')
 
     else:
         logger.info('Unknown AV handle status.')
         return -1
+
 
 @atexit.register
 def reEnableAvAtExit():
@@ -479,7 +512,9 @@ def reEnableAvAtExit():
         handleAv(options, logger, av_enable_status)
 
     except lib.utils.ShellCommandReturnedError as e:
-        logger.error("Error occured while trying to re-enable AV:\n{}".format(str(e)))
+        logger.error(
+            "Error occured while trying to re-enable AV:\n{}".format(str(e)))
+
 
 def banner():
 
@@ -535,7 +570,8 @@ def main():
             av_enable_status = handleAv(options, logger, 0)
 
         except lib.utils.ShellCommandReturnedError as e:
-            logger.fatal("Error occured while trying to disable AV:\n{}".format(str(e)))
+            logger.fatal(
+                "Error occured while trying to disable AV:\n{}".format(str(e)))
 
         infile = os.path.abspath(options['infile'])
         outfile = os.path.abspath(options['outfile'])
@@ -548,9 +584,11 @@ def main():
 
         elif os.path.isdir(infile):
             if not os.path.isdir(outfile):
-                logger.fatal('If infile points to a directory to perform recursive sweep - so should be the outfile, an output directory where to place generated artefacts!')
+                logger.fatal(
+                    'If infile points to a directory to perform recursive sweep - so should be the outfile, an output directory where to place generated artefacts!')
 
-            logger.info('Infile is a directory. Working recursively on files stored there.')
+            logger.info(
+                'Infile is a directory. Working recursively on files stored there.')
             processDir(infile, outfile)
 
     except Exception as e:
@@ -565,6 +603,7 @@ Friendly reminder:
 ''')
 
     return out
+
 
 if __name__ == '__main__':
     main()
