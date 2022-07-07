@@ -205,7 +205,7 @@ Commercial ones will require user to purchase the product and configure its loca
 8. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
 9. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
 10. [`LoGiC.NET`](https://github.com/Charterino/AsStrongAsFuck) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
-11. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
+11. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm) - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
 12. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
 13. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
 14. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
