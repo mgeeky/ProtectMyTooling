@@ -68,7 +68,7 @@ class PackerNimSyscall(IPacker):
 
     @staticmethod
     def get_type():
-        return PackerType.PEProtector
+        return PackerType.ShellcodeLoader
 
     @staticmethod
     def get_desc():

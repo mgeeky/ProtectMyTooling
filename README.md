@@ -250,9 +250,9 @@ C:\> py ProtectMyTooling.py -L
 [12] mpress         -  PE EXE/DLL Protector   - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
 [13] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
 [14] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[15] nimcrypt2      -  PE EXE/DLL Protector   - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by icyguider
-[16] nimpackt       -  PE EXE/DLL Protector   - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn't work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)
-[17] nimsyscall     -  PE EXE/DLL Protector   - (paid) Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by S3cur3Th1sSh1t
+[15] nimcrypt2      -  Shellcode Loader       - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by icyguider
+[16] nimpackt       -  Shellcode Loader       - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn't work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)
+[17] nimsyscall     -  Shellcode Loader       - (paid) Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by S3cur3Th1sSh1t
 [18] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
 [19] pe2shc         -  Shellcode Converter    - pe_to_shellcode by Hasherezade, takes PE EXE/DLL and produces PIC shellcode
 [20] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7
