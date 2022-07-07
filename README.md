@@ -7,7 +7,7 @@ Hunting for offensive researcher Twitter handles, email addresses, or `SeatBelt`
 Blue Teams, security vendors - we can all do better than that and focus on **detecting techniques instead of tools**. 
 
 - Smelling **kerberoasting** based on [Rubeus'](https://github.com/GhostPack/Rubeus) `$villain = "Harmj0y"`? How about looking for anomalous kerberos queries instead?
-- On the lookout of [Mimikatz's](https://github.com/gentilkiwi/mimikatz) `$i_got_you = "Benjamin DELPY gentilkiwi ( benjamin@gentilkiwi.com )"`? I say that's weak.
+- On the lookout of [Mimikatz's Gentil Kiwi](https://github.com/gentilkiwi/mimikatz)? I say that's weak.
 
 ![2.png](images/2.png)
 
