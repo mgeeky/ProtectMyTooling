@@ -570,6 +570,18 @@ Here's a list of options required by the Cobalt Strike integrator:
 
 ---
 
+## Disclaimer
+
+Use of this tool as well as any other projects I'm author of for illegal purposes, unsolicited hacking, cyber-espionage is strictly prohibited. 
+This and other tools distributed by myself serve professional Penetration Testers, Security Consultants, Security Engineers and other security personnel in improving their customer networks cyber-defence capabilities.  
+In no event shall the authors of copyright holders be liable for any claim, damages or other liability arising from illegal use of this software.
+
+If there are concerns, copyright issues, threats posed by this software or other inquiries - I am open to collaborate in responsibly addressing them.
+
+The tool exposes handy interface for using mostly open-source or commercially available packers/protectors/obfuscation software, therefore not introducing any immediately new threats to the cyber-security landscape as is.
+
+---
+
 ### ☕ Show Support ☕
 
 This and other projects are outcome of sleepless nights and **plenty of hard work**. If you like what I do and appreciate that I always give back to the community,
