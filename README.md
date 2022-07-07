@@ -3,18 +3,17 @@
 # Stop Detecting Tools - Detect Techniques Instead
 
 This offensive software is our professional Red Team community's manifest to security vendors, cyber-defenders all around the world **to stop devising signatures or Use Cases based on tool contents**.
-Hunting for offensive researcher Twitter handles, email addresses, or `SeatBelt` .NET class names is **naive** and just not enough to fight back patient, dedicated, well-funded adversaries.
-Blue Teams, security vendors - we can all do better than that and focus on **detecting techniques instead of tools**. 
+Hunting for offensive researcher Twitter handles, [email addresses](https://twitter.com/mariuszbit/status/1544994412639444993), or `SeatBelt` .NET class names is ineffective against patient, dedicated, well-funded adversaries.
+Blue Teams, security vendors - we can all do better and focus on **detecting techniques instead of tools**. 
 
 - Smelling **kerberoasting** based on [Rubeus'](https://github.com/GhostPack/Rubeus) `$villain = "Harmj0y"`? How about looking for anomalous kerberos queries instead?
-- On the lookout of [Mimikatz's Gentil Kiwi](https://github.com/gentilkiwi/mimikatz)? I say that's weak.
+- On the lookout of [Mimikatz's Gentil Kiwi](https://github.com/gentilkiwi/mimikatz)? I say that's shaky.
 
 ![2.png](images/2.png)
 
-Let us challenge current way of working by understanding ineffectiveness of legacy approaches against real-world Threat Actors known to use custom in-house weaponry. 
-Red Teams heavily invest in research to come up with new approaches. Blue Teams can do the same devising stronger Use Cases.
+Let us challenge current way of working by understanding ineffectiveness of legacy approaches against custom in-house weaponry employed by apex adversaries. 
 
-The project aims to help Red Teams evade obsolete static & naive signaturing in hope to speed up moving away of [**weak detection models**](https://twitter.com/mariuszbit/status/1544994412639444993).
+The project aims to help Red Teams step up their game and evade _obsolete_ static signaturing in hope to **educate** Blue Teams how **weak detection models** miss the point.
 
 
 ## Intro
