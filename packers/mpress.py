@@ -33,7 +33,7 @@ class PackerMPRESS(IPacker):
 
     @staticmethod
     def get_desc():
-        return 'MPRESS compressor by Vitaly Evseenko. Takes input EXE and compresses it.'
+        return 'MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.'
 
     def help(self, parser):
         if parser != None:
