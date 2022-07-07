@@ -1,0 +1,105 @@
+             MATCODE Compressor
+             ~~~~~~~~~~~~~~~~~~
+          Frequently Asked Questions
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+[1]  Which compression algorithm uses MPRESS?
+[2]  What advantages of this compression?
+[3]  Whether I need to buy some license in order to use MPRESS?
+[4]  "In-place decompression" - How does it work?
+[5]  Why MPRESS does not have decompression option?
+[6]  Can MPRESS protect my program against crackers?
+[7]  Do compressed files load faster or slower?
+[8]  What should I use instead of Assembly.Location?
+[9]  What should I use instead of Module.FullyQualifiedName?
+
+
+
+[1]  Which compression algorithm uses MPRESS?
+
+A. LZMAT. It's very similar to well known LZ77, but has some
+   advantages.
+
+
+[2]  What advantages of this compression?
+
+A. LZMAT does not require huge resources for compression, for
+   decompression it does not require resources at all.
+   It has extreamly fast compression/decompression speed,
+   a few times faster then LZ78 and even faster then LZO.
+   It could process unlimited size of blocks unlike LZ77/
+   LZ78/LZO with size of block limited to 64k. LZMAT has
+   very small decompression procedure which allows to make
+   in-place decomprassion.
+
+   
+[3]  Whether I need to buy some license in order to use MPRESS?
+
+A. No. MPRESS is absolutely free of charge software. Read the
+   license which is included in  the  distribution package.
+   MPRESS does not contain any code which is under different 
+   license (i.e. GPL, LGPL etc.), therefore you can use MPRESS
+   for your commercial project without needs to make it
+   opensource.
+
+
+[4]  "In-place decompression" - How does it work?
+
+A. Technique wich decompresses data into the same memory
+   called "in-place decompression".
+   MPRESS does in-place decompression of the compressed data.
+   This means that the applications packed with MPRESS does
+   not require more virtual memory than the original unpacked
+   versions.
+
+
+[5]  Why MPRESS does not have decompression option?
+
+A. It was planned in earliest releases to make such option for
+   decompression the compressed application, but then we've
+   figured out that it is not required. Most peaples are using
+   packers not only to compress the application, but to protect
+   their properties against decompilation and reverce engenering.
+   MPRESS has the backup option in case if you would need the
+   original application.
+
+
+[6]  Can MPRESS protect my program against crackers?
+
+A. MPRESS is not an envelope-protector, it is only a packer.
+   But MPRESS is a good defense against non-professional
+   hacker or reverce engeneres.
+
+
+[7]  Do compressed files load faster or slower?
+
+A. Most time, especially DLLs are loaded mutch faster, because
+   they are smaller and require less read operations to load
+   the executable image. 
+
+
+[8]  I got a warning while compressing MS.NET application:
+    "Assembly.Location property found - Will become null-string
+     inside the compressed application."
+     What should I use instead of Assembly.Location?
+
+A. You could use instead of Assembly.Location one of
+   Environment.CommandLine
+   Process.StartInfo.FileName
+   or Process.MainModule.ModuleName
+
+
+[9]  What should I use instead of Module.FullyQualifiedName
+   in my MS.NET application?
+
+A. Use the same as above one of
+   Environment.CommandLine
+   Process.StartInfo.FileName
+   or Process.MainModule.ModuleName
+
+
+Send your questions to ve@matcode.com  
+MATCODE Software
+
+
+

@@ -205,6 +205,7 @@ Commercial ones will require user to purchase the product and configure its loca
 8. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
 9. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
 10. [`LoGiC.NET`](https://github.com/Charterino/AsStrongAsFuck) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
+11. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm - MPRESS compressor by Vitaly Evseenko. Takes input EXE and compresses it.
 11. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
 12. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
 13. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
@@ -246,22 +247,23 @@ C:\> py ProtectMyTooling.py -L
 [ 9] intellilock    -  .NET Obfuscator        - (paid) Eziriz Intellilock is an advanced .Net (x86+x64) assemblies protector.
 [10] invobf         -  Powershell Obfuscator  - Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)
 [11] logicnet       -  .NET Obfuscator        - LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)
-[12] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[13] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
-[14] nimcrypt2      -  PE EXE/DLL Protector   - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by icyguider
-[15] nimpackt       -  PE EXE/DLL Protector   - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn't work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)
-[16] nimsyscall     -  PE EXE/DLL Protector   - (paid) Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by S3cur3Th1sSh1t
-[17] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
-[18] pe2shc         -  Shellcode Converter    - pe_to_shellcode by Hasherezade, takes PE EXE/DLL and produces PIC shellcode
-[19] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7
-[20] peresed        -  PE EXE/DLL Protector   - Removes all existing PE Resources and signature (think of Mimikatz icon).
-[21] scarecrow      -  Shellcode Loader       - Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact. (works best under Linux or Win10 WSL!)
-[22] sgn            -  Shellcode Encoder      - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode.
-[23] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
-[24] srdi           -  PE EXE/DLL Protector   - Convert DLLs to position independent shellcode. Authored by: @monoxgas
-[25] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
-[26] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
-[27] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
+[12] mpress         -  PE EXE/DLL Protector   - MPRESS compressor by Vitaly Evseenko. Takes input EXE and compresses it.
+[13] netreactor     -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[14] netshrink      -  .NET Obfuscator        - (paid) PELock .netshrink is an .Net EXE packer with anti-cracking feautres and LZMA compression
+[15] nimcrypt2      -  PE EXE/DLL Protector   - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by icyguider
+[16] nimpackt       -  PE EXE/DLL Protector   - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn't work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)
+[17] nimsyscall     -  PE EXE/DLL Protector   - (paid) Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by S3cur3Th1sSh1t
+[18] packer64       -  PE EXE/DLL Protector   - jadams/Packer64 - Packer for 64-bit PE exes
+[19] pe2shc         -  Shellcode Converter    - pe_to_shellcode by Hasherezade, takes PE EXE/DLL and produces PIC shellcode
+[20] pecloak        -  PE EXE/DLL Protector   - A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7
+[21] peresed        -  PE EXE/DLL Protector   - Removes all existing PE Resources and signature (think of Mimikatz icon).
+[22] scarecrow      -  Shellcode Loader       - Takes x64 shellcode and produces an EDR-evasive DLL (default)/JScript/CPL/XLL artifact. (works best under Linux or Win10 WSL!)
+[23] sgn            -  Shellcode Encoder      - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode.
+[24] smartassembly  -  .NET Obfuscator        - (paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques
+[25] srdi           -  PE EXE/DLL Protector   - Convert DLLs to position independent shellcode. Authored by: @monoxgas
+[26] themida        -  PE EXE/DLL Protector   - (paid) Advanced x86/x64 PE Executables virtualizer, compressor, protector and binder.
+[27] upx            -  PE EXE/DLL Protector   - Universal PE Executables Compressor - highly reliable, works with x86 & x64.
+[28] vmprotect      -  PE EXE/DLL Protector   - (paid) VMProtect protects x86/x64 code by virtualizing it in complex VM environments.
 ```
 
 Above are the packers that are supported, but that doesn't mean that you have them configured and ready to use. 
@@ -562,7 +564,6 @@ Here's a list of options required by the Cobalt Strike integrator:
 - Write custom PE injector and offer it as a "protector"
 - Add watermarking to other file formats such as Office documents, WSH scripts (VBS, JS, HTA) and containers
 - Add support for a few other Packers/Loaders/Generators in upcoming future:
-  - [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm)
   - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
   - [`PEZor`](https://github.com/phra/PEzor)
   - [`msfevenom`](https://github.com/rapid7/metasploit-framework) - two variants, one for input shellcode, the other for executable

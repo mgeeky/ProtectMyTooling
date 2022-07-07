@@ -66,6 +66,11 @@ donut_class:
 donut_exit: '1'
 
 #
+# MPRESS
+#
+mpress_path: "contrib\\MPRESS\\mpress.exe"
+
+#
 # NimPackt-v1
 #
 nimpackt_path: "contrib\\NimPackt-v1\\NimPackt.py"
