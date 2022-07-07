@@ -1,6 +1,20 @@
 ![1.png](images/1.png)
 
-# ProtectMyTooling
+# Stop Detecting Tools - Detect Techniques Used
+
+This offensive software is our professional Red Team community manifest to security vendors, cyber-defenders all around the world **to stop devising signatures or Use Cases based on tool contents**.
+Hunting for offensive researcher Twitter handles, email addresses, or `SeatBelt` .NET class names is **naive** and just not enough to fight back patient, dedicated, well-funded adversaries.
+Blue Teams, security vendors - we can all do better than that and focus on **detecting techniques instead of tools**. 
+
+- Smelling **kerberoasting** based on [Rubeus'](https://github.com/GhostPack/Rubeus) `$villain = "Harmj0y"`? Not anymore -how about looking for anomalous kerberos queries instead?
+- On the lookout of [Mimikatz's](https://github.com/gentilkiwi/mimikatz) `$i_got_you = "Benjamin DELPY gentilkiwi ( benjamin@gentilkiwi.com )";`? I say _objection_.
+
+I strive to professionally challenge current way of working by presenting ineffectiveness of legacy approaches against real-world Threat Actors known for use of custom in-house weaponry.
+
+The project aims to help Red Teams evade obsolete static & naive signaturing, that are still heavily rooted in the industry - and raise the bar in challenging implemented **weak detection models**.
+
+
+## Intro
 
 Script that wraps around multitude of packers, protectors, obfuscators, shellcode loaders, encoders, generators to produce complex protected Red Team implants.
 Your perfect companion in Malware Development CI/CD pipeline, **helping watermark your artifacts, collect IOCs, backdoor and more**
