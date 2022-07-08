@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import os
-import sys, re
+import sys
+import re
 import inspect
 from io import StringIO
 import csv
@@ -9,11 +10,13 @@ import lib.utils
 from lib.logger import Logger
 
 #
-# Plugin that attempts to load all of the supplied plugins from 
+# Plugin that attempts to load all of the supplied plugins from
 # program launch options.
-class PackersLoader:   
+
+
+class PackersLoader:
     class InjectedLogger(Logger):
-        def __init__(self, name, options = None):
+        def __init__(self, name, options=None):
             self.name = name
             super().__init__(options)
 
@@ -21,7 +24,7 @@ class PackersLoader:
             return '[{}] {}'.format(self.name, txt)
 
         # Info shall be used as an ordinary logging facility, for every desired output.
-        def info(self, txt, forced = False, **kwargs):
+        def info(self, txt, forced=False, **kwargs):
             super().info(self._text(txt), forced, **kwargs)
 
         # Trace by default does not uses [TRACE] prefix. Shall be used
@@ -38,7 +41,7 @@ class PackersLoader:
         def fatal(self, txt, **kwargs):
             super().fatal(self._text(txt), **kwargs)
 
-    def __init__(self, logger, options, instantiate = True):
+    def __init__(self, logger, options, instantiate=True):
         self.options = options
         self.packerslist = {}
         self.called = False
@@ -47,15 +50,17 @@ class PackersLoader:
         plugins_count = len(self.options['packerslist'])
 
         if plugins_count > 0:
-            self.logger.info('Loading %d packer%s...' % (plugins_count, '' if plugins_count == 1 else 's'))
-            
+            self.logger.info('Loading %d packer%s...' %
+                             (plugins_count, '' if plugins_count == 1 else 's'))
+
             for packer in self.options['packerslist']:
                 self.load(packer)
 
         self.called = True
 
     def __getitem__(self, key):
-        keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+        keys = [x.lower()
+                for x in lib.utils.RenamePackerNameToPackerFile.keys()]
         if key in keys:
             key = lib.utils.RenamePackerNameToPackerFile[key]
 
@@ -63,7 +68,7 @@ class PackersLoader:
 
     def __setitem__(self, key, val):
         self.packerslist[key] = val
-        
+
     # Output format:
     #   packerslist = {'packer1': instance, 'packer2': instance, ...}
     def get_packers(self):
@@ -82,7 +87,8 @@ class PackersLoader:
     def decompose_path(p):
         decomposed = {}
         f = StringIO(p)
-        rows = list(csv.reader(f, quoting=csv.QUOTE_ALL, skipinitialspace=True))
+        rows = list(csv.reader(
+            f, quoting=csv.QUOTE_ALL, skipinitialspace=True))
 
         for i in range(len(rows[0])):
             row = rows[0][i]
@@ -109,7 +115,8 @@ class PackersLoader:
         packer = path
 
         if not os.path.isfile(packer):
-            _packer = os.path.normpath(os.path.join(os.path.dirname(__file__), '../packers/{}'.format(packer)))
+            _packer = os.path.normpath(os.path.join(
+                os.path.dirname(__file__), '../packers/{}'.format(packer)))
             if os.path.isfile(_packer):
                 packer = _packer
             elif os.path.isfile(_packer+'.py'):
@@ -121,12 +128,14 @@ class PackersLoader:
             # Packer already loaded.
             return
 
-        keys = [x.lower() for x in lib.utils.RenamePackerNameToPackerFile.keys()]
+        keys = [x.lower()
+                for x in lib.utils.RenamePackerNameToPackerFile.keys()]
         if name in keys:
             name = lib.utils.RenamePackerNameToPackerFile[name]
 
-        self.logger.dbg('Attempting to load packer: %s ("%s")...' % (name, packer))
-       
+        self.logger.dbg('Attempting to load packer: %s ("%s")...' %
+                        (name, packer))
+
         try:
             p = os.path.dirname(packer)
             if p not in sys.path:
@@ -148,9 +157,10 @@ class PackersLoader:
                             continue
 
                         handle = getattr(module, attr)
-                
-                if handle == None :
-                    raise TypeError('Packer does not expose class of corresponding name: (' + self.options['packer_class_name'] + ')')
+
+                if handle == None:
+                    raise TypeError(
+                        'Packer does not expose class of corresponding name: (' + self.options['packer_class_name'] + ')')
 
                 found = False
                 inspect.getmro(handle)
@@ -161,18 +171,19 @@ class PackersLoader:
 
                 if not found:
                     raise TypeError('Packer does not inherit from IPacker.')
-                
+
                 # Call packer's __init__ with the `logger' instance passed to it.
                 if self.instantiate:
-                    instance = handle(PackersLoader.InjectedLogger(name), self.options)
+                    instance = handle(
+                        PackersLoader.InjectedLogger(name), self.options)
                 else:
                     instance = handle
-                
+
                 self.logger.dbg('Found class "%s".' % self.options['packer_class_name'])
 
             except AttributeError as e:
-                self.logger.err('Packer "%s" loading has failed: "%s".' % 
-                    (name, self.options['packer_class_name']))
+                self.logger.err('Packer "%s" loading has failed: "%s".' %
+                                (name, self.options['packer_class_name']))
                 self.logger.err('\tError: %s' % e)
                 if self.options['debug']:
                     raise
@@ -182,12 +193,23 @@ class PackersLoader:
                 raise
 
             if not instance:
-                self.logger.err('Didn\'t find supported class in module "%s"' % name)
+                self.logger.err(
+                    'Didn\'t find supported class in module "%s"' % name)
             else:
+                if not hasattr(instance, 'metadata'):
+                    raise TypeError('Packer does not expose "metadata" object.')
+                else:
+                    metadataKeys = ('author', 'url', 'description', 'licensing', 'type', 'input', 'output')
+
+                    for k in metadataKeys:
+                        if k not in instance.metadata.keys():
+                            raise TypeError(f'Packer does not expose metadata["{k}"] property.')
+
                 self[name] = instance
                 self.logger.info('Packer "%s" has been installed.' % name)
 
         except ImportError as e:
-            self.logger.err('Couldn\'t load specified packer: "%s". Error: %s' % (packer, e))
+            self.logger.err(
+                'Couldn\'t load specified packer: "%s". Error: %s' % (packer, e))
             if self.options['debug']:
                 raise
