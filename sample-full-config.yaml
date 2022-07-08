@@ -34,7 +34,7 @@ hyperion_args:
 # Open-Source neo-ConfuserEx
 #
 confuserex_path: "contrib\\ConfuserEx-1.5-mkaring\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\maximum.crproj"
+confuserex_project_file: "contrib\\_project-files\\ConfuserEx\\maximum.crproj"
 
 #
 # Amber
@@ -72,7 +72,7 @@ mangle_path: "contrib\\Mangle\\Mangle.exe"
 mangle_strip_go: True
 mangle_args: 
 mangle_increase: 0
-mangle_certificate: 'contrib\\Mangle\\signed-executables\\EXCEL.EXE'
+mangle_certificate: 'contrib\\Mangle\\signed-executables\\WINWORD.EXE'
 
 #
 # MPRESS
@@ -201,7 +201,7 @@ sgn_args:
 callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
 callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
 callobf_config: generate-automatically
-#callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
+#callobf_config: "contrib\\_project-files\\CallObf\\configExample.ini"
 
 
 #
@@ -247,7 +247,7 @@ invobf_powershell: powershell.exe
 #
 #themida_path_x86: "contrib\\Themida\\Themida.exe"
 #themida_path_x64: "contrib\\Themida\\Themida64.exe"
-#themida_project_file: "contrib\\Themida\\project-template.tmd"
+#themida_project_file: "contrib\\_project-files\\themida\\project-template.tmd"
 #themida_args: 
 
 
@@ -272,7 +272,7 @@ invobf_powershell: powershell.exe
 #
 #enigma_path_x86: "contrib\\The.Enigma.Protector\\enigma32.exe"
 #enigma_path_x64: "contrib\\The.Enigma.Protector\\enigma64.exe"
-#enigma_project_file: "contrib\\The.Enigma.Protector\\project-template.enigma"
+#enigma_project_file: "contrib\\_project-files\\The.Enigma.Protector\\project-template.enigma"
 #enigma_save_generated_project_file: 0
 #enigma_product_name: 
 #enigma_product_version: 
@@ -374,7 +374,7 @@ invobf_powershell: powershell.exe
 # .NET Reactor - a powerful protector for .NET assemblies
 #
 #netreactor_path: "contrib\\.Net.Reactor\\dotNET_Reactor.Console.exe"
-#netreactor_project_file: "contrib\\.Net.Reactor\\project-template.nrproj"
+#netreactor_project_file: "contrib\\_project-files\\.Net.Reactor\\project-template.nrproj"
 #netreactor_merge_namespaces: 1
 #netreactor_short_strings: 1
 #netreactor_stealth_mode: 1
@@ -401,7 +401,7 @@ invobf_powershell: powershell.exe
 #   https://documentation.red-gate.com/sa/building-your-assembly/using-the-command-line-mode
 #
 #smartassembly_path: "contrib\\RedGate.SmartAssembly.Protector\\SmartAssembly.com"
-#smartassembly_project_file: "contrib\\smartassembly-projects\\project-template.saproj"
+#smartassembly_project_file: "contrib\\_project-files\\smartassembly-projects\\full1.saproj"
 #smartassembly_tamperprotection: 1
 #smartassembly_sealclasses: 1
 #smartassembly_preventildasm: 1
@@ -424,5 +424,5 @@ invobf_powershell: powershell.exe
 # VMProtect
 #
 #vmprotect_path: "contrib\\VMProtect\\VMProtect_Con.exe"
-#vmprotect_project_file: "contrib\\vmprotect-projects\\full-vmprotect.vmp"
+#vmprotect_project_file: "contrib\\_project-files\\vmprotect-projects\\full-vmprotect.vmp"
 #vmprotect_args: 

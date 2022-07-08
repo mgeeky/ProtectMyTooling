@@ -31,7 +31,7 @@ hyperion_args:
 # Open-Source ConfuserEx-v1.5.0 forked by mkaring
 #
 confuserex_path: "contrib\\ConfuserEx\\active-mkaring\\Confuser.CLI.exe"
-confuserex_project_file: "contrib\\project-files\\ConfuserEx\\mkaring-maximum.crproj"
+confuserex_project_file: "contrib\\_project-files\\ConfuserEx\\mkaring-maximum.crproj"
 
 #
 # RedBackdoorer
@@ -54,7 +54,7 @@ peresed_path:
 callobf_path_x86: "contrib\\CallObf\\cobf86.exe"
 callobf_path_x64: "contrib\\CallObf\\cobf64.exe"
 callobf_config: generate-automatically
-#callobf_config: "contrib\\project-files\\CallObf\\configExample.ini"
+#callobf_config: "contrib\\_project-files\\CallObf\\configExample.ini"
 
 #
 # Amber
@@ -83,7 +83,7 @@ mangle_path: "contrib\\Mangle\\Mangle.exe"
 mangle_strip_go: True
 mangle_args: 
 mangle_increase: 0
-mangle_certificate: 'contrib\\Mangle\\signed-executables\\EXCEL.EXE'
+mangle_certificate: 'contrib\\Mangle\\signed-executables\\WINWORD.EXE'
 
 #
 # MPRESS

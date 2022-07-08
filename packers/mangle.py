@@ -12,7 +12,7 @@ import textwrap
 
 
 class PackerMangle(IPacker):
-    default_mangle_args = ' -M'
+    default_mangle_args = ''
     mangle_cmdline_template = '<command> <options> -I <infile> -O <outfile>'
 
     metadata = {
@@ -91,6 +91,11 @@ Sysinternals Sigcheck input file signature BEFORE running Mangle:
 {out}
 ------------
 ''')
+
+        if self.options['mangle_strip_go']:
+            PackerMangle.default_mangle_args += ' -M'
+        if self.options['mangle_increase'] > 0:
+            PackerMangle.default_mangle_args += f" -S {self.options['mangle_increase']}"
 
         cmd = IPacker.build_cmdline(
             PackerMangle.mangle_cmdline_template,

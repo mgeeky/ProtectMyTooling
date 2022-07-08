@@ -226,23 +226,24 @@ Commercial ones will require user to purchase the product and configure its loca
 8. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
 9. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
 10. [`LoGiC.NET`](https://github.com/AnErrupTion/LoGiC.NET) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
-11. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm) - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
-12. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
-13. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
-14. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
-15. [`NimPackt-v1`](https://github.com/chvancooten/NimPackt-v1) - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Brought to you by Cas van Cooten [(@chvancooten)](https://twitter.com/chvancooten)
-16. [`NimSyscallPacker`](https://github.com/S3cur3Th1sSh1t-Sponsors/NimSyscallPacker) - Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by [(@S3cur3Th1sSh1t)](https://twitter.com/ShitSecure)
-17. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
-18. [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode) - Converts PE into a shellcode. By yours truly [@hasherezade](https://twitter.com/hasherezade)
-19. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
-20. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
-21. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
-22. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
-23. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
-24. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
-25. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
-26. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
-27. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+11. [`Mangle`](https://github.com/optiv/Mangle) - Takes input EXE/DLL file and produces output one with cloned certificate, removed Golang-specific IoCs and bloated size. By Matt Eidelberg (@Tyl0us).
+12. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm) - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
+13. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
+14. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
+15. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
+16. [`NimPackt-v1`](https://github.com/chvancooten/NimPackt-v1) - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Brought to you by Cas van Cooten [(@chvancooten)](https://twitter.com/chvancooten)
+17. [`NimSyscallPacker`](https://github.com/S3cur3Th1sSh1t-Sponsors/NimSyscallPacker) - Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by [(@S3cur3Th1sSh1t)](https://twitter.com/ShitSecure)
+18. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
+19. [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode) - Converts PE into a shellcode. By yours truly [@hasherezade](https://twitter.com/hasherezade)
+20. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
+21. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
+22. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
+23. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
+24. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
+25. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
+26. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
+27. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
+28. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
 
 You can quickly list supported packers using `-L` option (table columns are chosen depending on Terminal width, the wider the more information revealed):
 
