@@ -18,7 +18,7 @@ import lib.optionsparser
 import PySimpleGUI as sg
 
 
-font = ("Consolas", 10)
+font = ("Consolas", 9)
 font2 = ("Consolas", 11)
 
 # https://stackoverflow.com/a/69064884
@@ -61,8 +61,7 @@ def run(command, width = 120):
 
     window.close()
 
-def showConfig(config):
-    font = ("Consolas", 10)
+def editConfig(config):
     sg.theme("Dark")
 
     layout = [
@@ -70,9 +69,10 @@ def showConfig(config):
             sg.Text(config, font=font),
         ],
         [
-            sg.Multiline(size=(120, 60), font=font, echo_stdout_stderr=False, reroute_stdout=True, reroute_stderr=True)
+            sg.Multiline(size=(120, 40), font=font, echo_stdout_stderr=False, reroute_stdout=True, reroute_stderr=True, key='-yaml-')
         ],
         [
+            sg.Button("Save", key="-Save-", font=font),
             sg.Button("Close", key="-Exit-", font=font),
         ],
     ]
@@ -87,6 +87,13 @@ def showConfig(config):
         if event == "-Exit-" or event == sg.WIN_CLOSED:
             break
 
+        if event == "-Save-":
+            pass
+#            with open(config) as f:
+#                f.write(values['-yaml-'])
+#
+#            sg.Popup('Saved.', 'YAML saved.')
+#
     window.close()
 
 def createWindow(packersChain, packersList):
@@ -102,10 +109,6 @@ def createWindow(packersChain, packersList):
             sg.FileBrowse(font=font),
         ],
         [
-            sg.Text("File Architecture" , font=font),
-            sg.Combo(size=(10, 1), values=["Auto", "x86", "x64"], readonly=True, default_value="Auto", enable_events=True, key="-arch-", font=font),
-        ],
-        [
             sg.Text("Output Folder" + ' ' * 4, font=font),
             sg.Input(size=(50, 1), enable_events=True, key="-outdir-", font=font),
             sg.FolderBrowse(font=font),
@@ -115,25 +118,30 @@ def createWindow(packersChain, packersList):
             sg.Input(size=(50, 1), enable_events=True, key="-outfilename-", font=font),
         ],
         [
-            sg.Text("Packers chain:", font=font2),
-        ],
-        [
             sg.Column([
                 [
                     sg.Listbox(values=packersChain, enable_events=True, size=(25, 15), pad=(5,5), key="-packers chain-", font=font2),
                 ]
             ]),
             sg.Column([
+                [sg.Text("", font=font2)],
+                [
+                    sg.Text("File Architecture" , font=font),
+                    sg.Combo(size=(10, 1), values=["Auto", "x86", "x64"], readonly=True, default_value="Auto", enable_events=True, key="-arch-", font=font),
+                ],
+                [
+                    sg.Text("Detected file type: " , font=font),
+                    sg.Text("" , font=font, key='-detected-'),
+                ],
+                [sg.Text("", font=font2)],
+                [sg.Text("<-- Packers chain", font=font2)],
+                [sg.Text("", font=font2)],
                 [sg.Button("Move Up", font=font),],
                 [sg.Button("Move Down", font=font),],
                 [sg.Button("Remove", font=font),],
                 [sg.Button("Clear", font=font),],
             ]),
   
-        ],
-        [
-            sg.Text("", font=font),
-            #sg.HSeparator(),
         ],
         [
             sg.Text("Config path", font=font),
@@ -187,12 +195,13 @@ def createWindow(packersChain, packersList):
             sg.Button("Protect", tooltip = "Runs ProtectMyTooling.py with provided arguments.", font=font),
             sg.Button("Protect & Run", tooltip = "Protects input payload and runs protected file without parameters.", font=font),
             sg.Button("List Packers & Details", tooltip = "List all packers details.", font=font),
-            sg.Button("Show Config", tooltip = "Preview configuration YAML contents.", font=font),
+            sg.Button("Edit Config", tooltip = "Edit configuration YAML contents.", font=font),
             sg.Button("About", font=font),
         ]
     ]
 
-    window = sg.Window("ProtectMyTooling | with great power, comes great responsibility. ", layout, return_keyboard_events=True)
+    window = sg.Window("ProtectMyTooling | with great power, comes great responsibility. ", 
+                        layout, return_keyboard_events=True, resizable=True)
     return window
 
 def main():
@@ -316,9 +325,9 @@ Enjoy!
             if len(values["-outdir-"]) == 0:
                 window["-outdir-"].update(os.path.dirname(p))
 
-        elif event == "Show Config":
+        elif event == "Edit Config":
             if len(values["-config-"]) > 0:
-                showConfig(values["-config-"])
+                editConfig(values["-config-"])
 
         elif 'Up' in event or '16777235' in event:
             element = window.find_element_with_focus().Key
