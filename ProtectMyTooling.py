@@ -18,6 +18,7 @@ import time
 import glob
 import shutil
 import pefile
+import sys
 import os
 
 VERSION = '0.15'
@@ -510,6 +511,12 @@ def handleAv(options, logger, status):
 def reEnableAvAtExit():
     try:
         handleAv(options, logger, av_enable_status)
+
+        if options['log'] != None and options['log'] != sys.stdout:
+            print(f'''
+----------------------------------------------------
+Program completed.
+''')
 
     except lib.utils.ShellCommandReturnedError as e:
         logger.error(

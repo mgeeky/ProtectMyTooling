@@ -19,7 +19,12 @@ The project aims to help Red Teams step up their game and evade _obsolete_ stati
 ## Intro
 
 Script that wraps around multitude of packers, protectors, obfuscators, shellcode loaders, encoders, generators to produce complex protected Red Team implants.
-Your perfect companion in Malware Development CI/CD pipeline, **helping watermark your artifacts, collect IOCs, backdoor and more**
+Your perfect companion in Malware Development CI/CD pipeline, **helping watermark your artifacts, collect IOCs, backdoor and more**.
+
+**ProtectMyToolingGUI.py**
+
+![3.png](images/3.png)
+
 
 With `ProtectMyTooling` you can quickly obfuscate your binaries without having to worry about clicking through all the Dialogs, interfaces, menus, creating projects to obfuscate a single binary, clicking through all the options available and wasting time about all that nonsense. It takes you straight to the point - to obfuscate your tool.
 

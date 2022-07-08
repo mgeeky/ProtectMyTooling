@@ -59,16 +59,22 @@ def preload_packers(logger, opts):
 
     return (packerslist, PackersLoader(logger, options))
 
-
 def terminalWidth():
     n = shutil.get_terminal_size((80, 20))  # pass fallback
     return n.columns
 
-
-def listPackers(logger, opts):
+def getPackers(logger, opts):
     (packerslist, packersloader) = preload_packers(logger, opts)
+    return packersloader.get_packers().items()
+
+def listPackers(argv, logger, opts):
     num = 0
     w = terminalWidth()
+
+    for a in argv:
+        if '--widest-packers-list' == a:
+            w = 400
+            break
 
     cols = ['#', 'Name', 'Type', 'Licensing', 'Description',
             'Input', 'Output', 'Author', 'URL']
@@ -84,13 +90,14 @@ def listPackers(logger, opts):
         cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output']
 
     table = PrettyTable(cols)
+    packers = getPackers(logger, opts)
 
-    for name, packer in packersloader.get_packers().items():
+    for name, packer in packers:
         num += 1
         metadata = packer.metadata
         authors = metadata['author']
         licensing = metadata['licensing']
-        desc = metadata['description'][:130]
+        desc = bytes(metadata['description'][:130], 'utf-8').decode('ascii','ignore')
         ptype = lib.utils.packerTypeNames[metadata['type']]
         url = metadata['url'].replace(
             'http://', '').replace('https://', '')[:55]
@@ -162,8 +169,8 @@ def parse_options(logger, opts, version):
     epilog = 'PROTIP: Use "py ProtectMyTooling.py -h -v" to see all packer-specific options.' if (
         helpRequested and not fullHelp) else ''
 
-    if len(sys.argv) == 2 and sys.argv[1] == '-L':
-        listPackers(logger, opts)
+    if len(sys.argv) >= 2 and sys.argv[1] == '-L':
+        listPackers(sys.argv, logger, opts)
 
     options = opts.copy()
 
@@ -322,7 +329,7 @@ def parse_options(logger, opts, version):
         opts['log'] = 'none'
     elif opts['log'] and len(opts['log']) > 0:
         try:
-            with open(opts['log'], 'w') as f:
+            with open(opts['log'], 'wb') as f:
                 pass
         except Exception as e:
             raise Exception(

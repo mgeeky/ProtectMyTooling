@@ -10,3 +10,4 @@ pycryptodome
 argparse
 donut-shellcode
 PrettyTable
+pysimplegui

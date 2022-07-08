@@ -398,8 +398,9 @@ def shell(logger, cmd, alternative=False, output=False, timeout=60):
     if not output or (type(output) == str and len(output) == 0):
         logger.dbg('Command did not produce any output.')
     else:
+        out2 = str(textwrap.indent(out, '\t')).replace('\r', '').replace('\n\n', '\n')
         logger.info(
-            'Command returned:\n------------------------------\n{}\n------------------------------\n'.format(textwrap.indent(out, '\t')), forced=True)
+            'Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out2), forced=True)
 
     return out
 
