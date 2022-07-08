@@ -68,6 +68,13 @@ PS C:\ProtectMyTooling> .\install.ps1
 bash# ./install.sh
 ```
 
+## Configuration
+
+To plug-in supported obfuscators, change default options or point **ProtectMyTooling** to your obfuscator executable path, you will need to adjust `config\ProtectMyTooling.yaml` configuration file.
+
+There is also `config\sample-full-config.yaml` file containing all the available options for all the supported packers, serving as reference point.
+
+
 ### Gimmicks
 
 For `ScareCrow` packer to run on Windows 10, there needs to be `WSL` installed and `bash.exe` available (in `%PATH%`).
