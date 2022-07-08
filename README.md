@@ -68,13 +68,6 @@ PS C:\ProtectMyTooling> .\install.ps1
 bash# ./install.sh
 ```
 
-## Configuration
-
-To plug-in supported obfuscators, change default options or point **ProtectMyTooling** to your obfuscator executable path, you will need to adjust `config\ProtectMyTooling.yaml` configuration file.
-
-There is also `config\sample-full-config.yaml` file containing all the available options for all the supported packers, serving as reference point.
-
-
 ### Gimmicks
 
 For `ScareCrow` packer to run on Windows 10, there needs to be `WSL` installed and `bash.exe` available (in `%PATH%`).
@@ -84,6 +77,13 @@ Then, in WSL one needs to have `golang` installed in version at least `1.16`:
 cmd> bash
 bash$ sudo apt update ; sudo apt upgrade -y ; sudo apt install golang=2:1.18~3 -y
 ```
+
+## Configuration
+
+To plug-in supported obfuscators, change default options or point **ProtectMyTooling** to your obfuscator executable path, you will need to adjust `config\ProtectMyTooling.yaml` configuration file.
+
+There is also `config\sample-full-config.yaml` file containing all the available options for all the supported packers, serving as reference point.
+
 
 ## Friendly reminder
 
@@ -598,6 +598,7 @@ Here's a list of options required by the Cobalt Strike integrator:
 - Add watermarking to other file formats such as Office documents, WSH scripts (VBS, JS, HTA) and containers
 - Add support for a few other Packers/Loaders/Generators in upcoming future:
   - [`GadgetToJScript`](https://github.com/med0x2e/GadgetToJScript)
+  - [`Limelighter`](https://github.com/Tylous/Limelighter)
   - [`PEZor`](https://github.com/phra/PEzor)
   - [`msfevenom`](https://github.com/rapid7/metasploit-framework) - two variants, one for input shellcode, the other for executable
 
