@@ -14,6 +14,16 @@ class PackerPeCloak(IPacker):
     default_pecloak_args = '-H 25'
     pecloak_cmdline_template = '<command> <options> <outfile>'
 
+    metadata = {
+        'author': ['Mike Czumak, @SecuritySift', 'buherator / v-p-b'],
+        'url': 'https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py',
+        'licensing': 'open-source',
+        'description': 'A Multi-Pass x86 PE Executables encoder. Requires Python 2.7',
+        'type': PackerType.PEProtector,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
+
     def __init__(self, logger, options):
         self.pecloak_args = PackerPeCloak.default_pecloak_args
         self.logger = logger
@@ -24,36 +34,35 @@ class PackerPeCloak(IPacker):
         return 'peCloak'
 
     @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
     def get_desc():
-        return 'A Multi-Pass x86 PE Executables encoder by Mike Czumak, @SecuritySift. Requires Python 2.7'
+        return 'A Multi-Pass x86 PE Executables encoder. Requires Python 2.7'
 
     def help(self, parser):
         if parser != None:
             parser.add_argument('--pecloak-python-path', metavar='PATH', dest='pecloak_python_path',
-                help = '(required) Path to Python2.7 interpreter.')
+                                help='(required) Path to Python2.7 interpreter.')
 
             parser.add_argument('--pecloak-script-path', metavar='PATH', dest='pecloak_script_path',
-                help = '(required) Path to peCloakCapstone script file.')
+                                help='(required) Path to peCloakCapstone script file.')
 
             parser.add_argument('--pecloak-args', metavar='ARGS', dest='pecloak_args',
-                help = 'Optional peCloakCapstone-specific arguments to pass during cloaking.')
+                                help='Optional peCloakCapstone-specific arguments to pass during cloaking.')
 
         else:
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['pecloak_python_path'] = configPath(self.options['config'], self.options['pecloak_python_path'])
-            self.options['pecloak_script_path'] = configPath(self.options['config'], self.options['pecloak_script_path'])
+            self.options['pecloak_python_path'] = configPath(
+                self.options['config'], self.options['pecloak_python_path'])
+            self.options['pecloak_script_path'] = configPath(
+                self.options['config'], self.options['pecloak_script_path'])
 
             if not os.path.isfile(self.options['pecloak_python_path']) or not os.path.isfile(self.options['pecloak_script_path']):
-                self.logger.fatal('Both --pecloak-python-path and --pecloak-script-path options must be specified!')
+                self.logger.fatal(
+                    'Both --pecloak-python-path and --pecloak-script-path options must be specified!')
 
             if 'pecloak_args' in self.options.keys() and self.options['pecloak_args'] != None \
-                and len(self.options['pecloak_args']) > 0: 
+                    and len(self.options['pecloak_args']) > 0:
                 self.pecloak_args += ' ' + self.options['pecloak_args']
 
     def buildArgs(self, infile):
@@ -90,8 +99,8 @@ class PackerPeCloak(IPacker):
                 self.pecloak_args,
                 '',
                 outfile,
-                dontCheckExists = True
-            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+                dontCheckExists=True
+            ), output=self.options['verbose'] or self.options['debug'], timeout=self.options['timeout'])
             succeeded = True
 
         except ShellCommandReturnedError as e:
@@ -99,14 +108,15 @@ class PackerPeCloak(IPacker):
 
             if foo in str(e):
                 try:
-                    self.logger.info('Re-running peCloak with option to add a new section for a code cave...')
+                    self.logger.info(
+                        'Re-running peCloak with option to add a new section for a code cave...')
                     out = shell(self.logger, IPacker.build_cmdline(
                         PackerPeCloak.pecloak_cmdline_template,
                         command,
                         self.pecloak_args + ' -a',
                         '',
                         outfile
-                    ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+                    ), output=self.options['verbose'] or self.options['debug'], timeout=self.options['timeout'])
                     succeeded = True
 
                 except ShellCommandReturnedError as e:
@@ -117,7 +127,8 @@ class PackerPeCloak(IPacker):
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
         if succeeded:
@@ -127,7 +138,8 @@ class PackerPeCloak(IPacker):
 
             if m:
                 tmpoutfile = m.group(1)
-                self.logger.dbg('Extracted output file path: "{}"'.format(tmpoutfile))
+                self.logger.dbg(
+                    'Extracted output file path: "{}"'.format(tmpoutfile))
 
                 move(tmpoutfile, outfile)
                 succeeded = True
@@ -137,10 +149,11 @@ class PackerPeCloak(IPacker):
                 outfile
             ))
 
-            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerPeCloak.get_name()} returned:
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                self.logger.info(f'''{PackerPeCloak.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         return succeeded

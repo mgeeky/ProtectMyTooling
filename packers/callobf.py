@@ -6,18 +6,24 @@ from lib.utils import *
 
 import random
 import string
-import os, tempfile
+import os
+import tempfile
 import pefile
 
-#
-# Name:   CallObfuscator 
-# URL:    https://github.com/d35ha/CallObfuscator
-# Author: Mustafa Mahmoud, @d35ha
-#
 
 class PackerCallObf(IPacker):
     default_callobf_args = ''
     callobf_cmdline_template = '<command> <infile> <outfile>'
+
+    metadata = {
+        'author': 'Mustafa Mahmoud, @d35ha',
+        'url': 'https://github.com/d35ha/CallObfuscator',
+        'description': 'Obscures PE imports by masquerading dangerous calls as innocuous ones',
+        'licensing': 'open-source',
+        'type': PackerType.PEProtector,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
 
     default_options = {
     }
@@ -31,41 +37,37 @@ class PackerCallObf(IPacker):
     def get_name():
         return 'CallObf'
 
-    @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
-    def get_desc():
-        return 'CallObfuscator - (by Mustafa Mahmoud, @d35ha) obscures PE imports by masquerading dangerous calls as innocuous ones'
-
     def help(self, parser):
         if parser != None:
             parser.add_argument('--callobf-path-x86', metavar='PATH', dest='callobf_path_x86',
-                help = '(required) Path to CallObfuscator x86 executable.')
+                                help='(required) Path to CallObfuscator x86 executable.')
 
             parser.add_argument('--callobf-path-x64', metavar='PATH', dest='callobf_path_x64',
-                help = '(required) Path to CallObfuscator x64 executable.')
+                                help='(required) Path to CallObfuscator x64 executable.')
 
-            parser.add_argument('--callobf-config', metavar='PATH', dest='callobf_config', default = '',
-                help = 'Custom config file for CallObfuscator. If "generate-automatically" is specified, a config file will be created randomly by ProtectMyTooling')
+            parser.add_argument('--callobf-config', metavar='PATH', dest='callobf_config', default='',
+                                help='Custom config file for CallObfuscator. If "generate-automatically" is specified, a config file will be created randomly by ProtectMyTooling')
 
         else:
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['callobf_path_x86'] = configPath(self.options['config'], self.options['callobf_path_x86'])
-            self.options['callobf_path_x64'] = configPath(self.options['config'], self.options['callobf_path_x64'])
+            self.options['callobf_path_x86'] = configPath(
+                self.options['config'], self.options['callobf_path_x86'])
+            self.options['callobf_path_x64'] = configPath(
+                self.options['config'], self.options['callobf_path_x64'])
 
             if not os.path.isfile(self.options['callobf_path_x86']) or not os.path.isfile(self.options['callobf_path_x64']):
-                self.logger.fatal('Both --callobf-path-x86 and --callobf-path-x64 option must be specified!')
+                self.logger.fatal(
+                    'Both --callobf-path-x86 and --callobf-path-x64 option must be specified!')
 
             if self.options['callobf_config'] != 'generate-automatically':
                 if not os.path.isfile(self.options['callobf_config']):
-                    self.logger.fatal('--callobf-config option must be specified!')
+                    self.logger.fatal(
+                        '--callobf-config option must be specified!')
 
-                self.options['callobf_config'] = os.path.abspath(configPath(self.options['config'], self.options['callobf_config']))
-
+                self.options['callobf_config'] = os.path.abspath(configPath(
+                    self.options['config'], self.options['callobf_config']))
 
     def generateConfigFile(self, infile):
         configPath = ''
@@ -75,8 +77,10 @@ class PackerCallObf(IPacker):
         beningFunctions = {}
         usedImports = {}
 
-        p = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/dodgy-functions.txt'))
-        r = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data/all-functions.txt'))
+        p = os.path.abspath(os.path.join(os.path.dirname(
+            os.path.realpath(__file__)), '../data/dodgy-functions.txt'))
+        r = os.path.abspath(os.path.join(os.path.dirname(
+            os.path.realpath(__file__)), '../data/all-functions.txt'))
 
         with open(p) as f:
             for line in f.readlines():
@@ -114,7 +118,8 @@ class PackerCallObf(IPacker):
 
             self.logger.dbg(f'\tDLL: {dll_name}')
             for func in entry.imports:
-                if f == None or func.name == None: continue
+                if f == None or func.name == None:
+                    continue
                 f = func.name.decode('utf-8')
 
                 self.logger.dbg(f'\t\t- {f}')
@@ -134,7 +139,7 @@ class PackerCallObf(IPacker):
             for oldFun in v:
                 randomShot = (random.randint(1, 100) % 3 == 0)
 
-                if oldFun not in dodgyFunctions[k] and not randomShot: 
+                if oldFun not in dodgyFunctions[k] and not randomShot:
                     continue
 
                 newFun = ''
@@ -204,12 +209,12 @@ Resulting generated CallObfuscator config file:
             outfile
         )
 
-        cmd += f' "{configPath}"' 
+        cmd += f' "{configPath}"'
 
-        out = shell(self.logger, cmd, 
-            output = self.options['verbose'] or self.options['debug'], 
-            timeout = self.options['timeout']
-        )
+        out = shell(self.logger, cmd,
+                    output=self.options['verbose'] or self.options['debug'],
+                    timeout=self.options['timeout']
+                    )
 
         if(autoGen):
             os.unlink(configPath)
@@ -224,11 +229,12 @@ Resulting generated CallObfuscator config file:
                 outfile
             ))
 
-            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerCallObf.get_name()} returned:
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                self.logger.info(f'''{PackerCallObf.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         return ret
 
@@ -259,8 +265,8 @@ Resulting generated CallObfuscator config file:
                 '.cdat',
             )
 
-            section_table_offset = (pe.DOS_HEADER.e_lfanew + 4 + 
-                pe.FILE_HEADER.sizeof() + pe.FILE_HEADER.SizeOfOptionalHeader)
+            section_table_offset = (pe.DOS_HEADER.e_lfanew + 4 +
+                                    pe.FILE_HEADER.sizeof() + pe.FILE_HEADER.SizeOfOptionalHeader)
 
             sectnum = 0
             for sect in pe.sections:
@@ -270,11 +276,11 @@ Resulting generated CallObfuscator config file:
                 if sect.Name.decode().lower().startswith('.cobf'):
                     newSectName = random.choice(newSectionNames)
                     newname = newSectName.encode() + ((8 - len(newSectName)) * b'\x00')
-                    
+
                     self.logger.dbg('\tRenamed CallObfuscator section ({}) => ({})'.format(
                         sect.Name.decode(), newSectName
                     ))
-                    
+
                     pe.set_bytes_at_offset(section_offset, newname)
                     break
 

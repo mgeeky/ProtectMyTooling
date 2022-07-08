@@ -66,6 +66,15 @@ donut_class:
 donut_exit: '1'
 
 #
+# Mangle
+#
+mangle_path: "contrib\\Mangle\\Mangle.exe"
+mangle_strip_go: True
+mangle_args: 
+mangle_increase: 0
+mangle_certificate: 'contrib\\Mangle\\signed-executables\\EXCEL.EXE'
+
+#
 # MPRESS
 #
 mpress_path: "contrib\\MPRESS\\mpress.exe"

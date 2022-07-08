@@ -4,8 +4,10 @@
 from abc import ABC, abstractmethod
 from lib.utils import *
 
-import sys, os
+import sys
+import os
 import lib.logger
+
 
 class IPacker(ABC):
 
@@ -16,16 +18,6 @@ class IPacker(ABC):
     @abstractmethod
     def get_name():
         return 'IPacker'
-
-    @staticmethod
-    @abstractmethod
-    def get_type():
-        return PackerType.Unsupported
-
-    @staticmethod
-    @abstractmethod
-    def get_desc():
-        return 'Packer class Interface'
 
     @staticmethod
     def validate_file_architecture():
@@ -49,7 +41,7 @@ class IPacker(ABC):
         return True
 
     @staticmethod
-    def build_cmdline(template, command, options = [], infile = '', outfile = '', dontCheckExists = False):
+    def build_cmdline(template, command, options=[], infile='', outfile='', dontCheckExists=False):
         out = template
         out = out.replace('<command>', command)
 
@@ -71,18 +63,21 @@ build_cmdline:
 
     ''', sys.stdout, '[!] ', color='red')
 
-
             os._exit(1)
 
-        if len(options) > 0: 
-            if type(options) == type([]): out = out.replace('<options>', ' '.join(options))
-            elif type(options) == type(''): out = out.replace('<options>', options)
+        if len(options) > 0:
+            if type(options) == type([]):
+                out = out.replace('<options>', ' '.join(options))
+            elif type(options) == type(''):
+                out = out.replace('<options>', options)
         else:
             out = out.replace('<options>', '')
-        if len(infile) > 0: out = out.replace('<infile>', '"{}"'.format(infile))
+        if len(infile) > 0:
+            out = out.replace('<infile>', '"{}"'.format(infile))
         else:
             out = out.replace('<infile>', '')
-        if len(outfile) > 0: out = out.replace('<outfile>', '"{}"'.format(outfile))
+        if len(outfile) > 0:
+            out = out.replace('<outfile>', '"{}"'.format(outfile))
         else:
             out = out.replace('<outfile>', '')
 

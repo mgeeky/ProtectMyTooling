@@ -15,6 +15,16 @@ class PackerMPRESS(IPacker):
     default_mpress_args = ' -s -m'
     mpress_cmdline_template = '<command> <options> <infile>'
 
+    metadata = {
+        'author': 'Vitaly Evseenko',
+        'url': 'https://www.autohotkey.com/mpress/mpress_web.htm',
+        'description': 'Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it',
+        'licensing': 'freeware',
+        'type': PackerType.PECompressor,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
+
     default_options = {
     }
 
@@ -26,14 +36,6 @@ class PackerMPRESS(IPacker):
     @staticmethod
     def get_name():
         return 'MPRESS'
-
-    @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
-    def get_desc():
-        return 'MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.'
 
     def help(self, parser):
         if parser != None:

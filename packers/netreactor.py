@@ -2,15 +2,27 @@
 # -*- coding: utf-8 -*-
 
 import xml.etree.ElementTree as ET
-import sys, re
+import sys
+import re
 import shutil
 
 from IPacker import IPacker
 from lib.utils import *
 
+
 class PackerNetReactor(IPacker):
     default_netreactor_args = ''
     netreactor_cmdline_template = '<command> <options> -file <infile>'
+
+    metadata = {
+        'author': 'Eziriz',
+        'url': 'https://www.eziriz.com/dotnet_reactor.htm',
+        'licensing': 'commercial',
+        'description': 'A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques',
+        'type': PackerType.DotNetObfuscator,
+        'input': ['.NET', ],
+        'output': ['.NET', ],
+    }
 
     default_options = {
         'netreactor_merge_namespaces': 1,
@@ -30,7 +42,7 @@ class PackerNetReactor(IPacker):
         'netreactor_native_exe': 0,
         'netreactor_prejit': 0,
         'netreactor_strong_name_removal': 0,
-        'netreactor_save_generated_project_file' : False,
+        'netreactor_save_generated_project_file': False,
     }
 
     def __init__(self, logger, options):
@@ -42,74 +54,86 @@ class PackerNetReactor(IPacker):
     def get_name():
         return '.NET Reactor'
 
-    @staticmethod
-    def get_type():
-        return PackerType.DotNetObfuscator
-
-    @staticmethod
-    def get_desc():
-        return '(paid) A powerful code protection system for the .NET Framework including various obfuscation & anti- techniques'
-
     def help(self, parser):
         if parser != None:
             parser.add_argument('--netreactor-path', metavar='PATH', dest='netreactor_path',
-                help = '(required) Path to netreactor executable.')
+                                help='(required) Path to netreactor executable.')
 
             parser.add_argument('--netreactor-project-file', metavar='PATH', dest='netreactor_project_file',
-                help = '(required) Path to .NET Reactor .nrproj project file.')
+                                help='(required) Path to .NET Reactor .nrproj project file.')
 
             parser.add_argument('--netreactor-save-generated-project-file', metavar='bool', type=bool, dest='netreactor_save_generated_project_file',
-                help = 'Specifies whether to save newly generated project file along with the output generated executable (with .nrproj extension).')
+                                help='Specifies whether to save newly generated project file along with the output generated executable (with .nrproj extension).')
 
-            parser.add_argument('--netreactor-antitamp', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_antitamp', help = 'This option prevents your protected assembly from being tampered by hacker tools. Valid values: 0/1. Default: 1')
-        
-            parser.add_argument('--netreactor-control-flow-obfuscation', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_control_flow_obfuscation', help = 'Mangles program flow, making it extremely difficult for humans to follow the program logic. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-flow-level', metavar='bool', type=int, choices=range(1,9), dest='netreactor_flow_level', help = 'Controls the level of Control Flow Obfuscation. Valid values: 1-9. Default: 9')
-            
-            parser.add_argument('--netreactor-resourceencryption', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_resourceencryption', help = 'Enable this option to compress and encrypt embedded resources. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-necrobit', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_necrobit', help = 'Uses a powerful protection technology NecroBit which completely stops decompilation. It replaces the CIL code within methods with encrypted code. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-merge-namespaces', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_merge_namespaces', help = 'Enable this option to place all obfuscated types inside a single namespace. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-short-strings', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_short_strings', help = 'Enable to generate short strings for your obfuscated class and member names. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-stealth-mode', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_stealth_mode', help = 'Enable this to generate random meaningful names for obfuscated classes and members. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-all-params', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_all_params', help = 'Enable this to obfuscate all method parameters. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-incremental-obfuscation', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_incremental_obfuscation', help = 'If you want .NET Reactor always to generate the same obfuscation strings for your type and member names, you need to enable this option. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-unprintable-characters', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_unprintable_characters', help = 'Unprintable characters uses unprintable strings to obfuscate type and member names, but cannot be used if your assembly must run as safe code. Valid values: 0/1. Default: 1')
-            
-            parser.add_argument('--netreactor-obfuscate-public-types', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_obfuscate_public_types', help = 'Enable this to obfuscate all type and member names in an assembly. Valid values: 0/1. Default: 1')
+            parser.add_argument('--netreactor-antitamp', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_antitamp',
+                                help='This option prevents your protected assembly from being tampered by hacker tools. Valid values: 0/1. Default: 1')
 
-            parser.add_argument('--netreactor-anti-ildasm', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_anti_ildasm', help = 'Suppres decompilation using decompilation tools such as ILDasm. Valid values: 0/1. Default: 1')
+            parser.add_argument('--netreactor-control-flow-obfuscation', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_control_flow_obfuscation',
+                                help='Mangles program flow, making it extremely difficult for humans to follow the program logic. Valid values: 0/1. Default: 1')
 
-            parser.add_argument('--netreactor-native-exe', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_native_exe', help = '.NET Reactor is able to generate a native x86 EXE file stub for your app. This way its not going to be possible to directly open the app within a decompiler. Valid values: 0/1. Default: 0')
+            parser.add_argument('--netreactor-flow-level', metavar='bool', type=int, choices=range(
+                1, 9), dest='netreactor_flow_level', help='Controls the level of Control Flow Obfuscation. Valid values: 1-9. Default: 9')
 
-            parser.add_argument('--netreactor-prejit', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_prejit',  help = 'In combination with the Native EXE file feature and Necrobit, .NET Reactor is able to convert managed methods into REAL x86 native code. Mostly small methods (like property setters/getters) are converted into native code. Valid values: 0/1. Default: 0')
+            parser.add_argument('--netreactor-resourceencryption', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_resourceencryption',
+                                help='Enable this option to compress and encrypt embedded resources. Valid values: 0/1. Default: 1')
 
-            parser.add_argument('--netreactor-public-types-internalization', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_public_types_internalization', help = 'If set to 1, .NET Reactor will convert all public types of an application into internal ones. This way the accessibility of types and members the assembly exposes will be reduced. Valid values: 0/1. Default: 0')
+            parser.add_argument('--netreactor-necrobit', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_necrobit',
+                                help='Uses a powerful protection technology NecroBit which completely stops decompilation. It replaces the CIL code within methods with encrypted code. Valid values: 0/1. Default: 1')
 
-            parser.add_argument('--netreactor-strong-name-removal', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_strong_name_removal', help = 'Enables anti Strong Name removal technique which prevents protected assemblies from being tampered by hacking tools. Warning: this option can impact the runtime performance of generated protected assembly! Valid values: 0/1. Default: 0')
+            parser.add_argument('--netreactor-merge-namespaces', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_merge_namespaces',
+                                help='Enable this option to place all obfuscated types inside a single namespace. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-short-strings', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_short_strings',
+                                help='Enable to generate short strings for your obfuscated class and member names. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-stealth-mode', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_stealth_mode',
+                                help='Enable this to generate random meaningful names for obfuscated classes and members. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-all-params', metavar='bool', type=int, choices=range(
+                0, 2), dest='netreactor_all_params', help='Enable this to obfuscate all method parameters. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-incremental-obfuscation', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_incremental_obfuscation',
+                                help='If you want .NET Reactor always to generate the same obfuscation strings for your type and member names, you need to enable this option. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-unprintable-characters', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_unprintable_characters',
+                                help='Unprintable characters uses unprintable strings to obfuscate type and member names, but cannot be used if your assembly must run as safe code. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-obfuscate-public-types', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_obfuscate_public_types',
+                                help='Enable this to obfuscate all type and member names in an assembly. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-anti-ildasm', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_anti_ildasm',
+                                help='Suppres decompilation using decompilation tools such as ILDasm. Valid values: 0/1. Default: 1')
+
+            parser.add_argument('--netreactor-native-exe', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_native_exe',
+                                help='.NET Reactor is able to generate a native x86 EXE file stub for your app. This way its not going to be possible to directly open the app within a decompiler. Valid values: 0/1. Default: 0')
+
+            parser.add_argument('--netreactor-prejit', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_prejit',
+                                help='In combination with the Native EXE file feature and Necrobit, .NET Reactor is able to convert managed methods into REAL x86 native code. Mostly small methods (like property setters/getters) are converted into native code. Valid values: 0/1. Default: 0')
+
+            parser.add_argument('--netreactor-public-types-internalization', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_public_types_internalization',
+                                help='If set to 1, .NET Reactor will convert all public types of an application into internal ones. This way the accessibility of types and members the assembly exposes will be reduced. Valid values: 0/1. Default: 0')
+
+            parser.add_argument('--netreactor-strong-name-removal', metavar='bool', type=int, choices=range(0, 2), dest='netreactor_strong_name_removal',
+                                help='Enables anti Strong Name removal technique which prevents protected assemblies from being tampered by hacking tools. Warning: this option can impact the runtime performance of generated protected assembly! Valid values: 0/1. Default: 0')
 
             parser.add_argument('--netreactor-args', metavar='ARGS', dest='netreactor_args',
-                help = 'Optional netreactor-specific arguments to pass during compression.')
+                                help='Optional netreactor-specific arguments to pass during compression.')
 
         else:
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['netreactor_path'] = configPath(self.options['config'], self.options['netreactor_path'])
-            self.options['netreactor_project_file'] = os.path.abspath(configPath(self.options['config'], self.options['netreactor_project_file']))
+            self.options['netreactor_path'] = configPath(
+                self.options['config'], self.options['netreactor_path'])
+            self.options['netreactor_project_file'] = os.path.abspath(configPath(
+                self.options['config'], self.options['netreactor_project_file']))
 
             if not os.path.isfile(self.options['netreactor_path']):
-                self.logger.fatal('--netreactor-path option must be specified!')
+                self.logger.fatal(
+                    '--netreactor-path option must be specified!')
 
             if 'netreactor_args' in self.options.keys() and self.options['netreactor_args'] != None \
-                and len(self.options['netreactor_args']) > 0: 
+                    and len(self.options['netreactor_args']) > 0:
                 self.netreactor_args += ' ' + self.options['netreactor_args']
 
             for k, v in PackerNetReactor.default_options.items():
@@ -133,7 +157,8 @@ class PackerNetReactor(IPacker):
 
             for k, v in optionsMap.items():
                 if k in self.options.keys():
-                    self.netreactor_args += ' -{} {}'.format(v, self.options[k])
+                    self.netreactor_args += ' -{} {}'.format(
+                        v, self.options[k])
 
     def adjustProjectFile(self, projFile, infile, outfile):
         baseProject = ''
@@ -179,7 +204,7 @@ Adjusted project file:
 {}
 '''.format(newProject.decode()))
 
-        if self.options['netreactor_save_generated_project_file']:        
+        if self.options['netreactor_save_generated_project_file']:
             with open(outfile + '.nrproj', 'w') as foo:
                 foo.write(newProject.decode())
 
@@ -199,10 +224,12 @@ Adjusted project file:
 
             assemblyName = getClrAssemblyName(infile)
             if not assemblyName:
-                self.logger.err("Could not extract assembly name from input file! Probably we won't be able to recover generated output artefact. Trying anyway...")
+                self.logger.err(
+                    "Could not extract assembly name from input file! Probably we won't be able to recover generated output artefact. Trying anyway...")
                 assemblyName = os.path.basename(os.path.splitext(infile)[0])
 
-            self.logger.info("Running .NET Reactor on assembly {}, be patient...".format(assemblyName))
+            self.logger.info(
+                "Running .NET Reactor on assembly {}, be patient...".format(assemblyName))
 
             generatedOutfile = '{}\\{}_Secure\\{}'.format(
                 os.path.dirname(infile),
@@ -210,7 +237,7 @@ Adjusted project file:
                 os.path.basename(infile)
             )
 
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.nrproj') as fp: 
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.nrproj') as fp:
                 self.adjustProjectFile(fp, infile, outfile)
                 tmpname = fp.name
 
@@ -220,33 +247,37 @@ Adjusted project file:
                 self.netreactor_args + ' -project "{}"'.format(fp.name),
                 infile,
                 ''
-            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+            ), output=self.options['verbose'] or self.options['debug'], timeout=self.options['timeout'])
 
             status = (' - Successfully Protected!' in out)
 
             if status and os.path.isfile(generatedOutfile):
-                self.logger.dbg('Moving file from auto-generated output location: "{}"'.format(generatedOutfile))
+                self.logger.dbg(
+                    'Moving file from auto-generated output location: "{}"'.format(generatedOutfile))
                 shutil.move(generatedOutfile, outfile)
                 shutil.rmtree(os.path.dirname(generatedOutfile))
             else:
                 status = False
-                self.logger.err('Something went wrong and we couldn\'t find generated output file ({})!'.format(generatedOutfile))
+                self.logger.err(
+                    'Something went wrong and we couldn\'t find generated output file ({})!'.format(generatedOutfile))
 
-                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerNetReactor.get_name()} returned:
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                    self.logger.info(f'''{PackerNetReactor.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         except Exception as e:
             raise
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
-            if os.path.isfile(tmpname): 
+            if os.path.isfile(tmpname):
                 os.remove(tmpname)
 
         return status

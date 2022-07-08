@@ -8,6 +8,7 @@ import shutil
 import pefile
 import hashlib
 import tempfile
+import textwrap
 import getpass
 import subprocess
 
@@ -32,17 +33,21 @@ class PackerType(Enum):
     ShellcodeLoader = 3
     ShellcodeEncoder = 4
     PowershellObfuscator = 5
-    ShellcodeConverter = 6
+    ShellcodeConverter = 6,
+    PECompressor = 7,
+    ExeSigner = 8
 
 
 packerTypeNames = {
     PackerType.Unsupported: 'Unsupported',
     PackerType.DotNetObfuscator: '.NET Obfuscator',
     PackerType.PEProtector: 'PE EXE/DLL Protector',
+    PackerType.PECompressor: 'PE EXE/DLL Compressor',
     PackerType.ShellcodeLoader: 'Shellcode Loader',
     PackerType.ShellcodeEncoder: 'Shellcode Encoder',
     PackerType.PowershellObfuscator: 'Powershell Obfuscator',
     PackerType.ShellcodeConverter: 'Shellcode Converter',
+    PackerType.ExeSigner: 'Executable Signing',
 }
 
 logger = Logger()
@@ -394,7 +399,7 @@ def shell(logger, cmd, alternative=False, output=False, timeout=60):
         logger.dbg('Command did not produce any output.')
     else:
         logger.info(
-            'Command returned:\n------------------------------\n{}\n------------------------------\n'.format(out), forced=True)
+            'Command returned:\n------------------------------\n{}\n------------------------------\n'.format(textwrap.indent(out, '\t')), forced=True)
 
     return out
 

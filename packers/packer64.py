@@ -6,18 +6,24 @@ from lib.utils import *
 
 import random
 import string
-import os, tempfile
+import os
+import tempfile
 import pefile
 
-#
-# Name:   jadams/Packer64 
-# URL:    https://github.com/jadams/Packer64
-# Author: John Adams, @jadams
-#
 
 class PackerPacker64(IPacker):
     default_packer64_args = ''
     packer64_cmdline_template = '<command> <infile> <outfile>'
+
+    metadata = {
+        'author': 'John Adams, @jadams',
+        'url': 'https://github.com/jadams/Packer64',
+        'licensing': 'open-source',
+        'description': 'Packer for 64-bit PE exes',
+        'type': PackerType.PECompressor,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
 
     default_options = {
     }
@@ -32,20 +38,17 @@ class PackerPacker64(IPacker):
         return 'packer64'
 
     @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
     def get_desc():
-        return 'jadams/Packer64 - Packer for 64-bit PE exes'
+        return 'Packer for 64-bit PE exes'
 
     def help(self, parser):
         if parser != None:
             parser.add_argument('--packer64-path', metavar='PATH', dest='packer64_path',
-                help = '(required) Path to Packer64 executable.')
+                                help='(required) Path to Packer64 executable.')
 
         else:
-            self.options['packer64_path'] = os.path.abspath(configPath(self.options['config'], self.options['packer64_path']))
+            self.options['packer64_path'] = os.path.abspath(configPath(
+                self.options['config'], self.options['packer64_path']))
 
             if not os.path.isfile(self.options['packer64_path']):
                 self.logger.fatal('--packer64-path option must be specified!')
@@ -70,10 +73,10 @@ class PackerPacker64(IPacker):
         cwd = os.getcwd()
         os.chdir(os.path.dirname(path))
 
-        out = shell(self.logger, cmd, 
-            output = self.options['verbose'] or self.options['debug'], 
-            timeout = self.options['timeout']
-        )
+        out = shell(self.logger, cmd,
+                    output=self.options['verbose'] or self.options['debug'],
+                    timeout=self.options['timeout']
+                    )
 
         os.chdir(cwd)
 
@@ -84,10 +87,11 @@ class PackerPacker64(IPacker):
                 outfile
             ))
 
-            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerPacker64.get_name()} returned:
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                self.logger.info(f'''{PackerPacker64.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         return status

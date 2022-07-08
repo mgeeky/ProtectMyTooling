@@ -14,6 +14,16 @@ class PackerNimcrypt2(IPacker):
     default_nimcrypt2_args = ''
     nimcrypt2_cmdline_template = f'<command> <options> -f <infile> -o <outfile>'
 
+    metadata = {
+        'author': '@icyguider',
+        'url': 'https://github.com/icyguider/Nimcrypt2',
+        'licensing': 'open-source',
+        'description': 'Generates Nim loader running input .NET, PE or Raw Shellcode',
+        'type': PackerType.ShellcodeLoader,
+        'input': ['PE', '.NET', 'Shellcode'],
+        'output': ['PE', ],
+    }
+
     default_options = {
         'nimcrypt2_path': '',
         'nimcrypt2_unhook': True,
@@ -34,14 +44,6 @@ class PackerNimcrypt2(IPacker):
     @staticmethod
     def get_name():
         return 'Nimcrypt2'
-
-    @staticmethod
-    def get_type():
-        return PackerType.ShellcodeLoader
-
-    @staticmethod
-    def get_desc():
-        return 'Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by icyguider'
 
     def help(self, parser):
         if parser != None:

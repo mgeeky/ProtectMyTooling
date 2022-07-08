@@ -14,6 +14,16 @@ class PackerNimpackt(IPacker):
     default_nimpackt_args = ''
     nimpackt_cmdline_template = f'{sys.executable} <command> <options> -i <infile> -o <outfile>'
 
+    metadata = {
+        'author': 'Cas van Cooten (@chvancooten)',
+        'url': 'https://github.com/chvancooten/NimPackt-v1',
+        'licensing': 'open-source',
+        'description': 'Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn\'t work very well with x86. Based on modified NimPackt',
+        'type': PackerType.ShellcodeLoader,
+        'input': ['.NET', 'Shellcode'],
+        'output': ['PE', ],
+    }
+
     default_options = {
         'nimpackt_path': '',
         'nimpackt_bake_args': '',
@@ -37,14 +47,6 @@ class PackerNimpackt(IPacker):
     @staticmethod
     def get_name():
         return 'NimPackt-v1'
-
-    @staticmethod
-    def get_type():
-        return PackerType.ShellcodeLoader
-
-    @staticmethod
-    def get_desc():
-        return 'Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Doesn\'t work very well with x86. Based on modified NimPackt. Brought to you by Cas van Cooten (@chvancooten)'
 
     def help(self, parser):
         if parser != None:

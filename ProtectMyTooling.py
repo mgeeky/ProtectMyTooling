@@ -19,8 +19,8 @@ import glob
 import shutil
 import pefile
 import os
-VERSION = '0.14'
 
+VERSION = '0.15'
 
 options = {
     'debug': False,

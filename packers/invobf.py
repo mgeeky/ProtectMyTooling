@@ -8,19 +8,20 @@ import os
 import re
 import pe_tools
 
+
 class PackerInvObf(IPacker):
 
     #
     # Modify those to whatever you please.
     # Available obfuscations:
-    #   
+    #
     #   [*] TOKEN       Obfuscate PowerShell command Tokens
     #   [*] AST         Obfuscate PowerShell Ast nodes (PS3.0+)
     #   [*] STRING      Obfuscate entire command as a String
     #   [*] ENCODING    Obfuscate entire command via Encoding
     #   [*] COMPRESS    Convert entire command to one-liner and Compress
     #   [*] LAUNCHER    Obfuscate command args w/Launcher techniques (run once at end)
-    #   
+    #
     #   [*] TOKEN\STRING        Obfuscate String tokens (suggested to run first)
     #   [*] TOKEN\COMMAND       Obfuscate Command tokens
     #   [*] TOKEN\ARGUMENT      Obfuscate Argument tokens
@@ -30,7 +31,7 @@ class PackerInvObf(IPacker):
     #   [*] TOKEN\COMMENT       Remove all Comment tokens
     #   [*] TOKEN\WHITESPACE    Insert random Whitespace (suggested to run last)
     #   [*] TOKEN\ALL           Select All choices from above (random order)
-    #   
+    #
     #   [*] AST\NamedAttributeArgumentAst    Obfuscate NamedAttributeArgumentAst nodes
     #   [*] AST\ParamBlockAst                Obfuscate ParamBlockAst nodes
     #   [*] AST\ScriptBlockAst               Obfuscate ScriptBlockAst nodes
@@ -42,11 +43,11 @@ class PackerInvObf(IPacker):
     #   [*] AST\TypeExpressionAst            Obfuscate TypeExpressionAst nodes
     #   [*] AST\TypeConstraintAst            Obfuscate TypeConstraintAst nodes
     #   [*] AST\ALL                          Select All choices from above
-    #   
+    #
     #   [*] STRING\1            Concatenate entire command
     #   [*] STRING\2            Reorder entire command after concatenating
     #   [*] STRING\3            Reverse entire command after concatenating
-    # 
+    #
     #   [*] ENCODING\1          Encode entire command as ASCII
     #   [*] ENCODING\2          Encode entire command as Hex
     #   [*] ENCODING\3          Encode entire command as Octal
@@ -55,7 +56,7 @@ class PackerInvObf(IPacker):
     #   [*] ENCODING\6          Encode entire command as BXOR
     #   [*] ENCODING\7          Encode entire command as Special Characters
     #   [*] ENCODING\8          Encode entire command as Whitespace
-    # 
+    #
     #   [*] COMPRESS\1          Convert entire command to one-liner and compress
     #
     #   [*] LAUNCHER\PS         PowerShell
@@ -82,7 +83,17 @@ class PackerInvObf(IPacker):
     invobf_cmdline_template = r'<command> -c "Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force ; Import-Module .\Invoke-Obfuscation.psd1 ; Invoke-Obfuscation -ScriptPath <infile> -Command \'<options>\' -Quiet | Out-File <outfile>'
 
     default_options = {
-        'invobf_powershell' : 'powershell.exe',
+        'invobf_powershell': 'powershell.exe',
+    }
+
+    metadata = {
+        'author': 'Daniel Bohannon',
+        'url': 'https://github.com/danielbohannon/Invoke-Obfuscation',
+        'licensing': 'open-source',
+        'description': 'Invoke-Obfuscation - obfuscated Powershell scripts',
+        'type': PackerType.PowershellObfuscator,
+        'input': ['Powershell', ],
+        'output': ['Powershell', ],
     }
 
     def __init__(self, logger, options):
@@ -95,27 +106,19 @@ class PackerInvObf(IPacker):
         return 'InvObf'
 
     @staticmethod
-    def get_type():
-        return PackerType.PowershellObfuscator
-
-    @staticmethod
-    def get_desc():
-        return 'Obfuscates Powershell scripts with Invoke-Obfuscation (by Daniel Bohannon)'
-
-    @staticmethod
     def validate_file_architecture():
         return False
 
     def help(self, parser):
         if parser != None:
             parser.add_argument('--invobf-powershell', metavar='PATH', dest='invobf_powershell',
-                help = 'Path to Powershell interpreter to be used by Invoke-Obfuscation. Default: "powershell.exe"')
+                                help='Path to Powershell interpreter to be used by Invoke-Obfuscation. Default: "powershell.exe"')
 
             parser.add_argument('--invobf-path', metavar='PATH', dest='invobf_path',
-                help = 'Path to the Invoke-Obfuscation script.')
+                                help='Path to the Invoke-Obfuscation script.')
 
             parser.add_argument('--invobf-args', metavar='ARGS', dest='invobf_args',
-                help = 'Optional Invoke-Obfuscation specific arguments to pass. They override default ones.')
+                                help='Optional Invoke-Obfuscation specific arguments to pass. They override default ones.')
 
         else:
             if not self.options['config']:
@@ -131,12 +134,13 @@ class PackerInvObf(IPacker):
                 self.options['invobf_powershell'] = PackerInvObf.default_options['invobf_powershell']
 
             if 'invobf_path' in self.options.keys() and self.options['invobf_path'] != None and len(self.options['invobf_path']) > 0:
-                self.options['invobf_path'] = configPath(self.options['config'], self.options['invobf_path'])
+                self.options['invobf_path'] = configPath(
+                    self.options['config'], self.options['invobf_path'])
             else:
                 self.options['invobf_path'] = PackerInvObf.default_options['invobf_path']
 
             if 'invobf_args' in self.options.keys() and self.options['invobf_args'] != None \
-                and len(self.options['invobf_args']) > 0: 
+                    and len(self.options['invobf_args']) > 0:
                 self.options['invobf_args'] = self.options['invobf_args']
                 self.invobf_args = self.options['invobf_args']
 
@@ -160,10 +164,10 @@ class PackerInvObf(IPacker):
 
             self.logger.dbg('changed working directory to "{}"'.format(base))
             os.chdir(base)
-            
-            out = shell(self.logger, cmd, 
-                output = self.options['verbose'] or self.options['debug'], 
-                timeout = self.options['timeout'])
+
+            out = shell(self.logger, cmd,
+                        output=self.options['verbose'] or self.options['debug'],
+                        timeout=self.options['timeout'])
 
             if os.path.isfile(outfile):
                 return True
@@ -173,11 +177,12 @@ class PackerInvObf(IPacker):
                     outfile
                 ))
 
-                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerInvObf.get_name()} returned:
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                    self.logger.info(f'''{PackerInvObf.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         except ShellCommandReturnedError as e:
             self.logger.err(f'''Error message from packer:
@@ -191,7 +196,8 @@ class PackerInvObf(IPacker):
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
         return False

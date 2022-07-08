@@ -16,6 +16,16 @@ class PackerNimSyscall(IPacker):
     default_nimsyscall_args = ''
     nimsyscall_cmdline_template = f'<command> <options> --file=<infile> --output=<outfile>'
 
+    metadata = {
+        'author': '@S3cur3Th1sSh1t',
+        'url': 'https://github.com/S3cur3Th1sSh1t-Sponsors/NimSyscallPacker',
+        'licensing': 'sponsorware',
+        'description': 'Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader',
+        'type': PackerType.ShellcodeLoader,
+        'input': ['PE', '.NET', 'Shellcode'],
+        'output': ['PE', ],
+    }
+
     default_options = {
         'nimsyscall_path': '',
         'nimsyscall_noetw': False,
@@ -67,12 +77,8 @@ class PackerNimSyscall(IPacker):
         return 'NimSyscallPacker'
 
     @staticmethod
-    def get_type():
-        return PackerType.ShellcodeLoader
-
-    @staticmethod
     def get_desc():
-        return '(paid) Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by S3cur3Th1sSh1t'
+        return 'Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader'
 
     def help(self, parser):
         if parser != None:

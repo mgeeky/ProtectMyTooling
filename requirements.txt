@@ -9,3 +9,4 @@ keystone-engine
 pycryptodome
 argparse
 donut-shellcode
+PrettyTable

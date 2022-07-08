@@ -9,12 +9,23 @@ import re
 import sys
 import pe_tools
 
+
 class PackerPeresed(IPacker):
     default_peresed_args = '--clear --print-tree --print-version --ignore-trailer --remove-signature'
     peresed_cmdline_template = '<command> <options> --output <outfile> <infile>'
 
+    metadata = {
+        'author': 'Martin Vejnár, Avast',
+        'url': 'https://github.com/avast/pe_tools',
+        'licensing': 'open-source',
+        'description': 'Removes all existing PE Resources and signature (think of Mimikatz icon)',
+        'type': PackerType.PEProtector,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
+
     default_options = {
-        'peresed_path' : f'{sys.executable} -m pe_tools.peresed',
+        'peresed_path': f'{sys.executable} -m pe_tools.peresed',
     }
 
     def __init__(self, logger, options):
@@ -26,21 +37,13 @@ class PackerPeresed(IPacker):
     def get_name():
         return 'Peresed'
 
-    @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
-    def get_desc():
-        return 'Removes all existing PE Resources and signature (think of Mimikatz icon).'
-
     def help(self, parser):
         if parser != None:
             parser.add_argument('--peresed-path', metavar='PATH', dest='peresed_path',
-                help = 'Path to peresed. By default will look it up in %%PATH%%')
+                                help='Path to peresed. By default will look it up in %%PATH%%')
 
             parser.add_argument('--peresed-args', metavar='ARGS', dest='peresed_args',
-                help = 'Optional peresed-specific arguments to pass. They override default ones.')
+                                help='Optional peresed-specific arguments to pass. They override default ones.')
 
         else:
             if not self.options['config']:
@@ -51,13 +54,14 @@ class PackerPeresed(IPacker):
                     self.options[k] = v
 
             if 'peresed_path' in self.options.keys() and self.options['peresed_path'] != None and len(self.options['peresed_path']) > 0 \
-                and self.options['peresed_path'] != PackerPeresed.default_options['peresed_path']:
-                self.options['peresed_path'] = configPath(self.options['config'], self.options['peresed_path'])
+                    and self.options['peresed_path'] != PackerPeresed.default_options['peresed_path']:
+                self.options['peresed_path'] = configPath(
+                    self.options['config'], self.options['peresed_path'])
             else:
                 self.options['peresed_path'] = PackerPeresed.default_options['peresed_path']
 
             if 'peresed_args' in self.options.keys() and self.options['peresed_args'] != None \
-                and len(self.options['peresed_args']) > 0: 
+                    and len(self.options['peresed_args']) > 0:
                 self.options['peresed_args'] = self.options['peresed_args']
                 self.peresed_args = self.options['peresed_args']
 
@@ -77,12 +81,12 @@ class PackerPeresed(IPacker):
                 self.peresed_args,
                 infile,
                 outfile,
-                dontCheckExists = True
+                dontCheckExists=True
             )
-            
-            out = shell(self.logger, cmd, 
-                output = self.options['verbose'] or self.options['debug'], 
-                timeout = self.options['timeout'])
+
+            out = shell(self.logger, cmd,
+                        output=self.options['verbose'] or self.options['debug'],
+                        timeout=self.options['timeout'])
 
             if os.path.isfile(outfile):
                 return True
@@ -92,11 +96,12 @@ class PackerPeresed(IPacker):
                     outfile
                 ))
 
-                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerPeresed.get_name()} returned:
+                if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                    self.logger.info(f'''{PackerPeresed.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         except ShellCommandReturnedError as e:
             self.logger.err(f'''Error message from packer:
@@ -110,7 +115,8 @@ class PackerPeresed(IPacker):
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
         return False

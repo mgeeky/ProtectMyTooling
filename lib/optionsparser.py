@@ -6,14 +6,17 @@ import sys
 import os
 import re
 import yaml
-
+import shutil
 import lib.utils
 
 from copy import deepcopy
 from argparse import ArgumentParser
 
 from lib.packersloader import PackersLoader
+from prettytable import PrettyTable
 from lib.logger import Logger
+from shutil import get_terminal_size
+
 
 OptionsDefaultValues = {
 
@@ -57,6 +60,96 @@ def preload_packers(logger, opts):
     return (packerslist, PackersLoader(logger, options))
 
 
+def terminalWidth():
+    n = shutil.get_terminal_size((80, 20))  # pass fallback
+    return n.columns
+
+
+def listPackers(logger, opts):
+    (packerslist, packersloader) = preload_packers(logger, opts)
+    num = 0
+    w = terminalWidth()
+
+    cols = ['#', 'Name', 'Type', 'Licensing', 'Description',
+            'Input', 'Output', 'Author', 'URL']
+
+    if w >= 380:
+        pass
+    elif w >= 300:
+        cols = ['#', 'Name', 'Type', 'Licensing', 'Description',
+                'Input', 'Output', 'Author']
+    elif w >= 170:
+        cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output', 'Author']
+    elif w >= 80:
+        cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output']
+
+    table = PrettyTable(cols)
+
+    for name, packer in packersloader.get_packers().items():
+        num += 1
+        metadata = packer.metadata
+        authors = metadata['author']
+        licensing = metadata['licensing']
+        desc = metadata['description'][:130]
+        ptype = lib.utils.packerTypeNames[metadata['type']]
+        url = metadata['url'].replace(
+            'http://', '').replace('https://', '')[:55]
+
+        if type(authors) == tuple or type(authors) == list:
+            authors = ', '.join(metadata['author'])
+
+        authors = authors[:54]
+
+        if w >= 380:
+            table.add_row([
+                num,
+                name,
+                ptype,
+                licensing,
+                desc,
+                ', '.join(metadata['input']),
+                ', '.join(metadata['output']),
+                authors,
+                url
+            ])
+        elif w >= 300:
+            table.add_row([
+                num,
+                name,
+                licensing,
+                ptype,
+                desc,
+                ', '.join(metadata['input']),
+                ', '.join(metadata['output']),
+                authors
+            ])
+        elif w >= 170:
+            table.add_row([
+                num,
+                name,
+                licensing,
+                ptype,
+                ', '.join(metadata['input']),
+                ', '.join(metadata['output']),
+                authors
+            ])
+        elif w >= 80:
+            table.add_row([
+                num,
+                name,
+                licensing,
+                ptype,
+                ', '.join(metadata['input']),
+                ', '.join(metadata['output']),
+            ])
+
+    tablines = str(table).split('\n')
+    for line in tablines:
+        print(line[:w-1])
+
+    sys.exit(0)
+
+
 def parse_options(logger, opts, version):
     global options
 
@@ -70,20 +163,7 @@ def parse_options(logger, opts, version):
         helpRequested and not fullHelp) else ''
 
     if len(sys.argv) == 2 and sys.argv[1] == '-L':
-        (packerslist, packersloader) = preload_packers(logger, opts)
-        num = 0
-        for name, packer in packersloader.get_packers().items():
-            num += 1
-            packerType = packer.get_type()
-            print('[{0:2}] {1:14} -  {2:22} - {3}'.format(
-                num,
-                name,
-                lib.utils.packerTypeNames[packerType],
-                packer.get_desc().strip()
-            ))
-
-        print()
-        sys.exit(0)
+        listPackers(logger, opts)
 
     options = opts.copy()
 

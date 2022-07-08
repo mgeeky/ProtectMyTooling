@@ -2,10 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import xml.etree.ElementTree as ET
-import sys, re
+import sys
+import re
 
 from IPacker import IPacker
 from lib.utils import *
+
 
 class PackerEnigma(IPacker):
     default_enigma_args = ''
@@ -19,6 +21,16 @@ class PackerEnigma(IPacker):
         'enigma_save_generated_project_file': False,
     }
 
+    metadata = {
+        'author': 'The Enigma Protector Developers Team',
+        'url': 'https://enigmaprotector.com',
+        'description': 'An advanced x86/x64 PE Executables protector with many anti- features and virtualization',
+        'licensing': 'commercial',
+        'type': PackerType.PEProtector,
+        'input': ['PE', ],
+        'output': ['PE', ],
+    }
+
     def __init__(self, logger, options):
         self.enigma_args = PackerEnigma.default_enigma_args
         self.logger = logger
@@ -28,75 +40,72 @@ class PackerEnigma(IPacker):
     def get_name():
         return 'EnigmaProtector'
 
-    @staticmethod
-    def get_type():
-        return PackerType.PEProtector
-
-    @staticmethod
-    def get_desc():
-        return '(paid) The Engima Protector is an advanced x86/x64 PE Executables protector with many anti- features and virtualization'
-
     def help(self, parser):
         if parser != None:
             parser.add_argument('--enigma-path-x86', metavar='PATH', dest='enigma_path_x86',
-                help = '(required) Path to The Enigma Protector x86 executable.')
+                                help='(required) Path to The Enigma Protector x86 executable.')
 
             parser.add_argument('--enigma-path-x64', metavar='PATH', dest='enigma_path_x64',
-                help = '(required) Path to The Enigma Protector x64 executable.')
+                                help='(required) Path to The Enigma Protector x64 executable.')
 
             parser.add_argument('--enigma-project-file', metavar='PATH', dest='enigma_project_file',
-                help = '(required) Path to The Enigma Protector .enigma base project file (template to work with).')
+                                help='(required) Path to The Enigma Protector .enigma base project file (template to work with).')
 
-            parser.add_argument('--enigma-save-generated-project-file', metavar='bool', type=int, choices=range(0, 2), dest='enigma_save_generated_project_file', 
-                help = 'Specifies whether to save newly generated project file along with the output generated executable (with .enigma extension). Valid values: 0/1. Default: 0')
+            parser.add_argument('--enigma-save-generated-project-file', metavar='bool', type=int, choices=range(0, 2), dest='enigma_save_generated_project_file',
+                                help='Specifies whether to save newly generated project file along with the output generated executable (with .enigma extension). Valid values: 0/1. Default: 0')
 
             parser.add_argument('--enigma-product-name', metavar='NAME', dest='enigma_product_name',
-                help = 'Product name to set in application\'s manifest.')
+                                help='Product name to set in application\'s manifest.')
 
             parser.add_argument('--enigma-product-version', metavar='VER', dest='enigma_product_version',
-                help = 'Product version to set in application\'s manifest.')
+                                help='Product version to set in application\'s manifest.')
 
-            parser.add_argument('--enigma-process-blacklist', metavar='PROCNAME', dest='enigma_processes_blacklist', action = 'append',
-                help = 'Enigma will exit running if this process is found launched. May be repeated. Suitable for anti-analysis defenses.')
+            parser.add_argument('--enigma-process-blacklist', metavar='PROCNAME', dest='enigma_processes_blacklist', action='append',
+                                help='Enigma will exit running if this process is found launched. May be repeated. Suitable for anti-analysis defenses.')
 
-            parser.add_argument('--enigma-check-processes-every', metavar='SECONDS', type=int, choices=range(0, 2), dest='enigma_check_processes_every', action = 'append',
-                help = 'Enigma will check processes list for blacklisted entries every N seconds. Default: 10. Use "0" to check only at startup.')
+            parser.add_argument('--enigma-check-processes-every', metavar='SECONDS', type=int, choices=range(0, 2), dest='enigma_check_processes_every', action='append',
+                                help='Enigma will check processes list for blacklisted entries every N seconds. Default: 10. Use "0" to check only at startup.')
 
-            parser.add_argument('--enigma-antidebug', metavar='bool', type=int, choices=range(0, 2), dest='enigma_antidebug', 
-                help = 'Enable Anti-Debug checks and prevent output from running under debugger. Valid values: 0/1. Default: 1')
+            parser.add_argument('--enigma-antidebug', metavar='bool', type=int, choices=range(0, 2), dest='enigma_antidebug',
+                                help='Enable Anti-Debug checks and prevent output from running under debugger. Valid values: 0/1. Default: 1')
 
-            parser.add_argument('--enigma-antivm', metavar='bool', type=int, choices=range(0, 2), dest='enigma_antivm', 
-                help = 'Enable Anti-VM checks and prevent running sample in Virtual Machines such as VMWare. Valid values: 0/1. Default: 0')
+            parser.add_argument('--enigma-antivm', metavar='bool', type=int, choices=range(0, 2), dest='enigma_antivm',
+                                help='Enable Anti-VM checks and prevent running sample in Virtual Machines such as VMWare. Valid values: 0/1. Default: 0')
 
-            parser.add_argument('--enigma-control-sum', metavar='bool', type=int, choices=range(0, 2), dest='enigma_controlsum', 
-                help = 'Enable Program control-sum / Integrity vertification. Valid values: 0/1. Default: 1')
+            parser.add_argument('--enigma-control-sum', metavar='bool', type=int, choices=range(0, 2), dest='enigma_controlsum',
+                                help='Enable Program control-sum / Integrity vertification. Valid values: 0/1. Default: 1')
 
             parser.add_argument('--enigma-protected-exe-cmdline', metavar='ARGS', dest='enigma_protected_exe_cmdline',
-                help = 'Allows to use initial command line arguments for the protected executable.')
+                                help='Allows to use initial command line arguments for the protected executable.')
 
             parser.add_argument('--enigma-args', metavar='ARGS', dest='enigma_args',
-                help = 'Optional enigma-specific arguments to pass during compression.')
+                                help='Optional enigma-specific arguments to pass during compression.')
 
         else:
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['enigma_path_x86'] = configPath(self.options['config'], self.options['enigma_path_x86'])
-            self.options['enigma_path_x64'] = configPath(self.options['config'], self.options['enigma_path_x64'])
-            self.options['enigma_project_file'] = os.path.abspath(configPath(self.options['config'], self.options['enigma_project_file']))
+            self.options['enigma_path_x86'] = configPath(
+                self.options['config'], self.options['enigma_path_x86'])
+            self.options['enigma_path_x64'] = configPath(
+                self.options['config'], self.options['enigma_path_x64'])
+            self.options['enigma_project_file'] = os.path.abspath(configPath(
+                self.options['config'], self.options['enigma_project_file']))
 
             for k, v in PackerEnigma.default_options.items():
                 if k not in self.options.keys() or not self.options[k]:
                     self.options[k] = v
 
             if not os.path.isfile(self.options['enigma_path_x86']) or not os.path.isfile(self.options['enigma_path_x64']):
-                self.logger.err('Both options --enigma-path-x86 and --enigma-path-x64 must be specified!')
+                self.logger.err(
+                    'Both options --enigma-path-x86 and --enigma-path-x64 must be specified!')
 
             if not os.path.isfile(self.options['enigma_project_file']):
-                self.logger.fatal('You must specify existing --enigma-project-file project file (.tmd) that will be reused for subsequent samples!')
+                self.logger.fatal(
+                    'You must specify existing --enigma-project-file project file (.tmd) that will be reused for subsequent samples!')
 
             if 'enigma_args' in self.options.keys() and self.options['enigma_args'] != None \
-                and len(self.options['enigma_args']) > 0: 
+                    and len(self.options['enigma_args']) > 0:
                 self.enigma_args += ' ' + self.options['enigma_args']
 
     def adjustProjectFile(self, projFile, arch, infile, outfile):
@@ -127,11 +136,15 @@ class PackerEnigma(IPacker):
 
         checks = et.find('CheckUp')
 
-        et.find('./CheckUp/AntiDebugger/Enabled').text = str(bool(self.options['enigma_antidebug']))
-        et.find('./CheckUp/ControlSum/Enabled').text = str(bool(self.options['enigma_controlsum']))
-        et.find('./Protection/InlinePatching/Enabled').text = str(bool(self.options['enigma_controlsum']))
-        et.find('./CheckUp/VirtualizationTools/Enabled').text = str(bool(self.options['enigma_antivm']))
-        
+        et.find(
+            './CheckUp/AntiDebugger/Enabled').text = str(bool(self.options['enigma_antidebug']))
+        et.find(
+            './CheckUp/ControlSum/Enabled').text = str(bool(self.options['enigma_controlsum']))
+        et.find('./Protection/InlinePatching/Enabled').text = str(
+            bool(self.options['enigma_controlsum']))
+        et.find(
+            './CheckUp/VirtualizationTools/Enabled').text = str(bool(self.options['enigma_antivm']))
+
         # Engima "Virtual Machine" Modern RISC options
         et.find('./VirtualMachine/Enabled').text = 'True'
         et.find('./VirtualMachine/FileEntryPoint/Enabled').text = 'True'
@@ -142,17 +155,19 @@ class PackerEnigma(IPacker):
         et.find('./VirtualMachine/Common/RISCVMEncryption').text = '3'
 
         if self.options['enigma_processes_blacklist'] is not None \
-            and len(self.options['enigma_processes_blacklist']) > 0:
+                and len(self.options['enigma_processes_blacklist']) > 0:
             et.find('./CheckUp/ExecutedProcesses/Enabled').text = 'True'
 
             if self.options['enigma_check_processes_every'] > 0:
-                et.find('./CheckUp/ExecutedProcesses/CheckDelay').text = str(self.options['enigma_check_processes_every'])
+                et.find('./CheckUp/ExecutedProcesses/CheckDelay').text = str(
+                    self.options['enigma_check_processes_every'])
                 et.find('./CheckUp/ExecutedProcesses/CheckEndless').text = 'True'
             else:
                 et.find('./CheckUp/ExecutedProcesses/CheckEndless').text = 'False'
 
             processes = et.find('./CheckUp/ExecutedProcesses/Processes')
-            processes.attrib['Count'] = str(len(self.options['enigma_processes_blacklist']))
+            processes.attrib['Count'] = str(
+                len(self.options['enigma_processes_blacklist']))
 
             for proc in self.options['enigma_processes_blacklist']:
                 process = ET.SubElement(processes, 'Process')
@@ -165,7 +180,8 @@ class PackerEnigma(IPacker):
                 ET.SubElement(process, 'WindowClassCondition').text = '2'
 
         et.find('./Miscellaneous/CommandLine/Enabled').text = 'True'
-        et.find('./Miscellaneous/CommandLine/CommandLine').text = self.options['enigma_protected_exe_cmdline']
+        et.find(
+            './Miscellaneous/CommandLine/CommandLine').text = self.options['enigma_protected_exe_cmdline']
 
         # ----------
 
@@ -180,9 +196,10 @@ Adjusted project file:
 {}
 '''.format(newProject.decode()))
 
-        if self.options['enigma_save_generated_project_file']:        
+        if self.options['enigma_save_generated_project_file']:
             suf = '.enigma'
-            if arch == 'x64': suf += '64'
+            if arch == 'x64':
+                suf += '64'
 
             with open(outfile + suf, 'w') as foo:
                 foo.write(newProject.decode())
@@ -194,12 +211,13 @@ Adjusted project file:
             path = self.options['enigma_path_x64']
 
         if not path:
-            raise ArchitectureNotSupported('Architecture {} not supported as there was no corresponding The Enigma Protector path configured!\nPlease configure it using: --enigma-path-{}'.format(arch, arch))
+            raise ArchitectureNotSupported(
+                'Architecture {} not supported as there was no corresponding The Enigma Protector path configured!\nPlease configure it using: --enigma-path-{}'.format(arch, arch))
 
         tmpname = ''
         out = ''
         cwd = ''
-        
+
         try:
             cwd = os.getcwd()
             base = os.path.dirname(path)
@@ -207,9 +225,10 @@ Adjusted project file:
             self.logger.dbg('changed working directory to "{}"'.format(base))
             os.chdir(base)
 
-            self.logger.info("Running Enigma protector, heavy computations ahead, be patient...")
+            self.logger.info(
+                "Running Enigma protector, heavy computations ahead, be patient...")
 
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.enigma') as fp: 
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.enigma') as fp:
                 self.adjustProjectFile(fp, arch, infile, outfile)
                 tmpname = fp.name
 
@@ -219,17 +238,18 @@ Adjusted project file:
                 tmpname,
                 '',
                 ''
-            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+            ), output=self.options['verbose'] or self.options['debug'], timeout=self.options['timeout'])
 
         except Exception as e:
             raise
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
-        if os.path.isfile(tmpname): 
+        if os.path.isfile(tmpname):
             os.remove(tmpname)
             return True
 
@@ -238,10 +258,11 @@ Adjusted project file:
                 outfile
             ))
 
-            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerEnigma.get_name()} returned:
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                self.logger.info(f'''{PackerEnigma.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
             return False

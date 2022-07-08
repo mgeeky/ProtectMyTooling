@@ -4,9 +4,20 @@
 from IPacker import IPacker
 from lib.utils import *
 
+
 class PackerLogicNet(IPacker):
     default_LogicNet_args = ''
     LogicNet_cmdline_template = '<command> <infile> <outfile>'
+
+    metadata = {
+        'author': ['AnErrupTion', 'klezVirus'],
+        'url': 'https://github.com/AnErrupTion/LoGiC.NET',
+        'licensing': 'open-source',
+        'description': 'Free and open .NET obfuscator using dnlib',
+        'type': PackerType.DotNetObfuscator,
+        'input': ['.NET', ],
+        'output': ['.NET', ],
+    }
 
     def __init__(self, logger, options):
         self.LogicNet_args = PackerLogicNet.default_LogicNet_args
@@ -17,24 +28,17 @@ class PackerLogicNet(IPacker):
     def get_name():
         return 'LoGiC.NET'
 
-    @staticmethod
-    def get_type():
-        return PackerType.DotNetObfuscator
-
-    @staticmethod
-    def get_desc():
-        return 'LoGiC.NET - A more advanced free and open .NET obfuscator using dnlib. (modded by klezVirus)'
-
     def help(self, parser):
         if parser != None:
             parser.add_argument('--logicnet-path', metavar='PATH', dest='logicnet_path',
-                help = '(required) Path to LogicNet executable.')
+                                help='(required) Path to LogicNet executable.')
 
         else:
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['logicnet_path'] = configPath(self.options['config'], self.options['logicnet_path'])
+            self.options['logicnet_path'] = configPath(
+                self.options['config'], self.options['logicnet_path'])
 
             if not os.path.isfile(self.options['logicnet_path']):
                 self.logger.fatal('--LogicNet-path option must be specified!')
@@ -58,14 +62,15 @@ class PackerLogicNet(IPacker):
                 '',
                 infile,
                 outfile
-            ), output = self.options['verbose'] or self.options['debug'], timeout = self.options['timeout'])
+            ), output=self.options['verbose'] or self.options['debug'], timeout=self.options['timeout'])
 
         except Exception as e:
             raise
 
         finally:
             if len(cwd) > 0:
-                self.logger.dbg('reverted to original working directory "{}"'.format(cwd))
+                self.logger.dbg(
+                    'reverted to original working directory "{}"'.format(cwd))
                 os.chdir(cwd)
 
         status = os.path.isfile(outfile)
@@ -75,10 +80,11 @@ class PackerLogicNet(IPacker):
                 outfile
             ))
 
-            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']): self.logger.info(f'''{PackerLogicNet.get_name()} returned:
+            if len(out) > 0 and not (self.options['verbose'] or self.options['debug']):
+                self.logger.info(f'''{PackerLogicNet.get_name()} returned:
 ----------------------------------------
 {out}
 ----------------------------------------
-''', forced = True, noprefix=True)
+''', forced=True, noprefix=True)
 
         return status
