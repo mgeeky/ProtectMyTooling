@@ -18,6 +18,8 @@ import lib.optionsparser
 import PySimpleGUI as sg
 
 
+font = ("Consolas", 10)
+font2 = ("Consolas", 11)
 
 # https://stackoverflow.com/a/69064884
 def runCommand(cmd, timeout=None, window=None):
@@ -35,7 +37,6 @@ def runCommand(cmd, timeout=None, window=None):
     return (retval, output)                         
 
 def run(command, width = 120):
-    font = ("Consolas", 10)
     sg.theme("Dark")
 
     layout = [
@@ -89,8 +90,6 @@ def showConfig(config):
     window.close()
 
 def createWindow(packersChain, packersList):
-    font = ("Consolas", 10)
-    font2 = ("Consolas", 11)
     sg.theme("Dark")
 
     tooltip1 = 'Inject watermark to generated artifact. Syntax: where=value, example: "-w dos-stub=Foobar". Available watermark places: dos-stub,checksum,overlay,section . Section requires NAME,STR syntax where NAME denotes PE section name, e.g. "-w section=.foo,bar" will create PE section named ".foo" with contents "bar". May be repeated'
@@ -189,10 +188,11 @@ def createWindow(packersChain, packersList):
             sg.Button("Protect & Run", tooltip = "Protects input payload and runs protected file without parameters.", font=font),
             sg.Button("List Packers & Details", tooltip = "List all packers details.", font=font),
             sg.Button("Show Config", tooltip = "Preview configuration YAML contents.", font=font),
+            sg.Button("About", font=font),
         ]
     ]
 
-    window = sg.Window("ProtectMyTooling", layout, return_keyboard_events=True)
+    window = sg.Window("ProtectMyTooling | with great power, comes great responsibility. ", layout, return_keyboard_events=True)
     return window
 
 def main():
@@ -283,6 +283,28 @@ def main():
                 for p in packersChain:
                     chain = f"{p[0].capitalize()}({chain})"
                 window['-current chain-'].update(chain) 
+            
+        elif event == "About":
+            sg.Popup("About ProtectMyTooling", f'''
+
+Mariusz Banach / mgeeky, '20-'22
+<mb [at] binary-offensive.com>
+(https://github.com/mgeeky) 
+
+------------------------------------------------------------
+This and other projects are outcome of sleepless nights and 
+plenty of hard work. If you like what I do and appreciate 
+that I always give back to the community, Consider buying 
+me a coffee (or better a beer) just to say thank you! :-)
+
+https://github.com/sponsors/mgeeky
+
+------------------------------------------------------------
+
+Use only for legitimate, ethical engagements.
+
+Enjoy!
+''', font=font)
 
         elif event == "-infile-":
             p = os.path.normpath(os.path.abspath(values["-infile-"]))
