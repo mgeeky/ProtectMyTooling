@@ -450,6 +450,14 @@ def checkAv(options, logger):
     if 'check_av_command' in options.keys() and 'disable_av_command' in options.keys() \
             and 'enable_av_command' in options.keys() and options['check_av_command']:
 
+        if len(options['check_av_command']) == 0 or len(options['enable_av_command']) == 0 or len(options['enable_av_command']) == 0:
+            logger.info('Will not disable/enable AV due to a missing option: check_av_command/enable_av_command/enable_av_command')
+            return outstatus
+
+        if options['check_av_command'] == 'false':
+            logger.info('Won\'t disable AV as requested.')
+            return outstatus
+
         out = shell(logger, options['check_av_command'])
         logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
 
@@ -460,6 +468,10 @@ def checkAv(options, logger):
             logger.info('AV seemingly disabled.')
             outstatus = 0
     else:
+        return outstatus
+
+    if 'check_av_command' in options.keys() and options['check_av_command'] and \
+        len(options['check_av_command']) > 0 and options['check_av_command'] == 'false':
         return outstatus
 
     if outstatus == -1:

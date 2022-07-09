@@ -233,7 +233,7 @@ def parse_options(logger, opts, version):
     # Packers handling
     av = parser.add_argument_group("Optional AV Handling hooks")
     av.add_argument('--check-av-command', default='',
-                    help='Command used to check status of AV solution. This command must return "True" if AV is running.')
+                    help='Command used to check status of AV solution. This command must return "True" if AV is running. Set to "false" to skip AV disabling (--check-av-command false)')
     av.add_argument('--disable-av-command', default='',
                     help='Command used to disable AV solution before processing files.')
     av.add_argument('--enable-av-command', default='',

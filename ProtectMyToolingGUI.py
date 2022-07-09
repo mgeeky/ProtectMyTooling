@@ -284,6 +284,7 @@ def createWindow(packersList):
                         tooltip="Collect IOCs and save them to .csv file side by side to <outfile>", font=font),
             sg.Checkbox('Hide Console', key='-Hide Console-', default=False,
                         tooltip="If output artifact is PE EXE, use this option to hide Console window by switching PE Subsystem from WINDOWS_GUI", font=font),
+            sg.Checkbox("Don't disable AV", key='-dont-disable-av-', default=False, font=font),
             sg.Checkbox('Verbose', key='-Verbose-', default=True, font=font),
             sg.Checkbox('Debug', key='-Debug-', default=False, font=font)
         ]
@@ -601,6 +602,11 @@ Enjoy!
                     command.append('-v')
                 if values['-Debug-']:
                     command.append('-d')
+                if values['-dont-disable-av-']:
+                    command.extend([
+                        '--check-av-command',
+                        'false'
+                    ])
 
                 if len(values["-customopts-"]) > 0:
                     opts = values["-customopts-"]
