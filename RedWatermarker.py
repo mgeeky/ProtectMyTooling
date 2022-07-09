@@ -42,6 +42,9 @@ class Logger:
     def ok(txt):
         print('[+] ' + txt)
 
+    def warn(txt):
+        print('[?] ' + txt)
+
     def verbose(txt):
         if options['verbose']:
             print('[>] ' + txt)
@@ -400,7 +403,8 @@ class PeWatermarker:
             raise
 
         finally:
-            self.pe.close()
+            if self.pe:
+                self.pe.close()
 
     def checkIt(self, where, rule_name, watermark):
         if type(watermark) == bytes:

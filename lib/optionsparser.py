@@ -76,14 +76,12 @@ def listPackers(argv, logger, opts):
             w = 400
             break
 
-    cols = ['#', 'Name', 'Type', 'Licensing', 'Description',
-            'Input', 'Output', 'Author', 'URL']
+    cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output', 'Description', 'Author', 'URL']
 
     if w >= 380:
         pass
     elif w >= 300:
-        cols = ['#', 'Name', 'Type', 'Licensing', 'Description',
-                'Input', 'Output', 'Author']
+        cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output', 'Description', 'Author']
     elif w >= 170:
         cols = ['#', 'Name', 'Type', 'Licensing', 'Input', 'Output', 'Author']
     elif w >= 80:
@@ -113,9 +111,9 @@ def listPackers(argv, logger, opts):
                 name,
                 ptype,
                 licensing,
-                desc,
                 ', '.join(metadata['input']),
                 ', '.join(metadata['output']),
+                desc,
                 authors,
                 url
             ])
@@ -125,9 +123,9 @@ def listPackers(argv, logger, opts):
                 name,
                 licensing,
                 ptype,
-                desc,
                 ', '.join(metadata['input']),
                 ', '.join(metadata['output']),
+                desc,
                 authors
             ])
         elif w >= 170:
