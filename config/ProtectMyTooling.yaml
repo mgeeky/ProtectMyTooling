@@ -10,9 +10,13 @@ check_av_command: 'powershell.exe -c "(Get-MpPreference).DisableRealtimeMonitori
 disable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $true"'
 enable_av_command: 'powershell.exe -c "Set-MpPreference -DisableRealtimeMonitoring $false"'
 
+#
+# Preset packers chain in GUI upon input file open.
+#
 gui_default_chain_pe: upx
 gui_default_chain_dotnet: confuserex
 gui_default_chain_shellcode: sgn
+
 
 # UPX (x86, x64)
 upx_path: "contrib\\upx\\upx-3.96-win32\\upx.exe"

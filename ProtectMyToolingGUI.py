@@ -4,7 +4,7 @@
 # Author:
 #   Mariusz Banach / mgeeky, '20-'22
 #   <mb [at] binary-offensive.com>
-#   (https://github.com/mgeeky)
+#   https://mgeeky.tech
 #
 
 import time
@@ -16,6 +16,8 @@ from lib.utils import *
 from lib.logger import Logger
 from lib.packersloader import PackersLoader
 from ProtectMyTooling import VERSION
+from threading import Thread
+
 import lib.optionsparser
 
 import PySimpleGUI as sg
@@ -32,6 +34,8 @@ phrases = (
     'be responsible - watermark and track your implants',
     'be responsible - collect your implants\'s IOCs'
 )
+
+packersChain = []
 
 # https://stackoverflow.com/a/69064884
 def runCommand(cmd, timeout=None, window=None):
@@ -117,15 +121,16 @@ def editConfig(config):
             break
 
         if event == "-Save-":
-            pass
-#            with open(config) as f:
-#                f.write(values['-yaml-'])
-#
-#            sg.Popup('Saved.', 'YAML saved.')
-#
+            with open(config, 'w') as f:
+                f.write(values['-yaml-'])
+
+            sg.Popup('Saved.', 'YAML saved.')
+
     window.close()
 
-def createWindow(packersChain, packersList):
+def createWindow(packersList):
+    global packersChain
+
     tooltip1 = 'Inject watermark to generated artifact. Syntax: where=value, e.g.: "dos-stub=Foobar".\nAvailable watermarks: dos-stub,checksum,overlay,section\nSection requires NAME,STR syntax where NAME denotes PE section name\ne.g. "section=.foo,bar" creates PE section named ".foo" with contents "bar".\nMay be repeated'
     tooltip2 = 'Specify a custom IOC value that is to be written into output IOCs csv file in column "comment"'
 
@@ -164,17 +169,21 @@ def createWindow(packersChain, packersList):
   
         ],
         [
-            sg.Text("Config path", font=font),
-            sg.Input(size=(65, 1), default_text=os.path.abspath(os.path.join(os.path.dirname(__file__), "config/ProtectMyTooling.yaml")), enable_events=True, key="-config-", font=font),
+            sg.Text("Config path" + ' ' * 3, font=font),
+            sg.Input(size=(61, 1), default_text=os.path.abspath(os.path.join(os.path.dirname(__file__), "config/ProtectMyTooling.yaml")), enable_events=True, key="-config-", font=font),
             sg.FileBrowse(font=font),
         ],
         [
-            sg.Text("Watermark" + ' ' * 2, font=font, tooltip=tooltip1),
-            sg.Input(size=(74, 1), default_text="section=.foo,1234567890abcdef123456", pad=(5,5), enable_events=True, key="-watermark-", font=font, tooltip=tooltip1),
+            sg.Text("Watermark" + ' ' * 5, font=font, tooltip=tooltip1),
+            sg.Input(size=(70, 1), default_text="section=.foo,1234567890abcdef123456", pad=(5,5), enable_events=True, key="-watermark-", font=font, tooltip=tooltip1),
         ],
         [
-            sg.Text("Custom IOC" + ' ' * 1, font=font, tooltip=tooltip2),
-            sg.Input(size=(74, 1), default_text="", pad=(5,5), enable_events=True, key="-customioc-", font=font, tooltip=tooltip2),
+            sg.Text("Custom IOC" + ' ' * 4, font=font, tooltip=tooltip2),
+            sg.Input(size=(70, 1), default_text="", pad=(5,5), enable_events=True, key="-customioc-", font=font, tooltip=tooltip2),
+        ],
+        [
+            sg.Text("Custom Options" + ' ' * 0, font=font, tooltip='Specify your own custom ProtectMyTooling options to be added to command line.'),
+            sg.Input(size=(70, 1), default_text="", pad=(5,5), enable_events=True, key="-customopts-", font=font, tooltip='Specify your own custom ProtectMyTooling options to be added to command line.'),
         ],
         [
             sg.Checkbox('Collect IOCs', key='-Collect IOCs-', text_color='cyan', default=False, tooltip="Collect IOCs and save them to .csv file side by side to <outfile>", font=font),
@@ -216,6 +225,7 @@ def createWindow(packersChain, packersList):
             sg.Button("Protect & Run", tooltip = "Protects input payload and runs protected file without parameters.", font=font),
             sg.Button("List Packers & Details", tooltip = "List all packers details.", font=font),
             sg.Button("Edit Config", tooltip = "Edit configuration YAML contents.", font=font),
+            sg.Button("Full Help", font=font),
             sg.Button("About", font=font),
         ]
     ]
@@ -227,9 +237,50 @@ def createWindow(packersChain, packersList):
 
     return window
 
+def detectFileType(p, window, values):
+    global packersChain
+
+    ftype = 'unkown'
+
+    if os.path.isfile(p):
+        if isDotNetExecutable(p): 
+            window['-detected-'].update('.NET Assembly')
+            ftype = 'dotnet'
+        elif isValidPE(p): 
+            window['-detected-'].update('PE Executable')
+            ftype = 'pe'
+        elif isShellcode(p): 
+            window['-detected-'].update('Shellcode')
+            ftype = 'shellcode'
+        else: 
+            window['-detected-'].update('Unknown')
+
+    if len(values['-config-']) > 0 and os.path.isfile(values['-config-']):
+        try:
+            with open(values['-config-']) as f:
+                parsed = yaml.load(f, Loader=yaml.FullLoader)
+
+            if ftype == 'pe': 
+                packersChain = [[x] for x in parsed['gui_default_chain_pe'].replace(' ', '').split(',')]
+            if ftype == 'dotnet': 
+                packersChain = [[x] for x in parsed['gui_default_chain_dotnet'].replace(' ', '').split(',')]
+            if ftype == 'shellcode': 
+                packersChain = [[x] for x in parsed['gui_default_chain_shellcode'].replace(' ', '').split(',')]
+
+            index = 0
+            window["-packers chain-"].update(packersChain, set_to_index=[index + 1], scroll_to_index=index + 1)
+
+            chain = f'"{os.path.basename(values["-infile-"])}"'
+            for p in packersChain:
+                chain = f"{p[0].capitalize()}({chain})"
+            window['-current chain-'].update(chain)
+
+        except:
+            pass
+
 def main():
+    global packersChain
     packersList = []
-    packersChain = []
 
     files = os.listdir(os.path.join(os.path.dirname('__file__'), 'packers'))
 
@@ -240,7 +291,7 @@ def main():
             if name.lower() not in ['__init__', 'ipacker']:
                 packersList.append(name)
 
-    window = createWindow(packersChain, packersList)
+    window = createWindow(packersList)
 
     while True:
         event, values = window.read()
@@ -321,7 +372,7 @@ def main():
 
 Mariusz Banach / mgeeky, '20-'22
 <mb [at] binary-offensive.com>
-(https://github.com/mgeeky) 
+(https://mgeeky.tech) 
 
 ------------------------------------------------------------
 This and other projects are outcome of sleepless nights and 
@@ -348,42 +399,9 @@ Enjoy!
                 outpath = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(p), newname)))
                 window["-outfile-"].update(outpath)
 
-            ftype = 'unkown'
-
-            if isDotNetExecutable(p): 
-                window['-detected-'].update('.NET Assembly')
-                ftype = 'dotnet'
-            elif isValidPE(p): 
-                window['-detected-'].update('PE Executable')
-                ftype = 'pe'
-            elif isShellcode(p): 
-                window['-detected-'].update('Shellcode')
-                ftype = 'shellcode'
-            else: 
-                window['-detected-'].update('Unknown')
-
-            if len(values['-config-']) > 0 and os.path.isfile(values['-config-']):
-                try:
-                    with open(values['-config-']) as f:
-                        parsed = yaml.load(f, Loader=yaml.FullLoader)
-
-                    if ftype == 'pe': 
-                        packersChain = [[x] for x in parsed['gui_default_chain_pe'].replace(' ', '').split(',')]
-                    if ftype == 'dotnet': 
-                        packersChain = [[x] for x in parsed['gui_default_chain_dotnet'].replace(' ', '').split(',')]
-                    if ftype == 'shellcode': 
-                        packersChain = [[x] for x in parsed['gui_default_chain_shellcode'].replace(' ', '').split(',')]
-
-                    index = 0
-                    window["-packers chain-"].update(packersChain, set_to_index=[index + 1], scroll_to_index=index + 1)
-
-                    chain = f'"{os.path.basename(values["-infile-"])}"'
-                    for p in packersChain:
-                        chain = f"{p[0].capitalize()}({chain})"
-                    window['-current chain-'].update(chain)
-
-                except:
-                    pass
+            #thread = Thread(target = detectFileType, args = (p, window, values))
+            #thread.start()
+            detectFileType(p, window, values)
 
         elif event == "Edit Config":
             if len(values["-config-"]) > 0:
@@ -408,6 +426,17 @@ Enjoy!
                 window.Element(element).Update(set_to_index=cur_index)
                 window.Element(element).Update(scroll_to_index=cur_index)
                 window.write_event_value(element, [window.Element(element).GetListValues()[cur_index]])
+
+        elif event == "Full Help":
+            script = os.path.abspath(os.path.join(os.path.dirname(__file__), 'ProtectMyTooling.py'))
+            command = [
+                sys.executable,
+                script,
+                '-h',
+                '-v',
+                '-C',
+            ]
+            run(command)
 
         elif event == "Protect" or event == "Protect & Run":
             infile = os.path.normpath(os.path.abspath(values["-infile-"]))
@@ -444,6 +473,35 @@ Enjoy!
                 if values['-Hide Console-']: command.append('-g')
                 if values['-Verbose-']: command.append('-v')
                 if values['-Debug-']: command.append('-d')
+
+                if len(values["-customopts-"]) > 0:
+                    opts = values["-customopts-"]
+                    pos = 0
+                    failed = False
+
+                    while pos < len(opts):
+                        if opts[pos] == '"':
+                            pos2 = opts.find('"', pos + 1)
+                            if pos2 == 0:
+                                sg.Popup("Missing \" in custom options!")
+                                failed = True
+                                break
+
+                            c = opts[pos + 1:pos2]
+                            command.append(c.strip())
+                            pos = pos2 + 1
+                        else:
+                            pos2 = opts.find(' ', pos + 1)
+                            if pos2 > 0:
+                                c = opts[pos:pos2]
+                                command.append(c.strip())
+                                pos = pos2 + 1
+                            else:
+                                c = opts[pos:]
+                                command.append(c.strip())
+                                break
+
+                    if failed: continue
 
                 if event == "Protect & Run": command.append('-r')
 
