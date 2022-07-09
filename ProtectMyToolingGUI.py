@@ -341,7 +341,7 @@ def main():
                     '--widest-packers-list'
                 ]
 
-                run(command, width = 200)
+                run(command, width = 150)
             
         elif event == "Move Up":
             index = int(''.join(map(str, window["-packers chain-"].get_indexes())))
