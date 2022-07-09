@@ -512,12 +512,6 @@ def reEnableAvAtExit():
     try:
         handleAv(options, logger, av_enable_status)
 
-        if options['log'] != None and options['log'] != sys.stdout:
-            print(f'''
-----------------------------------------------------
-Program completed.
-''')
-
     except lib.utils.ShellCommandReturnedError as e:
         logger.error(
             "Error occured while trying to re-enable AV:\n{}".format(str(e)))

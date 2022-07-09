@@ -11,3 +11,4 @@ argparse
 donut-shellcode
 PrettyTable
 pysimplegui
+clipboard
