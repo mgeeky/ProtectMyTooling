@@ -397,6 +397,9 @@ def main():
             name = os.path.basename(f).replace('.py', '')
 
             if name.lower() not in ['__init__', 'ipacker']:
+                if name in RenamePackerNameToPackerFile.values():
+                    name = list(RenamePackerNameToPackerFile.keys())[list(RenamePackerNameToPackerFile.values()).index(name)]
+                    
                 packersList.append(name)
 
     window = createWindow(packersList)
