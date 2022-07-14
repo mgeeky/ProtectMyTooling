@@ -493,7 +493,7 @@ cmd> py RedBackdoorer.py --help
     Mariusz Banach / mgeeky '22, (@mariuszbit)
     <mb@binary-offensive.com>
 
-usage: peInjector.py [options] <mode> <shellcode> <infile>
+usage: RedBackdoorer.py [options] <mode> <shellcode> <infile>
 
 options:
   -h, --help            show this help message and exit
@@ -534,7 +534,7 @@ First one denotes where to store shellcode, second how to run it:
                       2 - append shellcode to the PE file in a new PE section
 Example:
 
-    py peInjector.py 1,2 beacon.bin putty.exe putty-infected.exe
+    py RedBackdoorer.py 1,2 beacon.bin putty.exe putty-infected.exe
 ```
 
 # Cobalt Strike Integration
