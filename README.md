@@ -1,20 +1,10 @@
 ![1.png](images/1.png)
 
-# Don't Detect Tools - Detect Techniques Instead
+# Don't Detect Tools - Detect Techniques
 
-This offensive software is our professional Red Team community's manifest to security vendors, cyber-defenders all around the world **to stop devising signatures or Use Cases based on tool contents**.
-Hunting for offensive researcher Twitter handles, [email addresses](https://twitter.com/mariuszbit/status/1544994412639444993), or `SeatBelt` .NET class names is ineffective against patient, dedicated, well-funded adversaries.
-Blue Teams, security vendors - we can all do better and focus on **detecting techniques instead of tools**. 
+Rationale behind releasing this software was outlined in an acompanying blog post:
 
-- Smelling **kerberoasting** based on [Rubeus'](https://github.com/GhostPack/Rubeus) `$villain = "Harmj0y"`? How about looking for anomalous kerberos queries instead?
-- On the lookout of [Mimikatz's Gentil Kiwi](https://github.com/gentilkiwi/mimikatz)? I say that's shaky.
-
-![2.png](images/2.png)
-
-Let us challenge current way of working by understanding ineffectiveness of legacy approaches against custom in-house weaponry employed by apex adversaries. 
-
-The project aims to help Red Teams step up their game and evade _obsolete_ static signaturing in hope to **educate** Blue Teams how **weak detection models** miss the point.
-
+- [ProtectMyTooling - Don't detect tools, detect techniques](https://mgeeky.tech/protectmytooling/)
 
 ## Intro
 
@@ -612,8 +602,8 @@ Here's a list of options required by the Cobalt Strike integrator:
 ## Disclaimer
 
 Use of this tool as well as any other projects I'm author of for illegal purposes, unsolicited hacking, cyber-espionage is strictly prohibited. 
-This and other tools distributed by myself serve professional Penetration Testers, Security Consultants, Security Engineers and other security personnel in improving their customer networks cyber-defence capabilities.  
-In no event shall the authors of copyright holders be liable for any claim, damages or other liability arising from illegal use of this software.
+This and other tools I distribute help professional Penetration Testers, Security Consultants, Security Engineers and other security personnel in improving their customer networks cyber-defence capabilities.  
+In no event shall the authors or copyright holders be liable for any claim, damages or other liability arising from illegal use of this software.
 
 If there are concerns, copyright issues, threats posed by this software or other inquiries - I am open to collaborate in responsibly addressing them.
 
