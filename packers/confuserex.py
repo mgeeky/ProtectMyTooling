@@ -52,10 +52,10 @@ class PackerConfuserEx(IPacker):
             parser.add_argument('--confuserex-args', metavar='ARGS', dest='confuserex_args',
                                 help='Optional ConfuserEx-specific arguments to pass during compression.')
 
-            parser.add_argument('--confuserex-module', metavar='PATH', dest='confuserex_module', nargs='+', action='extend',
+            parser.add_argument('--confuserex-module', metavar='PATH', dest='confuserex_module', nargs='+', action='append',
                                 help='(Optional) Embed specified by path DLL module into final EXE. Can be repeated.')
 
-            parser.add_argument('--confuserex-modules-in-dir', metavar='DIR', dest='confuserex_modules_in_dir', nargs='+', action='extend',
+            parser.add_argument('--confuserex-modules-in-dir', metavar='DIR', dest='confuserex_modules_in_dir', nargs='+', action='append',
                                 help='(Optional) Embed all DLLs in specified DIR into final EXE. Can be repeated.')
 
         else:
