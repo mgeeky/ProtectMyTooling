@@ -103,14 +103,18 @@ def isShellcode(path):
 
 
 def isValidPowershell(path):
-    if not path.lower().endswith('.ps1') or not path.lower().endswith('.psm1') or \
-            not path.lower().endswith('.psm') or not path.lower().endswith('.psd1'):
+    a = path.lower().endswith('.ps1') or path.lower().endswith('.psm1') or \
+            path.lower().endswith('.psm') or path.lower().endswith('.psd1')
+
+    if not a:
         return False
 
     keywords = (
         'function', 'param', 'cmdletbinding', 'parameter', 'mandatory', 'foreach', 'process', 'write-host',
         'write-verbose', 'catch', '-not', 'new-object', 'readallbytes', '.synopsis', '.example'
     )
+    found = 0
+
     with open(path, 'r') as f:
         data = f.read().lower()
 
