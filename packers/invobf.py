@@ -156,7 +156,8 @@ class PackerInvObf(IPacker):
                 self.options['invobf_powershell'],
                 self.invobf_args,
                 infile,
-                outfile
+                outfile,
+                dontCheckExists = True
             )
 
             cwd = os.getcwd()
