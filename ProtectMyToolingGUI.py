@@ -619,13 +619,14 @@ Enjoy!
 
                 if len(values["-backdoor-"]) > 0:
                     backdoor = values["-backdoor-"]
-                    fname, ext = os.path.splitext(backdoor.file())
+                    fname, ext = os.path.splitext(backdoor.lower())
 
                     if ext not in ('.exe', '.dll', '.cpl', '.xll', '.wll', '.ocx', '.sys'):
-                        sg.Popup("File to be backdoored must be a valid PE executable: EXE/DLL/CPL/XLL/WLL/OCX/SYS")
+                        sg.Popup("File to be backdoored must be a valid PE executable: EXE/DLL/CPL/XLL/WLL/OCX/SYS and input file must be shellcode.")
                         continue
 
-                    command.append(f'--backdoor-file \"{backdoor.strip()}\"')
+                    command.append(f'-B')
+                    command.append(f'"{backdoor.strip()}"')
 
                     if 'backdoor' not in [x[0].lower() for x in window["-packers chain-"].get_list_values()]:
                         sg.Popup("You did not select \"backdoor\" packer in your packers chain!")
