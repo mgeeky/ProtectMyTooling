@@ -626,7 +626,7 @@ Enjoy!
                         continue
 
                     command.append(f'-B')
-                    command.append(f'"{backdoor.strip()}"')
+                    command.append(backdoor.strip())
 
                     if 'backdoor' not in [x[0].lower() for x in window["-packers chain-"].get_list_values()]:
                         sg.Popup("You did not select \"backdoor\" packer in your packers chain!")

@@ -47,7 +47,7 @@ confuserex_project_file: "contrib\\_project-files\\ConfuserEx\\mkaring-maximum.c
 # we'll used default one
 backdoor_path:
 backdoor_save: 1
-backdoor_run: 1
+backdoor_run: 2
 backdoor_args:
 
 #
