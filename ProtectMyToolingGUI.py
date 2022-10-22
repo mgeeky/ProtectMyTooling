@@ -280,6 +280,12 @@ def createWindow(packersList):
                      tooltip='Specify your own custom ProtectMyTooling options to be added to command line.', expand_x=True,),
         ],
         [
+            sg.Text("File to backdoor" + ' ' * 0, font=font,
+                    tooltip='You can backdoor specific EXE/DLL file by providing path to it here AND choosing BACKDOORER packer in the chain'),
+            sg.Input(size=(70, 1), default_text="", pad=(5, 5), enable_events=True, key="-backdoor-", font=font,
+                     tooltip='You can backdoor specific EXE/DLL file by providing path to it here AND choosing BACKDOORER packer in the chain', expand_x=True,),
+        ],
+        [
             sg.Checkbox('Collect IOCs', key='-Collect IOCs-', text_color='cyan', default=False,
                         tooltip="Collect IOCs and save them to .csv file side by side to <outfile>", font=font),
             sg.Checkbox('Hide Console', key='-Hide Console-', default=False,
@@ -611,6 +617,20 @@ Enjoy!
                         'false'
                     ])
 
+                if len(values["-backdoor-"]) > 0:
+                    backdoor = values["-backdoor-"]
+                    fname, ext = os.path.splitext(backdoor.file())
+
+                    if ext not in ('.exe', '.dll', '.cpl', '.xll', '.wll', '.ocx', '.sys'):
+                        sg.Popup("File to be backdoored must be a valid PE executable: EXE/DLL/CPL/XLL/WLL/OCX/SYS")
+                        continue
+
+                    command.append(f'--backdoor-file \"{backdoor.strip()}\"')
+
+                    if 'backdoor' not in [x[0].lower() for x in window["-packers chain-"].get_list_values()]:
+                        sg.Popup("You did not select \"backdoor\" packer in your packers chain!")
+                        continue
+
                 if len(values["-customopts-"]) > 0:
                     opts = values["-customopts-"]
                     pos = 0
@@ -620,7 +640,7 @@ Enjoy!
                         if opts[pos] == '"':
                             pos2 = opts.find('"', pos + 1)
                             if pos2 == 0:
-                                sg.Popup("Missing \" in custom options!")
+                                sg.Popup("Missing \" (quote) character in custom options!")
                                 failed = True
                                 break
 
