@@ -41,7 +41,7 @@ class IPacker(ABC):
         return True
 
     @staticmethod
-    def build_cmdline(template, command, options=[], infile='', outfile='', dontCheckExists=False):
+    def build_cmdline(template, command, options=[], infile='', outfile='', dontCheckExists=False, noQuotes = False):
         out = template
         out = out.replace('<command>', command)
 
@@ -65,6 +65,11 @@ build_cmdline:
 
             os._exit(1)
 
+        q = '"'
+
+        if noQuotes:
+            q = ''
+
         if len(options) > 0:
             if type(options) == type([]):
                 out = out.replace('<options>', ' '.join(options))
@@ -73,11 +78,11 @@ build_cmdline:
         else:
             out = out.replace('<options>', '')
         if len(infile) > 0:
-            out = out.replace('<infile>', '"{}"'.format(infile))
+            out = out.replace('<infile>', f'{q}{infile}{q}')
         else:
             out = out.replace('<infile>', '')
         if len(outfile) > 0:
-            out = out.replace('<outfile>', '"{}"'.format(outfile))
+            out = out.replace('<outfile>', f'{q}{outfile}{q}')
         else:
             out = out.replace('<outfile>', '')
 

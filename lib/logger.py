@@ -4,6 +4,10 @@
 
 import time
 import sys, os
+import colorama
+import atexit
+
+colorama.init()
 
 class Logger:
     options = {
@@ -123,3 +127,8 @@ class Logger:
     def fatal(self, txt, **kwargs):
         Logger.out(txt, self.options['log'], '[!] ', color='red', **kwargs)
         os._exit(1)
+
+
+@atexit.register
+def goodbye():
+    colorama.deinit()

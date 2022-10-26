@@ -50,6 +50,12 @@ amber_path: "contrib\\Amber\\amber.exe"
 amber_args: 
 
 #
+# AtomPePacker
+#
+atompepacker_path: "contrib\\AtomPePacker\\PePacker.exe"
+atompepacker_args: 
+
+#
 # RedBackdoorer
 #
 # we'll used default one

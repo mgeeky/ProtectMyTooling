@@ -127,7 +127,7 @@ C:\> py ProtectMyTooling.py confuserex Rubeus.exe Rubeus-obf.exe
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.15
+    v0.16
 
 [.] Processing x86 file: "\Rubeus.exe"
 [.] Generating output of ConfuserEx(<file>)...
@@ -219,33 +219,34 @@ At the moment, program supports various Commercial and Open-Source packers/obfus
 Commercial ones will require user to purchase the product and configure its location in `ProtectMyTooling.yaml` file to point the script where to find them.
 
 1. [`Amber`](https://github.com/EgeBalci/amber) - Reflective PE Packer that takes EXE/DLL on input and produces EXE/PIC shellcode
-2. [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
-3. [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
-4. [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
-5. [`Donut`](https://github.com/TheWover/donut) - Popular PE loader that takes EXE/DLL/.NET on input and produces a PIC shellcode
-6. [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
-7. [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
-8. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
-9. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
-10. [`LoGiC.NET`](https://github.com/AnErrupTion/LoGiC.NET) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
-11. [`Mangle`](https://github.com/optiv/Mangle) - Takes input EXE/DLL file and produces output one with cloned certificate, removed Golang-specific IoCs and bloated size. By Matt Eidelberg (@Tyl0us).
-12. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm) - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
-13. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
-14. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
-15. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
-16. [`NimPackt-v1`](https://github.com/chvancooten/NimPackt-v1) - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Brought to you by Cas van Cooten [(@chvancooten)](https://twitter.com/chvancooten)
-17. [`NimSyscallPacker`](https://github.com/S3cur3Th1sSh1t-Sponsors/NimSyscallPacker) - Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by [(@S3cur3Th1sSh1t)](https://twitter.com/ShitSecure)
-18. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
-19. [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode) - Converts PE into a shellcode. By yours truly [@hasherezade](https://twitter.com/hasherezade)
-20. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
-21. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
-22. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
-23. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
-24. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
-25. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
-26. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
-27. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
-28. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+2. [`AtomPePacker`](https://github.com/ORCx41/AtomPePacker) - A Highly capable Pe Packer
+3. [`AsStrongAsFuck`](https://github.com/Charterino/AsStrongAsFuck) - A console obfuscator for .NET assemblies by Charterino
+4. [`CallObfuscator`](https://github.com/d35ha/CallObfuscator) - Obfuscates specific windows apis with different apis.
+5. [`ConfuserEx`](https://github.com/mkaring/ConfuserEx) - Popular .NET obfuscator, forked from [Martin Karing](https://github.com/mkaring)
+6. [`Donut`](https://github.com/TheWover/donut) - Popular PE loader that takes EXE/DLL/.NET on input and produces a PIC shellcode
+7. [`Enigma`](https://enigmaprotector.com/) - A powerful system designed for comprehensive protection of executable files
+8. [`Hyperion`](https://nullsecurity.net/tools/binary.html) - runtime encrypter for 32-bit and 64-bit portable executables. It is a reference implementation and bases on the paper "Hyperion: Implementation of a PE-Crypter"
+9. [`IntelliLock`](https://www.eziriz.com/intellilock.htm) - combines strong license security, highly adaptable licensing functionality/schema with reliable assembly protection
+10. [`InvObf`](https://github.com/danielbohannon/Invoke-Obfuscation) - Obfuscates Powershell scripts with `Invoke-Obfuscation` (by Daniell Bohannon)
+11. [`LoGiC.NET`](https://github.com/AnErrupTion/LoGiC.NET) - A more advanced free and open .NET obfuscator using dnlib by AnErrupTion
+12. [`Mangle`](https://github.com/optiv/Mangle) - Takes input EXE/DLL file and produces output one with cloned certificate, removed Golang-specific IoCs and bloated size. By Matt Eidelberg (@Tyl0us).
+13. [`MPRESS`](https://www.autohotkey.com/mpress/mpress_web.htm) - MPRESS compressor by Vitaly Evseenko. Takes input EXE/DLL/.NET/MAC-DARWIN (x86/x64) and compresses it.
+14. [`NetReactor`](https://www.eziriz.com/dotnet_reactor.htm) - Unmatched .NET code protection system which completely stops anyone from decompiling your code
+15. [`NetShrink`](https://www.pelock.com/pl/produkty/netshrink) - an exe packer aka executable compressor, application password protector and virtual DLL binder for Windows & Linux .NET applications.
+16. [`Nimcrypt2`](https://github.com/icyguider/Nimcrypt2) - Generates Nim loader running input .NET, PE or Raw Shellcode. Authored by [(@icyguider)](https://twitter.com/icyguider)
+17. [`NimPackt-v1`](https://github.com/chvancooten/NimPackt-v1) - Takes Shellcode or .NET Executable on input, produces EXE or DLL loader. Brought to you by Cas van Cooten [(@chvancooten)](https://twitter.com/chvancooten)
+18. [`NimSyscallPacker`](https://github.com/S3cur3Th1sSh1t-Sponsors/NimSyscallPacker) - Takes PE/Shellcode/.NET executable and generates robust Nim+Syscalls EXE/DLL loader. Sponsorware authored by [(@S3cur3Th1sSh1t)](https://twitter.com/ShitSecure)
+19. [`Packer64`](https://github.com/jadams/Packer64) - wrapper around John Adams' `Packer64` 
+20. [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode) - Converts PE into a shellcode. By yours truly [@hasherezade](https://twitter.com/hasherezade)
+21. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
+22. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
+23. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
+24. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
+25. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
+26. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
+27. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
+28. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
+29. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
 
 You can quickly list supported packers using `-L` option (table columns are chosen depending on Terminal width, the wider the more information revealed):
 
@@ -257,40 +258,41 @@ C:\> py ProtectMyTooling.py -L
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.15
+    v0.16
 
 +----+----------------+-------------+-----------------------+-----------------------------+------------------------+--------------------------------------------------------+
 | #  |      Name      |     Type    |       Licensing       |            Input            |         Output         |                         Author                         |
 +----+----------------+-------------+-----------------------+-----------------------------+------------------------+--------------------------------------------------------+
 | 1  |     amber      | open-source |    Shellcode Loader   |              PE             |     EXE, Shellcode     |                       Ege Balci                        |
 | 2  | asstrongasfuck | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                 Charterino, klezVirus                  |
-| 3  |    backdoor    | open-source |    Shellcode Loader   |          Shellcode          |           PE           |              Mariusz Banach, @mariuszbit               |
-| 4  |    callobf     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                Mustafa Mahmoud, @d35ha                 |
-| 5  |   confuserex   | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                        mkaring                         |
-| 6  |  donut-packer  | open-source |  Shellcode Converter  | PE, .NET, VBScript, JScript |       Shellcode        |                        TheWover                        |
-| 7  |     enigma     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |          The Enigma Protector Developers Team          |
-| 8  |    hyperion    | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                   nullsecurity team                    |
-| 9  |  intellilock   |  commercial |    .NET Obfuscator    |              PE             |           PE           |                         Eziriz                         |
-| 10 |     invobf     | open-source | Powershell Obfuscator |          Powershell         |       Powershell       |                    Daniel Bohannon                     |
-| 11 |    logicnet    | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                 AnErrupTion, klezVirus                 |
-| 12 |     mangle     | open-source |   Executable Signing  |              PE             |           PE           |                Matt Eidelberg (@Tyl0us)                |
-| 13 |     mpress     |   freeware  | PE EXE/DLL Compressor |              PE             |           PE           |                    Vitaly Evseenko                     |
-| 14 |   netreactor   |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                         Eziriz                         |
-| 15 |   netshrink    | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                     Bartosz Wójcik                     |
-| 16 |   nimcrypt2    | open-source |    Shellcode Loader   |     PE, .NET, Shellcode     |           PE           |                       @icyguider                       |
-| 17 |    nimpackt    | open-source |    Shellcode Loader   |       .NET, Shellcode       |           PE           |             Cas van Cooten (@chvancooten)              |
-| 18 |   nimsyscall   | sponsorware |    Shellcode Loader   |     PE, .NET, Shellcode     |           PE           |                    @S3cur3Th1sSh1t                     |
-| 19 |    packer64    | open-source | PE EXE/DLL Compressor |              PE             |           PE           |                  John Adams, @jadams                   |
-| 20 |     pe2shc     | open-source |  Shellcode Converter  |              PE             |       Shellcode        |                      @hasherezade                      |
-| 21 |    pecloak     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |     Mike Czumak, @SecuritySift, buherator / v-p-b      |
-| 22 |    peresed     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                  Martin Vejnár, Avast                  |
-| 23 |   scarecrow    | open-source |    Shellcode Loader   |          Shellcode          | DLL, JScript, CPL, XLL |                Matt Eidelberg (@Tyl0us)                |
-| 24 |      sgn       | open-source |   Shellcode Encoder   |          Shellcode          |       Shellcode        |                       Ege Balci                        |
-| 25 | smartassembly  |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                        Red-Gate                        |
-| 26 |      srdi      | open-source |   Shellcode Encoder   |             DLL             |       Shellcode        |                Nick Landers, @monoxgas                 |
-| 27 |    themida     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                         Oreans                         |
-| 28 |      upx       | open-source | PE EXE/DLL Compressor |              PE             |           PE           | Markus F.X.J. Oberhumer, László Molnár, John F. Reiser |
-| 29 |   vmprotect    |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                        vmpsoft                         |
+| 3  |  atompepacker  | open-source |  PE EXE/DLL Protector |              PE             |        EXE, DLL        |            ORCA (@ORCx41, ORCx41@gmail.com)            |
+| 4  |    backdoor    | open-source |    Shellcode Loader   |          Shellcode          |           PE           |              Mariusz Banach, @mariuszbit               |
+| 5  |    callobf     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                Mustafa Mahmoud, @d35ha                 |
+| 6  |   confuserex   | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                        mkaring                         |
+| 7  |  donut-packer  | open-source |  Shellcode Converter  | PE, .NET, VBScript, JScript |       Shellcode        |                        TheWover                        |
+| 8  |     enigma     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |          The Enigma Protector Developers Team          |
+| 9  |    hyperion    | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                   nullsecurity team                    |
+| 10 |  intellilock   |  commercial |    .NET Obfuscator    |              PE             |           PE           |                         Eziriz                         |
+| 11 |     invobf     | open-source | Powershell Obfuscator |          Powershell         |       Powershell       |                    Daniel Bohannon                     |
+| 12 |    logicnet    | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                 AnErrupTion, klezVirus                 |
+| 13 |     mangle     | open-source |   Executable Signing  |              PE             |           PE           |                Matt Eidelberg (@Tyl0us)                |
+| 14 |     mpress     |   freeware  | PE EXE/DLL Compressor |              PE             |           PE           |                    Vitaly Evseenko                     |
+| 15 |   netreactor   |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                         Eziriz                         |
+| 16 |   netshrink    | open-source |    .NET Obfuscator    |             .NET            |          .NET          |                     Bartosz Wójcik                     |
+| 17 |   nimcrypt2    | open-source |    Shellcode Loader   |     PE, .NET, Shellcode     |           PE           |                       @icyguider                       |
+| 18 |    nimpackt    | open-source |    Shellcode Loader   |       .NET, Shellcode       |           PE           |             Cas van Cooten (@chvancooten)              |
+| 19 |   nimsyscall   | sponsorware |    Shellcode Loader   |     PE, .NET, Shellcode     |           PE           |                    @S3cur3Th1sSh1t                     |
+| 20 |    packer64    | open-source | PE EXE/DLL Compressor |              PE             |           PE           |                  John Adams, @jadams                   |
+| 21 |     pe2shc     | open-source |  Shellcode Converter  |              PE             |       Shellcode        |                      @hasherezade                      |
+| 22 |    pecloak     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |     Mike Czumak, @SecuritySift, buherator / v-p-b      |
+| 23 |    peresed     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                  Martin Vejnár, Avast                  |
+| 24 |   scarecrow    | open-source |    Shellcode Loader   |          Shellcode          | DLL, JScript, CPL, XLL |                Matt Eidelberg (@Tyl0us)                |
+| 25 |      sgn       | open-source |   Shellcode Encoder   |          Shellcode          |       Shellcode        |                       Ege Balci                        |
+| 26 | smartassembly  |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                        Red-Gate                        |
+| 27 |      srdi      | open-source |   Shellcode Encoder   |             DLL             |       Shellcode        |                Nick Landers, @monoxgas                 |
+| 28 |    themida     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                         Oreans                         |
+| 29 |      upx       | open-source | PE EXE/DLL Compressor |              PE             |           PE           | Markus F.X.J. Oberhumer, László Molnár, John F. Reiser |
+| 30 |   vmprotect    |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                        vmpsoft                         |
 +----+----------------+-------------+-----------------------+-----------------------------+------------------------+--------------------------------------------------------+
 ```
 
@@ -444,7 +446,7 @@ PS> py ProtectMyTooling.py sgn,backdoor,amber beacon64.bin dbgview64-infected.ex
 
     Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
     Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
-    v0.15
+    v0.16
 
 [.] Processing x64 file :  beacon64.bin
 [>] Generating output of sgn(<file>)...
