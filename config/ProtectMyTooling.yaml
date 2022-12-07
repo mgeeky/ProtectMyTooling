@@ -91,6 +91,16 @@ donut_class:
 donut_exit: '1'
 
 #
+# Freeze
+#
+#freeze_path: "contrib\\Freeze\\Freeze.exe"
+#freeze_console: False
+#freeze_encrypt: False
+#freeze_export: ''
+#freeze_process: ''
+#freeze_sandbox: False
+
+#
 # Mangle
 #
 mangle_path: "contrib\\Mangle\\Mangle.exe"

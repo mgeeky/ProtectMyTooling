@@ -7,6 +7,8 @@
 !contrib/exiftool.exe
 !contrib/Hyperion
 !contrib/Invoke-Obfuscation
+!contrib/Freeze
+!contrib/Mangle
 !contrib/LoGIC.NET
 !contrib/MPRESS
 !contrib/Nimcrypt2
