@@ -1,0 +1,2 @@
+import shlwapi, \
+	PathFindFileNameA, 'PathFindFileNameA'

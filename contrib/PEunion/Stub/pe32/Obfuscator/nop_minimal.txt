@@ -1,0 +1,12 @@
+; Nop-like instructions used by the obfuscator
+
+; This is the "minimal" set that is used to obfuscate tight loops.
+; Between "obfoff" and "obfon", only one obfuscation code is added between each line to avoid performance impacts.
+
+; A semicolon separates each code block.
+; $1..$8		A random general purpose register. Only registers from 'register.txt' are used.
+; $rnd1..$rnd3	A 32-bit random number literal
+
+mov		$1, $1
+;
+xchg	$1, $1

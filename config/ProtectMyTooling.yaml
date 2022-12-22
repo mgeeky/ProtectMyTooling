@@ -151,6 +151,14 @@ nimcrypt2_no_ppid_spoof: False
 nimsyscall_path: "contrib\\NimSyscallPacker\\NimSyscallLoader.exe"
 nimsyscall_args:
 
+#
+# PEunion
+#
+peunion_path: "contrib\\PEunion\\peubuild.exe"
+peunion_native86_project_path: "contrib\\_project-files\\PEunion\\native86.peu"
+peunion_dotnet86_project_path: "contrib\\_project-files\\PEunion\\dotnet86.peu"
+peunion_dotnet64_project_path: "contrib\\_project-files\\PEunion\\dotnet64.peu"
+
 
 #
 # ScareCrow

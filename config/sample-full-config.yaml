@@ -200,6 +200,15 @@ scarecrow_sandbox: False
 scarecrow_sign: False
 
 #
+# PEunion
+#
+peunion_path: "contrib\\PEunion\\peubuild.exe"
+peunion_native86_project_path: "contrib\\_project-files\\PEunion\\native86.peu"
+peunion_dotnet86_project_path: "contrib\\_project-files\\PEunion\\dotnet86.peu"
+peunion_dotnet64_project_path: "contrib\\_project-files\\PEunion\\dotnet64.peu"
+
+
+#
 # peresed
 #
 # we'll used default one: "python3 -m pe_tools.peresed"

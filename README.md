@@ -241,13 +241,14 @@ Commercial ones will require user to purchase the product and configure its loca
 21. [`pe2shc`](https://github.com/hasherezade/pe_to_shellcode) - Converts PE into a shellcode. By yours truly [@hasherezade](https://twitter.com/hasherezade)
 22. [`peCloak`](https://github.com/v-p-b/peCloakCapstone/blob/master/peCloak.py) - A Multi-Pass Encoder & Heuristic Sandbox Bypass AV Evasion Tool
 23. [`peresed`](https://github.com/avast/pe_tools) - Uses _"peresed"_ from **avast/pe_tools** to remove all existing PE Resources and signature _(think of Mimikatz icon)._
-24. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
-25. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
-26. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
-27. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
-28. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
-29. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
-30. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
+24. [`peunion`](https://bytecode77.com/pe-union) - Encrypts executables (x86 or .NET x86/x64), which are decrypted at runtime and executed in-memory
+25. [`ScareCrow`](https://github.com/optiv/ScareCrow) - EDR-evasive x64 shellcode loader that produces DLL/CPL/XLL/JScript/HTA artifact loader
+26. [`sgn`](https://github.com/EgeBalci/sgn) - Shikata ga nai (仕方がない) encoder ported into go with several improvements. Takes shellcode, produces encoded shellcode
+27. [`SmartAssembly`](https://www.red-gate.com/products/dotnet-development/smartassembly/) - obfuscator that helps protect your application against reverse-engineering or modification, by making it difficult for a third-party to access your source code
+28. [`sRDI`](https://github.com/monoxgas/sRDI) - Convert DLLs to position independent shellcode. Authored by: [Nick Landers, @monoxgas](https://twitter.com/monoxgas)
+29. [`Themida`](https://www.oreans.com/Themida.php) - Advanced Windows software protection system
+30. [`UPX`](https://upx.github.io/) - a free, portable, extendable, high-performance executable packer for several executable formats.
+31. [`VMProtect`](https://vmpsoft.com/) - protects code by executing it on a virtual machine with non-standard architecture that makes it extremely difficult to analyze and crack the software
 
 You can quickly list supported packers using `-L` option (table columns are chosen depending on Terminal width, the wider the more information revealed):
 
@@ -288,13 +289,14 @@ C:\> py ProtectMyTooling.py -L
 | 22 |     pe2shc     | open-source |  Shellcode Converter  |              PE             |       Shellcode        |                      @hasherezade                      |
 | 23 |    pecloak     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |     Mike Czumak, @SecuritySift, buherator / v-p-b      |
 | 24 |    peresed     | open-source |  PE EXE/DLL Protector |              PE             |           PE           |                  Martin Vejnár, Avast                  |
-| 25 |   scarecrow    | open-source |    Shellcode Loader   |          Shellcode          | DLL, JScript, CPL, XLL |                Matt Eidelberg (@Tyl0us)                |
-| 26 |      sgn       | open-source |   Shellcode Encoder   |          Shellcode          |       Shellcode        |                       Ege Balci                        |
-| 27 | smartassembly  |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                        Red-Gate                        |
-| 28 |      srdi      | open-source |   Shellcode Encoder   |             DLL             |       Shellcode        |                Nick Landers, @monoxgas                 |
-| 29 |    themida     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                         Oreans                         |
-| 30 |      upx       | open-source | PE EXE/DLL Compressor |              PE             |           PE           | Markus F.X.J. Oberhumer, László Molnár, John F. Reiser |
-| 31 |   vmprotect    |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                        vmpsoft                         |
+| 25 |    peunion     |   freeware  | PE EXE/DLL Compressor |           PE, .NET          |           PE           |  Martin Fischer / bytecode77 <mail@martinfischer.it>   |
+| 26 |   scarecrow    | open-source |    Shellcode Loader   |          Shellcode          | DLL, JScript, CPL, XLL |                Matt Eidelberg (@Tyl0us)                |
+| 27 |      sgn       | open-source |   Shellcode Encoder   |          Shellcode          |       Shellcode        |                       Ege Balci                        |
+| 28 | smartassembly  |  commercial |    .NET Obfuscator    |             .NET            |          .NET          |                        Red-Gate                        |
+| 29 |      srdi      | open-source |   Shellcode Encoder   |             DLL             |       Shellcode        |                Nick Landers, @monoxgas                 |
+| 30 |    themida     |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                         Oreans                         |
+| 31 |      upx       | open-source | PE EXE/DLL Compressor |              PE             |           PE           | Markus F.X.J. Oberhumer, László Molnár, John F. Reiser |
+| 32 |   vmprotect    |  commercial |  PE EXE/DLL Protector |              PE             |           PE           |                        vmpsoft                         |
 +----+----------------+-------------+-----------------------+-----------------------------+------------------------+--------------------------------------------------------+
 ```
 

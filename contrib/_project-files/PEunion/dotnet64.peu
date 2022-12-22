@@ -1,0 +1,14 @@
+﻿[stub]
+type = net64
+padding = 50
+
+[manifest]
+template = default
+
+[source.embedded]
+id = 4317a448-3376-4830-92df-8b6a3ff0b02d
+path = evil.exe
+compress = true
+
+[action.invoke]
+source = 4317a448-3376-4830-92df-8b6a3ff0b02d

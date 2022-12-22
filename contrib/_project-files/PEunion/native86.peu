@@ -1,0 +1,14 @@
+﻿[stub]
+type = pe32
+padding = 50
+
+[manifest]
+template = default
+
+[source.embedded]
+id = 97b6fbca-50d8-4efc-92d8-44da11071184
+path = evil.exe
+compress = true
+
+[action.runpe]
+source = 97b6fbca-50d8-4efc-92d8-44da11071184

@@ -21,7 +21,7 @@ import pefile
 import sys
 import os
 
-VERSION = '0.16'
+VERSION = '0.17'
 
 options = {
     'debug': False,

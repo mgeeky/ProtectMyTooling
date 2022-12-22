@@ -1,0 +1,8 @@
+; Registers that are used by the obfuscator to create random instructions
+
+eax
+ebx
+ecx
+edx
+esi
+edi

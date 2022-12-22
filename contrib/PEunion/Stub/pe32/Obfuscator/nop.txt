@@ -1,0 +1,38 @@
+; Nop-like instructions used by the obfuscator
+
+; A semicolon separates each code block.
+; $1..$8		A random general purpose register. Only registers from 'register.txt' are used.
+; $rnd1..$rnd3	A 32-bit random number literal
+
+mov		$1, $1
+;
+xchg	$1, $1
+;
+xchg	$1, $2
+xchg	$2, $1
+;
+push	$1
+pop		$1
+;
+push	$1 $2
+pop		$2 $1
+;
+pushfd
+xor		$1, $rnd1
+xor		$1, $rnd1
+popfd
+;
+pushfd
+inc		$1
+dec		$1
+popfd
+;
+pushfd
+push	$1
+add		esp, 4
+popfd
+;
+pushfd
+push	$rnd1
+add		esp, 4
+popfd
