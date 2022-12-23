@@ -3,12 +3,13 @@ pefile
 capstone
 pythonnet==3.0.0a2
 pe_tools
-yara-python
 capstone
 keystone-engine
 pycryptodome
 argparse
-donut-shellcode
 PrettyTable
 pysimplegui
 clipboard
+colorama
+yara
+donut-shellcode
