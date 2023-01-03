@@ -11,5 +11,5 @@ PrettyTable
 pysimplegui
 clipboard
 colorama
-yara
+yara-python
 donut-shellcode
