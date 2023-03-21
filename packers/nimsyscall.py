@@ -325,9 +325,11 @@ class PackerNimSyscall(IPacker):
                 outfile
             )
 
+            self.logger.ok('Hang tight, NimSyscallPacker takes 3-5 minutes to compile...')
+
             out = shell(self.logger, cmd,
                         output=self.options['verbose'] or self.options['debug'],
-                        timeout=2 * self.options['timeout'])
+                        timeout=360)
 
             if os.path.isfile(outfile):
                 return True
