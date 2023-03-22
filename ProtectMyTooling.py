@@ -458,7 +458,7 @@ def checkAv(options, logger):
             logger.info('Won\'t disable AV as requested.')
             return outstatus
 
-        out = shell(logger, options['check_av_command'])
+        out = shell(logger, options['check_av_command'], timeout=10)
         logger.dbg('AV status before starting packers: "{}"'.format(str(out)))
 
         if out.lower() == 'false':
@@ -466,6 +466,9 @@ def checkAv(options, logger):
             outstatus = 1
         elif out.lower() == 'true':
             logger.info('AV seemingly disabled.')
+            outstatus = 0
+        else:
+            logger.info('AV seemingly disabled, timed out or unknown response from checking command.')
             outstatus = 0
     else:
         return outstatus
@@ -495,7 +498,7 @@ def handleAv(options, logger, status):
         if outstatus == 1:
             logger.dbg('Disabling AV...')
 
-            out = shell(logger, options['disable_av_command'])
+            out = shell(logger, options['disable_av_command'], timeout=10)
 
             logger.dbg('AV disable command returned: "{}"'.format(str(out)))
             logger.info('AV should be disabled now. Waiting 5 seconds...')
@@ -509,7 +512,7 @@ def handleAv(options, logger, status):
         logger.dbg('Enabling AV in 5 seconds...')
         time.sleep(5.0)
 
-        out = shell(logger, options['enable_av_command'])
+        out = shell(logger, options['enable_av_command'], timeout=10)
 
         logger.dbg('AV enable command returned: "{}"'.format(str(out)))
         logger.info('AV should be enabled now.')

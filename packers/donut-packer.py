@@ -9,7 +9,7 @@ import re
 
 
 class PackerDonut(IPacker):
-    default_donut_args = '-b 3 -e 3 -x <exit> -a <arch> -f <format>'
+    default_donut_args = '-b 3 -e 3 -k 2 -x <exit> -a <arch> -f <format>'
     donut_cmdline_template = '<command> <options> -o <outfile> -i <infile>'
 
     default_options = {
