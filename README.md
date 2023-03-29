@@ -553,6 +553,7 @@ To use it:
 
   * `protected-execute-assembly` - Executes a local, previously protected and compressed .NET program in-memory on target.
   * `protected-upload` - Takes an input file, protects it if its PE executable and then uploads that file to specified remote location.
+  * `bofnet_load_protected` - Takes input .NET assembly file, passes it through configured .NET packers chain, loads generated output with `bofnet_load`. [BOFNET](https://github.com/CCob/BOF.NET/) needs to be loaded separetely for this to work.
 
 Basically these commands will open input files, pass the firstly to the `CobaltStrike/cobaltProtectMyTooling.py` script, which in turn calls out to `ProtectMyTooling.py`. As soon as the binary gets obfuscated, it will be passed to your beacon for execution/uploading. 
 
