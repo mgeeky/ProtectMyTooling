@@ -13,7 +13,7 @@
 import re
 import os
 import sys
-import clr
+#import clr
 import glob
 import pefile
 import random
@@ -80,11 +80,17 @@ def shell(cmd):
     si.dwFlags |= subprocess.STARTF_USESHOWWINDOW
     si.wShowWindow = subprocess.SW_HIDE
 
-    out = subprocess.run(cmd, shell=True, capture_output=True, startupinfo=si, creationflags=CREATE_NO_WINDOW)
+    out = subprocess.run(
+        cmd, 
+        shell=True, 
+        capture_output=True, 
+        startupinfo=si, 
+        creationflags=CREATE_NO_WINDOW
+    )
     status = out.stdout.decode(errors='ignore').strip()
 
     if len(out.stderr) > 0:
-        raise ShellCommandReturnedError('''
+        raise Exception('''
 Running shell command ({}) failed:
 
 ---------------------------------------------
@@ -154,7 +160,7 @@ def parseOptions(config):
         os.path.join(settings['protect_my_tooling_dir'], 'ProtectMyTooling.py')
     ))
 
-    for m in re.finditer(r'\[\s*\d+\] Packer:\s*(\w+)\s+', packerslistoutput):
+    for m in re.finditer(r'\|\s*\d+\s*\|\s*([^\s]+)\s*\|', packerslistoutput):
         packerslist.append(m.group(1).lower())
 
     #output('[.] Packers available:')

