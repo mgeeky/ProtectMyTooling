@@ -409,26 +409,24 @@ def shell(logger, cmd, alternative=False, output=False, timeout=60):
     return out
 
 
-def configPath(basepath, path):
-    p = _configPath(basepath, path)
+def configPath(path):
+    p = _configPath(path)
+    return os.path.abspath(os.path.normpath(p))
 
-    return os.path.abspath(p)
-
-
-def _configPath(basepath, path):
+def _configPath(path):
     if not path:
         return ''
 
     if os.path.isfile(path) or os.path.isdir(path):
         return path
 
-    b = os.path.dirname(os.path.realpath(basepath))
-    p = os.path.join(b, path)
+    basepath = os.path.abspath(os.path.normpath(os.path.join(os.path.dirname(__file__), '..')))
+    p = os.path.join(basepath, path)
 
     if os.path.isfile(p) or os.path.isdir(p):
         return p
 
-    return ''
+    return path
 
 
 def get_tempfile_name(some_id=''):

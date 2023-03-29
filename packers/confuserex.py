@@ -62,11 +62,6 @@ class PackerConfuserEx(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['confuserex_path'] = configPath(
-                self.options['config'], self.options['confuserex_path'])
-            self.options['confuserex_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['confuserex_project_file']))
-
             if not os.path.isfile(self.options['confuserex_path']):
                 self.logger.fatal(
                     '--confuserex-path option must be specified!')
