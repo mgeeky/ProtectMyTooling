@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Author:
-#   Mariusz Banach / mgeeky, '20-'22
+#   Mariusz Banach / mgeeky, '20-'23
 #   <mb [at] binary-offensive.com>
 #   (https://github.com/mgeeky)
 #
@@ -21,7 +21,7 @@ import pefile
 import sys
 import os
 
-VERSION = '0.17'
+VERSION = '0.18'
 
 options = {
     'debug': False,
@@ -566,10 +566,10 @@ def main():
 
     banner()
 
-    print(r'''    Red Team implants static signatures evasion hammer.
+    print(r'''    Your Red Team implants will never again fell into static signatures.
 
-    Multi-Packer wrapping around multitude of packers, protectors, shellcode loaders, encoders.
-    Mariusz Banach / mgeeky '20-'22, <mb@binary-offensive.com>
+    Multi-Packer that wraps around multitude of packers, protectors, shellcode loaders, encoders.
+    Mariusz Banach / mgeeky '20-'23, <mb@binary-offensive.com>
     v{}
 '''.format(VERSION))
 
