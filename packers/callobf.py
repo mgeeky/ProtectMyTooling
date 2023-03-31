@@ -52,10 +52,8 @@ class PackerCallObf(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['callobf_path_x86'] = configPath(
-                self.options['config'], self.options['callobf_path_x86'])
-            self.options['callobf_path_x64'] = configPath(
-                self.options['config'], self.options['callobf_path_x64'])
+            self.options['callobf_path_x86'] = configPath( self.options['callobf_path_x86'])
+            self.options['callobf_path_x64'] = configPath( self.options['callobf_path_x64'])
 
             if not os.path.isfile(self.options['callobf_path_x86']) or not os.path.isfile(self.options['callobf_path_x64']):
                 self.logger.fatal(
@@ -66,8 +64,7 @@ class PackerCallObf(IPacker):
                     self.logger.fatal(
                         '--callobf-config option must be specified!')
 
-                self.options['callobf_config'] = os.path.abspath(configPath(
-                    self.options['config'], self.options['callobf_config']))
+                self.options['callobf_config'] = os.path.abspath(configPath( self.options['callobf_config']))
 
     def generateConfigFile(self, infile):
         configPath = ''

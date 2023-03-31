@@ -60,8 +60,7 @@ class PackerSgn(IPacker):
                     self.options[k] = v
 
             if 'sgn_path' in self.options.keys() and self.options['sgn_path'] != None and len(self.options['sgn_path']) > 0:
-                self.options['sgn_path'] = configPath(
-                    self.options['config'], self.options['sgn_path'])
+                self.options['sgn_path'] = configPath(self.options['sgn_path'])
             else:
                 self.options['sgn_path'] = PackerSgn.default_options['sgn_path']
 

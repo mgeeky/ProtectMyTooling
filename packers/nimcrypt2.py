@@ -80,8 +80,7 @@ class PackerNimcrypt2(IPacker):
 
             if 'nimcrypt2_path' in self.options.keys() and self.options['nimcrypt2_path'] != None and len(self.options['nimcrypt2_path']) > 0 \
                     and self.options['nimcrypt2_path'] != PackerNimcrypt2.default_options['nimcrypt2_path']:
-                self.options['nimcrypt2_path'] = configPath(
-                    self.options['config'], self.options['nimcrypt2_path'])
+                self.options['nimcrypt2_path'] = configPath( self.options['nimcrypt2_path'])
             else:
                 self.options['nimcrypt2_path'] = PackerNimcrypt2.default_options['nimcrypt2_path']
 

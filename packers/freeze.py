@@ -51,8 +51,7 @@ class PackerFreeze(IPacker):
             parser.add_argument('--freeze-sandbox', action='store_true',
                                 dest='freeze_sandbox', help='Enables sandbox evasion by checking domain-joined, more than 2 CPUs, more than 4 GBs of RAM')
         else:
-            self.options['freeze_path'] = os.path.abspath(configPath(
-                self.options['config'], self.options['freeze_path']))
+            self.options['freeze_path'] = os.path.abspath(configPath( self.options['freeze_path']))
 
             for k, v in PackerFreeze.default_options.items():
                 if k not in self.options.keys() or not self.options[k]:

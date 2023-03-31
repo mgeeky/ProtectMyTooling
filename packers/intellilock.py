@@ -41,8 +41,7 @@ class PackerIntellilock(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['intellilock_path'] = configPath(
-                self.options['config'], self.options['intellilock_path'])
+            self.options['intellilock_path'] = configPath( self.options['intellilock_path'])
 
             if not os.path.isfile(self.options['intellilock_path']):
                 self.logger.fatal(

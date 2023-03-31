@@ -43,8 +43,7 @@ class PackerMPRESS(IPacker):
                                 dest='mpress_path', help='(required) Path to MPRESS executable.')
 
         else:
-            self.options['mpress_path'] = os.path.abspath(configPath(
-                self.options['config'], self.options['mpress_path']))
+            self.options['mpress_path'] = os.path.abspath(configPath( self.options['mpress_path']))
 
             if not os.path.isfile(self.options['mpress_path']):
                 self.logger.fatal('--mpress-path option must be specified!')

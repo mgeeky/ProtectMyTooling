@@ -77,8 +77,7 @@ class PackerDonut(IPacker):
                     self.options[k] = v
 
             if 'donut_path' in self.options.keys() and self.options['donut_path'] != None and len(self.options['donut_path']) > 0:
-                self.options['donut_path'] = configPath(
-                    self.options['config'], self.options['donut_path'])
+                self.options['donut_path'] = configPath( self.options['donut_path'])
             else:
                 self.options['donut_path'] = PackerDonut.default_options['donut_path']
 

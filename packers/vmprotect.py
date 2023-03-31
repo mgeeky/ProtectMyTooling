@@ -48,10 +48,8 @@ class PackerVMProtect(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['vmprotect_path'] = configPath(
-                self.options['config'], self.options['vmprotect_path'])
-            self.options['vmprotect_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['vmprotect_project_file']))
+            self.options['vmprotect_path'] = configPath( self.options['vmprotect_path'])
+            self.options['vmprotect_project_file'] = os.path.abspath(configPath( self.options['vmprotect_project_file']))
 
             if not os.path.isfile(self.options['vmprotect_path']):
                 self.logger.fatal('--vmprotect-path option must be specified!')

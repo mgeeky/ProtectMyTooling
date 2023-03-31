@@ -44,8 +44,7 @@ class PackerAsStrongAsFuck(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['asstrongasfuck_path'] = configPath(
-                self.options['config'], self.options['asstrongasfuck_path'])
+            self.options['asstrongasfuck_path'] = configPath( self.options['asstrongasfuck_path'])
 
             if not os.path.isfile(self.options['asstrongasfuck_path']):
                 self.logger.fatal(

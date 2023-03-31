@@ -85,12 +85,9 @@ class PackerEnigma(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['enigma_path_x86'] = configPath(
-                self.options['config'], self.options['enigma_path_x86'])
-            self.options['enigma_path_x64'] = configPath(
-                self.options['config'], self.options['enigma_path_x64'])
-            self.options['enigma_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['enigma_project_file']))
+            self.options['enigma_path_x86'] = configPath( self.options['enigma_path_x86'])
+            self.options['enigma_path_x64'] = configPath( self.options['enigma_path_x64'])
+            self.options['enigma_project_file'] = os.path.abspath(configPath( self.options['enigma_project_file']))
 
             for k, v in PackerEnigma.default_options.items():
                 if k not in self.options.keys() or not self.options[k]:

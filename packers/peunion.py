@@ -52,8 +52,7 @@ class PackerPEunion(IPacker):
                                 dest='peunion_dotnet64_project_path', help='(required) Path to PEunion .NET x64 (Invoke) build project (.peu).')
 
         else:
-            self.options['peunion_path'] = os.path.abspath(configPath(
-                self.options['config'], self.options['peunion_path']))
+            self.options['peunion_path'] = os.path.abspath(configPath(self.options['peunion_path']))
 
             if not os.path.isfile(self.options['peunion_path']):
                 self.logger.fatal('--peunion-path option must be specified!')

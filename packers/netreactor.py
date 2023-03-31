@@ -123,10 +123,8 @@ class PackerNetReactor(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['netreactor_path'] = configPath(
-                self.options['config'], self.options['netreactor_path'])
-            self.options['netreactor_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['netreactor_project_file']))
+            self.options['netreactor_path'] = configPath( self.options['netreactor_path'])
+            self.options['netreactor_project_file'] = os.path.abspath(configPath( self.options['netreactor_project_file']))
 
             if not os.path.isfile(self.options['netreactor_path']):
                 self.logger.fatal(

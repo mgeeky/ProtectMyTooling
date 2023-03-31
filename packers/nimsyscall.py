@@ -168,8 +168,7 @@ class PackerNimSyscall(IPacker):
 
             if 'nimsyscall_path' in self.options.keys() and self.options['nimsyscall_path'] != None and len(self.options['nimsyscall_path']) > 0 \
                     and self.options['nimsyscall_path'] != PackerNimSyscall.default_options['nimsyscall_path']:
-                self.options['nimsyscall_path'] = configPath(
-                    self.options['config'], self.options['nimsyscall_path'])
+                self.options['nimsyscall_path'] = configPath( self.options['nimsyscall_path'])
             else:
                 self.options['nimsyscall_path'] = PackerNimSyscall.default_options['nimsyscall_path']
 

@@ -52,8 +52,7 @@ class PackerAmber(IPacker):
                     self.options[k] = v
 
             if 'amber_path' in self.options.keys() and self.options['amber_path'] != None and len(self.options['amber_path']) > 0:
-                self.options['amber_path'] = configPath(
-                    self.options['config'], self.options['amber_path'])
+                self.options['amber_path'] = configPath(self.options['amber_path'])
             else:
                 self.options['amber_path'] = PackerAmber.default_options['amber_path']
 

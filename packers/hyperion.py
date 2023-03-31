@@ -41,8 +41,7 @@ class PackerHyperion(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['hyperion_path'] = configPath(
-                self.options['config'], self.options['hyperion_path'])
+            self.options['hyperion_path'] = configPath( self.options['hyperion_path'])
 
             if not os.path.isfile(self.options['hyperion_path']):
                 self.logger.fatal('--hyperion-path option must be specified!')

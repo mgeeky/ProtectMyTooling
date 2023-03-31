@@ -89,8 +89,7 @@ class PackerNimpackt(IPacker):
 
             if 'nimpackt_path' in self.options.keys() and self.options['nimpackt_path'] != None and len(self.options['nimpackt_path']) > 0 \
                     and self.options['nimpackt_path'] != PackerNimpackt.default_options['nimpackt_path']:
-                self.options['nimpackt_path'] = configPath(
-                    self.options['config'], self.options['nimpackt_path'])
+                self.options['nimpackt_path'] = configPath( self.options['nimpackt_path'])
             else:
                 self.options['nimpackt_path'] = PackerNimpackt.default_options['nimpackt_path']
 

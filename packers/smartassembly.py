@@ -117,10 +117,8 @@ class PackerSmartAssembly(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['smartassembly_path'] = configPath(
-                self.options['config'], self.options['smartassembly_path'])
-            self.options['smartassembly_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['smartassembly_project_file']))
+            self.options['smartassembly_path'] = configPath(  self.options['smartassembly_path'])
+            self.options['smartassembly_project_file'] = os.path.abspath(configPath( self.options['smartassembly_project_file']))
 
             if not os.path.isfile(self.options['smartassembly_path']):
                 self.logger.fatal(

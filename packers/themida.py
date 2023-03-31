@@ -46,12 +46,9 @@ class PackerThemida(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['themida_path_x86'] = configPath(
-                self.options['config'], self.options['themida_path_x86'])
-            self.options['themida_path_x64'] = configPath(
-                self.options['config'], self.options['themida_path_x64'])
-            self.options['themida_project_file'] = os.path.abspath(configPath(
-                self.options['config'], self.options['themida_project_file']))
+            self.options['themida_path_x86'] = configPath( self.options['themida_path_x86'])
+            self.options['themida_path_x64'] = configPath( self.options['themida_path_x64'])
+            self.options['themida_project_file'] = os.path.abspath(configPath( self.options['themida_project_file']))
 
             if not os.path.isfile(self.options['themida_path_x86']) or not os.path.isfile(self.options['themida_path_x64']):
                 self.logger.err(

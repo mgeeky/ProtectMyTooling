@@ -54,8 +54,7 @@ class PackerUpx(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['upx_path'] = configPath(
-                self.options['config'], self.options['upx_path'])
+            self.options['upx_path'] = configPath( self.options['upx_path'])
 
             if not os.path.isfile(self.options['upx_path']):
                 self.logger.fatal('--upx-path option must be specified!')

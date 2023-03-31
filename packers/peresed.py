@@ -55,8 +55,7 @@ class PackerPeresed(IPacker):
 
             if 'peresed_path' in self.options.keys() and self.options['peresed_path'] != None and len(self.options['peresed_path']) > 0 \
                     and self.options['peresed_path'] != PackerPeresed.default_options['peresed_path']:
-                self.options['peresed_path'] = configPath(
-                    self.options['config'], self.options['peresed_path'])
+                self.options['peresed_path'] = configPath(  self.options['peresed_path'])
             else:
                 self.options['peresed_path'] = PackerPeresed.default_options['peresed_path']
 

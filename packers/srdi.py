@@ -74,8 +74,7 @@ class PackersRDI(IPacker):
 
             if 'srdi_path' in self.options.keys() and self.options['srdi_path'] != None and len(self.options['srdi_path']) > 0 \
                     and self.options['srdi_path'] != PackersRDI.default_options['srdi_path']:
-                self.options['srdi_path'] = configPath(
-                    self.options['config'], self.options['srdi_path'])
+                self.options['srdi_path'] = configPath( self.options['srdi_path'])
             else:
                 self.options['srdi_path'] = PackersRDI.default_options['srdi_path']
 

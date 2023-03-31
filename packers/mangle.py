@@ -51,8 +51,7 @@ class PackerMangle(IPacker):
             parser.add_argument('--mangle-certificate', metavar='executable', dest='mangle_path',
                                 help='Path to the file containing the certificate you want to clone.')
         else:
-            self.options['mangle_path'] = os.path.abspath(configPath(
-                self.options['config'], self.options['mangle_path']))
+            self.options['mangle_path'] = os.path.abspath(configPath( self.options['mangle_path']))
 
             if len(self.options['mangle_certificate']) > 0:
                 self.options['mangle_certificate'] = os.path.abspath(

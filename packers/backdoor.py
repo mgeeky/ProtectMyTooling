@@ -66,8 +66,7 @@ class PackerBackdoor(IPacker):
                 self.options['backdoor_path'] = PackerBackdoor.default_options['backdoor_path']
                 dontCheckExists = True
             else:
-                self.options['backdoor_path'] = os.path.abspath(configPath(
-                    self.options['config'], self.options['backdoor_path']))
+                self.options['backdoor_path'] = os.path.abspath(configPath( self.options['backdoor_path']))
 
             self.options['backdoor_file'] = os.path.abspath(
                 self.options['backdoor_file'])

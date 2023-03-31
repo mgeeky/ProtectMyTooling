@@ -37,8 +37,7 @@ class PackerLogicNet(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['logicnet_path'] = configPath(
-                self.options['config'], self.options['logicnet_path'])
+            self.options['logicnet_path'] = configPath( self.options['logicnet_path'])
 
             if not os.path.isfile(self.options['logicnet_path']):
                 self.logger.fatal('--LogicNet-path option must be specified!')

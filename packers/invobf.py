@@ -134,8 +134,7 @@ class PackerInvObf(IPacker):
                 self.options['invobf_powershell'] = PackerInvObf.default_options['invobf_powershell']
 
             if 'invobf_path' in self.options.keys() and self.options['invobf_path'] != None and len(self.options['invobf_path']) > 0:
-                self.options['invobf_path'] = configPath(
-                    self.options['config'], self.options['invobf_path'])
+                self.options['invobf_path'] = configPath( self.options['invobf_path'])
             else:
                 self.options['invobf_path'] = PackerInvObf.default_options['invobf_path']
 

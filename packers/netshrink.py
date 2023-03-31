@@ -51,8 +51,7 @@ class PackerNetshrink(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['netshrink_path'] = configPath(
-                self.options['config'], self.options['netshrink_path'])
+            self.options['netshrink_path'] = configPath( self.options['netshrink_path'])
 
             for k, v in PackerNetshrink.default_options.items():
                 if k not in self.options.keys() or not self.options[k]:

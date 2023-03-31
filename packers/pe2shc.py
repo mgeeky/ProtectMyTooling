@@ -47,8 +47,7 @@ class PackerPe2shc(IPacker):
                                 help='(required) Path to Pe2shc executable.')
 
         else:
-            self.options['pe2shc_path'] = os.path.abspath(configPath(
-                self.options['config'], self.options['pe2shc_path']))
+            self.options['pe2shc_path'] = os.path.abspath(configPath( self.options['pe2shc_path']))
 
             if not os.path.isfile(self.options['pe2shc_path']):
                 self.logger.fatal('--pe2shc-path option must be specified!')

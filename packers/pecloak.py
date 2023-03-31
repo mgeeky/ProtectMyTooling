@@ -52,10 +52,8 @@ class PackerPeCloak(IPacker):
             if not self.options['config']:
                 self.logger.fatal('Config file not specified!')
 
-            self.options['pecloak_python_path'] = configPath(
-                self.options['config'], self.options['pecloak_python_path'])
-            self.options['pecloak_script_path'] = configPath(
-                self.options['config'], self.options['pecloak_script_path'])
+            self.options['pecloak_python_path'] = configPath( self.options['pecloak_python_path'])
+            self.options['pecloak_script_path'] = configPath( self.options['pecloak_script_path'])
 
             if not os.path.isfile(self.options['pecloak_python_path']) or not os.path.isfile(self.options['pecloak_script_path']):
                 self.logger.fatal(

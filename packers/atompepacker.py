@@ -53,8 +53,7 @@ class PackerAtomPePacker(IPacker):
                     self.options[k] = v
 
             if 'atompepacker_path' in self.options.keys() and self.options['atompepacker_path'] != None and len(self.options['atompepacker_path']) > 0:
-                self.options['atompepacker_path'] = configPath(
-                    self.options['config'], self.options['atompepacker_path'])
+                self.options['atompepacker_path'] = configPath(self.options['atompepacker_path'])
             else:
                 self.options['atompepacker_path'] = PackerAtomPePacker.default_options['atompepacker_path']
 

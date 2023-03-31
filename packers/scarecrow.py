@@ -74,8 +74,7 @@ class PackerScareCrow(IPacker):
                     self.options[k] = v
 
             if 'scarecrow_path' in self.options.keys() and self.options['scarecrow_path'] != None and len(self.options['scarecrow_path']) > 0:
-                self.options['scarecrow_path'] = configPath(
-                    self.options['config'], self.options['scarecrow_path'])
+                self.options['scarecrow_path'] = configPath(self.options['scarecrow_path'])
             else:
                 self.options['scarecrow_path'] = PackerScareCrow.default_options['scarecrow_path']
 
