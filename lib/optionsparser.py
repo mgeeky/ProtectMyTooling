@@ -301,7 +301,7 @@ def parse_options(logger, opts, version):
 
         opts.update(fileparams)
 
-        updateParamsWithCmdAndFile(opts, vars(params), fileparams, params.config)
+        updateParamsWithCmdAndFile(opts, vars(params), fileparams, params.config, logger)
 
     else:
         opts.update(vars(params))
@@ -350,7 +350,7 @@ def parse_options(logger, opts, version):
 #
 
 
-def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams, configPath):
+def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams, configPath, logger):
     def isEmpty(x):
         if x is None:
             return True
@@ -379,7 +379,9 @@ def updateParamsWithCmdAndFile(opts, cmdlineparams, fileparams, configPath):
         if type(opts[k]) is str and type(k) is str:
             if k.endswith('_path') or k.endswith('_file') or 'contrib/' in opts[k].replace('\\', '//').lower():
                 opts[k] = lib.utils.configPath(opts[k])
-
+                
+                if not os.path.isfile(opts[k]) and not os.path.isdir(opts[k]):
+                    logger.err(f'WARNING: Path set in {k} seems not to exist: "{opts[k]}"')
 
 def parseParametersFromConfigFile(configFile):
     outparams = {}

@@ -18,14 +18,15 @@ class Logger:
     }
 
     colors_map = {
-        'red':      31, 
-        'green':    32, 
-        'yellow':   33,
-        'blue':     34, 
-        'magenta':  35, 
-        'cyan':     36,
-        'white':    37, 
-        'grey':     38,
+        'red':      colorama.Fore.RED, 
+        'green':    colorama.Fore.GREEN, 
+        'yellow':   colorama.Fore.YELLOW,
+        'blue':     colorama.Fore.BLUE, 
+        'magenta':  colorama.Fore.MAGENTA, 
+        'cyan':     colorama.Fore.CYAN,
+        'white':    colorama.Fore.WHITE, 
+        'grey':     colorama.Fore.WHITE,
+        'reset':    colorama.Style.RESET_ALL,
     }
 
     colors_dict = {
@@ -52,10 +53,11 @@ class Logger:
 
     @staticmethod
     def colorize(txt, col):
-        if not Logger.options['colors']:
+        if type(txt) is not str:
+            txt = str(txt)
+        if not col in Logger.colors_map.keys() or Logger.options.get('nocolor', False):
             return txt
-            
-        return Logger.with_color(Logger.colors_map[col], txt)
+        return Logger.colors_map[col] + txt + Logger.colors_map['reset']
 
     # Invocation:
     #   def out(txt, mode='info ', fd=None, color=None, noprefix=False, newline=True):
@@ -75,16 +77,11 @@ class Logger:
 
         if args['color']:
             col = args['color']
-            if type(col) == str and col in Logger.colors_map.keys():
-                col = Logger.colors_map[col]
 
         else:
-            col = Logger.colors_dict.setdefault(mode, Logger.colors_map['grey'])
+            col = Logger.colors_dict.setdefault(mode, 'grey')
 
         if not args['color']:
-            col = ''
-
-        if not Logger.options['colors']:
             col = ''
 
         if args['noprefix']:
@@ -100,11 +97,11 @@ class Logger:
                 f.write(mode + txt + nl)
                 f.flush()
 
-            sys.stdout.write(Logger.with_color(col, mode + txt) + nl)
+            sys.stdout.write(Logger.colorize(mode + txt, col) + nl)
             sys.stdout.flush()
 
         else:
-            fd.write(Logger.with_color(col, mode + txt) + nl)
+            fd.write(Logger.colorize(mode + txt, col) + nl)
 
     # Info shall be used as an ordinary logging facility, for every desired output.
     def info(self, txt, forced = False, **kwargs):
@@ -119,7 +116,7 @@ class Logger:
             Logger.out(txt, self.options['log'], '[dbg] ', **kwargs)
 
     def err(self, txt, **kwargs):
-        Logger.out(txt, self.options['log'], '[-] ', color='magenta', **kwargs)
+        Logger.out(txt, self.options['log'], '[-] ', color='red', **kwargs)
 
     def ok(self, txt, **kwargs):
         Logger.out(txt, self.options['log'], '[+] ', color='green', **kwargs)

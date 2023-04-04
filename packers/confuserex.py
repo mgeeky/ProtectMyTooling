@@ -63,8 +63,7 @@ class PackerConfuserEx(IPacker):
                 self.logger.fatal('Config file not specified!')
 
             if not os.path.isfile(self.options['confuserex_path']):
-                self.logger.fatal(
-                    '--confuserex-path option must be specified!')
+                self.logger.fatal('--confuserex-path option must be specified!')
 
             for k, v in PackerConfuserEx.default_options.items():
                 if k not in self.options.keys() or not self.options[k]:

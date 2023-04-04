@@ -538,6 +538,8 @@ sub executePacker {
         catch $msg {
         }
 
+        deleteFile($logfile);
+
         return $generatedlocalpath[0];
     }
     else {
