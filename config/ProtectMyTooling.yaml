@@ -228,9 +228,3 @@ logicnet_path: "contrib\\LoGIC.NET\\LoGiC.NET.exe"
 #
 invobf_path: "contrib\\Invoke-Obfuscation\\Invoke-Obfuscation.ps1"
 invobf_powershell: powershell.exe
-
-#
-# peCloak
-#
-pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
-pecloak_python_path: python2
