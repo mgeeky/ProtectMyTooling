@@ -26,9 +26,9 @@ upx_args:
 
 
 # peCloakCapstone (x86)
-pecloak_python_path: python2
-pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
-pecloak_args: 
+#pecloak_python_path: python2
+#pecloak_script_path: "contrib\\peCloakCapstone\\peCloak.py"
+#pecloak_args: 
 
 
 # Hyperion (x86, x64)
