@@ -93,12 +93,12 @@ donut_exit: '1'
 #
 # Freeze
 #
-freeze_path: "contrib\\Freeze\\Freeze.exe"
-freeze_console: False
-freeze_encrypt: False
-freeze_export: ''
-freeze_process: ''
-freeze_sandbox: False
+#freeze_path: "contrib\\Freeze\\Freeze.exe"
+#freeze_console: False
+#freeze_encrypt: False
+#freeze_export: ''
+#freeze_process: ''
+#freeze_sandbox: False
 
 #
 # Mangle
@@ -148,8 +148,8 @@ nimcrypt2_no_ppid_spoof: False
 #
 # NimSyscallPacker
 #
-nimsyscall_path: "contrib\\NimSyscallPacker\\NimSyscallLoader.exe"
-nimsyscall_args:
+#nimsyscall_path: "contrib\\NimSyscallPacker\\NimSyscallLoader.exe"
+#nimsyscall_args:
 
 #
 # PEunion

@@ -24,7 +24,7 @@ class PackerScareCrow(IPacker):
         'output': ['DLL', 'JScript', 'CPL', 'XLL'],
     }
 
-    Run_ScareCrow_On_Windows_As_WSL = True
+    Run_ScareCrow_On_Windows_As_WSL = False
 
     default_options = {
         'scarecrow_path': '',
