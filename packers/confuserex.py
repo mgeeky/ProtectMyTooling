@@ -90,6 +90,8 @@ class PackerConfuserEx(IPacker):
     def adjustProjectFile(self, projFile, arch, infile, outfile, outputDir):
         baseProject = ''
 
+        self.logger.info(f'Using ConfuserEx project: ' + self.options['confuserex_project_file'], forced=True)
+
         with open(self.options['confuserex_project_file'], 'r', encoding='utf-8') as f:
             baseProject = f.read().strip()
 
