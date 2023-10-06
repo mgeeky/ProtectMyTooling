@@ -1232,7 +1232,7 @@ def main(argv):
 ''')
 
     print(r'''    Your finest PE backdooring companion.
-    Mariusz Banach / mgeeky '22, (@mariuszbit)
+    Mariusz Banach / mgeeky '22-'23, (@mariuszbit)
     <mb@binary-offensive.com>
     ''')
 
