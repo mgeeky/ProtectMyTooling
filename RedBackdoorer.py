@@ -861,7 +861,7 @@ Sources:
             reloc_type = imageBaseRelocType << 12
 
             relocWord = (reloc_type | reloc_offset)
-            self.pe.set_word_at_rva(relocDirRva + relocsSize + 8 + i * 2, relocWord)
+            self.pe.set_word_at_rva(relocDirRva + sizeOfReloc + 8 + i * 2, relocWord)
             self.logger.dbg(f'\tReloc{i} for addr 0x{reloc:x}: 0x{relocWord:x} - 0x{reloc_offset:x} - type: {imageBaseRelocType}')
             i += 1
 
