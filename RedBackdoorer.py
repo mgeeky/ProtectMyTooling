@@ -604,7 +604,7 @@ Sources:
             self.logger.dbg(f'DLL Export: {export[0]} {export[1]}')
             if export[1].lower() == exportName.lower():
 
-                addr = self.pe.DIRECTORY_ENTRY_EXPORT.symbols[export[0]].address
+                addr = self.pe.DIRECTORY_ENTRY_EXPORT.symbols[export[0]-1].address
                 self.logger.ok(f'Found DLL Export "{exportName}" at RVA 0x{addr:x} . Attempting to hijack it...')
                 return addr
 
@@ -636,7 +636,7 @@ Sources:
         data = self.pe.get_memory_mapped_image()[ep:ep+128]
         offset = 0
 
-        self.logger.dbg('Entry Point disasm:')
+        self.logger.dbg(f'Entry Point disasm (VA: 0x{ep_ava:08x} / RVA: 0x{ep:08x}):')
 
         disasmData = self.pe.get_memory_mapped_image()
         output = self.disasmBytes(cs, ks, disasmData, ep, 128, self.backdoorInstruction)
@@ -1116,7 +1116,7 @@ Sources:
 
             pe = sections.push_back(
                 Name = name,
-                Characteristics = characteristics, 
+                Characteristics = characteristics,
                 Data = sectionData
             )
 
