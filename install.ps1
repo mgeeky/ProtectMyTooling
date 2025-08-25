@@ -1,6 +1,10 @@
 
 Write-Host "`n== Step 1: Installing pip3 dependencies...`n" -ForegroundColor cyan
+python -m venv venv
+.\venv\Scripts\activate
+
 pip3 install -r requirements.txt
+python -m pip install --upgrade --extra-index-url https://PySimpleGUI.net/install PySimpleGUI
 
 if ((Get-Command "python2" -ErrorAction SilentlyContinue) -eq $null) 
 {
