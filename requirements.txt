@@ -8,7 +8,7 @@ keystone-engine
 pycryptodome
 argparse
 PrettyTable
-PySimpleGUI
+freesimplegui
 clipboard
 colorama
 yara-python

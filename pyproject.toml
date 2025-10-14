@@ -1,0 +1,19 @@
+[project]
+name = "protectmytooling"
+version = "0.1.0"
+dependencies = [
+    "argparse>=1.4.0",
+    "capstone>=5.0.6",
+    "clipboard>=0.0.4",
+    "colorama>=0.4.6",
+    "donut-shellcode>=1.1",
+    "freesimplegui>=5.2.0.post1",
+    "keystone-engine>=0.9.2",
+    "pe-tools>=0.3.10",
+    "pefile>=2024.8.26",
+    "prettytable>=3.16.0",
+    "pycryptodome>=3.23.0",
+    "pythonnet==3.0.0a2",
+    "pyyaml>=6.0.3",
+    "yara-python>=4.5.4",
+]

@@ -23,7 +23,7 @@ from threading import Thread
 
 import lib.optionsparser
 
-import PySimpleGUI as sg
+import FreeSimpleGUI as sg
 
 sg.theme("Dark")
 font = ("Consolas", 8)
